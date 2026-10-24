@@ -1,0 +1,29 @@
+# Shared by all conditions: same data, data order, optimizer and hyper-parameters.
+base_model: gpt2
+old_tokenizer: gpt2
+old_name: gpt2                     # data/tokens/<domain>/gpt2.bin
+new_tokenizer: artifacts/tokenizers/code70_gpt4_32k
+new_name: code70_gpt4_32k          # data/tokens/<domain>/code70_gpt4_32k.bin
+domain: code
+raw_dir: data/raw
+tokens_dir: data/tokens
+out: runs
+
+token_budget: 50_000_000           # tokens of the tokenizer being trained on (as in the paper)
+block_size: 1024
+micro_batch: 4                     # fits 8 GB with an ~80k-row union vocabulary in bf16
+grad_accum: 16                     # 4 * 16 * 1024 = 65,536 tokens per step (~763 steps for 50M)
+lr: 3.0e-4
+warmup_frac: 0.02
+min_lr_ratio: 0.1
+weight_decay: 0.1
+betas: [0.9, 0.95]
+grad_clip: 1.0
+compile: false
+
+seed: 0
+data_seed: 1234                    # fixes the data order across conditions
+log_every: 10
+eval_every: 100
+eval_docs: 200                     # periodic eval on a subset; final eval on all 1000 test docs
+eval_batch: 8

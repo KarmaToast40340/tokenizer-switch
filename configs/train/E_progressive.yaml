@@ -1,0 +1,5 @@
+base: base.yaml
+run_name: E_progressive_code
+condition: progressive
+init: fvt
+rho: 0.5               # ablation: rho=0.1

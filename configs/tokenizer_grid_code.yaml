@@ -1,0 +1,11 @@
+# Phase 1, step 1: vary one lever at a time around the center point.
+domain: code          # data/raw/code/train.jsonl (codeparrot-clean)
+other: wiki_en        # rest of the mix (English Wikipedia)
+total_mb: 1000        # ~1 GB of training text per tokenizer
+identity_total_mb: 300  # Identity (no pre-tokenization) is much heavier for the HF trainer
+out: artifacts/tokenizers
+center: {domain_frac: 0.7, pretok: gpt4, vocab_size: 32000}
+levers:
+  domain_frac: [0.0, 0.3, 0.7, 1.0]
+  pretok: [gpt2, gpt4, punct, identity]
+  vocab_size: [16000, 32000, 50000, 64000]

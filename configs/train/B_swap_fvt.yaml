@@ -1,0 +1,4 @@
+base: base.yaml
+run_name: B_swap_fvt_code
+condition: swap
+init: fvt

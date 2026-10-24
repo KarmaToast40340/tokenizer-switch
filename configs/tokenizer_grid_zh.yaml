@@ -1,0 +1,11 @@
+# Phase 2: lighter grid on Chinese + English Wikipedia.
+domain: wiki_zh
+other: wiki_en
+total_mb: 1000
+identity_total_mb: 300
+out: artifacts/tokenizers
+center: {domain_frac: 0.7, pretok: gpt4, vocab_size: 32000}
+levers:
+  domain_frac: [0.3, 0.7, 1.0]
+  pretok: [gpt4, identity]
+  vocab_size: [32000, 50000]

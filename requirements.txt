@@ -1,0 +1,10 @@
+# Install PyTorch first, matching your CUDA version: https://pytorch.org/get-started/locally/
+torch>=2.4
+transformers>=4.44
+tokenizers>=0.19
+datasets>=2.20
+numpy>=1.26
+opencc>=1.1.9          # C++ binding; if no wheel for your OS: pip install opencc-python-reimplemented
+pyyaml>=6.0
+tqdm>=4.66
+pytest>=8.0
