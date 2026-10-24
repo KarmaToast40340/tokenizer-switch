@@ -16,6 +16,7 @@ from pathlib import Path
 
 from tqdm import tqdm
 
+from toksw.data import chunk_text
 from toksw.sources import SOURCES, stream_source
 
 
@@ -27,6 +28,10 @@ def main():
     ap.add_argument("--train-mb", type=float, required=True, help="UTF-8 megabytes of training text")
     ap.add_argument("--min-chars", type=int, default=0, help="drop shorter documents (stubs)")
     ap.add_argument("--max-chars", type=int, default=0, help="drop longer documents (0 = keep all)")
+    ap.add_argument("--chunk-chars", type=int, default=0,
+                    help="split training documents into pieces of at most this many characters, at line "
+                         "breaks (0 = off). Training windows start at document starts, so without it only "
+                         "the first ~1024 tokens of a long file are ever trained on. Test documents stay whole.")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--shuffle-buffer", type=int, default=10_000)
     args = ap.parse_args()
@@ -64,8 +69,11 @@ def main():
         if doc["group"] in test_groups:  # no file from a test repository in train
             stats["dropped_test_group"] += 1
             continue
-        ftrain.write(line)
-        n_train += 1
+        pieces = chunk_text(doc["text"], args.chunk_chars) if args.chunk_chars else [doc["text"]]
+        for k, piece in enumerate(pieces):
+            sub = doc if len(pieces) == 1 else doc | {"id": f"{doc['id']}#{k}", "text": piece}
+            ftrain.write(json.dumps(sub, ensure_ascii=False) + "\n")
+            n_train += 1
         train_bytes += n
         bar.update(n)
         if train_bytes >= budget:
