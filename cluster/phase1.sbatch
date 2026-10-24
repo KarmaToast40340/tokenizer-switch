@@ -18,6 +18,7 @@ BUDGET=${1:-50000000}
 NEW=${2:-code70_gpt4_32k}
 export LD_PRELOAD=/lib/x86_64-linux-gnu/libcuda.so.1
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True   # without it, micro 4 x 1024 already fails on 8 GB
 export PYTHONPATH=src
 source "${VENV:-$HOME/venv_lab2}/bin/activate"
 cd "$SLURM_SUBMIT_DIR"

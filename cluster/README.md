@@ -66,7 +66,7 @@ scp -r artifacts/tokenizers/code70_gpt4_32k USER@hpclogin01.cs.nycu.edu.tw:token
 ## Jobs
 
 ```bash
-sbatch -J bench cluster/job.sbatch python cluster/bench_throughput.py --micro 4 --vocab 80000
+sbatch -J bench cluster/job.sbatch python cluster/bench_throughput.py --micro 2 --vocab 80000
 sbatch cluster/phase1.sbatch 50000000          # A, B, C at 50M tokens, one after the other
 squeue -u $USER
 tail -f logs/phase1_*.out
@@ -74,3 +74,18 @@ tail -f logs/phase1_*.out
 
 Each member can run one job at a time on their own account, so the three of us can run three
 conditions in parallel with `cluster/job.sbatch python scripts/train.py ...`.
+
+## Measured throughput
+
+RTX 5050 8 GB, GPT-2 small, sequence 1024, bf16, no `torch.compile`, 24 Oct 2026:
+
+| Vocabulary | Micro-batch | Tokens/s | 50M tokens | 200M tokens | Peak memory |
+|---|---|---|---|---|---|
+| 50,257 (GPT-2, condition A) | 4 | 12,697 | 1.1 h | 4.4 h | 7.18 GB |
+| 80,000 (union, condition E) | 2 | 11,880 | 1.2 h | 4.7 h | 5.42 GB |
+| 32,000 (new tokenizer, B and C) | 2 | 15,002 | 0.9 h | 3.7 h | 3.84 GB |
+
+* Micro-batch 8 runs out of memory with any vocabulary, and so does micro 4 with 80k: the logits alone
+  take 786 MB per copy at 50k. `base.yaml` therefore uses micro 2 with 32 accumulation steps (same
+  65,536 tokens per step). `expandable_segments` is set in the sbatch scripts for the same reason.
+* `torch.compile` fails on the compute nodes: Triton needs `Python.h`, which is not installed.

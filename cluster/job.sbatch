@@ -16,6 +16,7 @@
 # Compute nodes run offline: cache GPT-2 on the login node first (see cluster/README.md).
 export LD_PRELOAD=/lib/x86_64-linux-gnu/libcuda.so.1   # requested by the NYCU guide
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True   # without it, micro 4 x 1024 already fails on 8 GB
 export PYTHONPATH=src
 source "${VENV:-$HOME/venv_lab2}/bin/activate"
 cd "$SLURM_SUBMIT_DIR"

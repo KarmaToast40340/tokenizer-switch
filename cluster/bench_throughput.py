@@ -1,11 +1,11 @@
 """Mesure le debit d'entrainement de GPT-2 small (124M) sur le GPU du cluster.
-Usage : python bench_throughput.py --micro 8 --seq 1024 --steps 60 [--compile]
+Usage : python bench_throughput.py --micro 4 --seq 1024 --steps 60   (--compile fails on the NYCU nodes: no Python.h for Triton)
 Affiche les tokens/s apres echauffement, et la memoire max utilisee."""
 import argparse, time, torch
 from transformers import GPT2Config, GPT2LMHeadModel
 
 p = argparse.ArgumentParser()
-p.add_argument("--micro", type=int, default=8)
+p.add_argument("--micro", type=int, default=4)
 p.add_argument("--seq", type=int, default=1024)
 p.add_argument("--steps", type=int, default=60)
 p.add_argument("--warmup", type=int, default=10)
