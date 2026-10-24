@@ -83,7 +83,25 @@ Hardware & GPU cluster & NVIDIA RTX 5050 (8\,GB) \\
 
 \subsection{Phase 1: reproducing the paper at small scale (code)}
 
-\paragraph{Step 1: tokenizer grid.} We train byte-level BPE tokenizers with the HuggingFace \texttt{tokenizers} library, as in the base paper, on about 1\,GB of Python files from The Stack~\citep{kocetkov2022stack} and English Wikipedia, varying one lever at a time (Table~\ref{tab:grid}). No Unicode normalization is applied, so all tokenizers are reversible. We evaluate on 1{,}000 held-out files per subset with NSL relative to the GPT-2 tokenizer and with bytes per token. This step runs on CPU only and outputs one code tokenizer.
+\paragraph{Data.} We use Python files from \texttt{codeparrot-clean}~\citep{codeparrot}, a deduplicated set of GitHub Python files, because access to The Stack~\citep{kocetkov2022stack} requires approval, and English and Chinese Wikipedia~\citep{wikimedia2023} (dump of 1 November 2023, Chinese converted to simplified characters). Table~\ref{tab:data} gives the data we have already downloaded. GPT-2 encodes only 2.16 bytes of Python and 1.41 bytes of Chinese per token, against 4.23 bytes of English, which leaves room for a better tokenizer in both target domains. Each corpus has 1{,}000 more held-out documents for evaluation.
+
+\begin{table}[h]
+\centering
+\caption{Downloaded training data, measured with the GPT-2 tokenizer.}
+\label{tab:data}
+\small
+\begin{tabular}{llrrrr}
+\toprule
+Corpus & Source & Documents & Text & Bytes/token & GPT-2 tokens \\
+\midrule
+Code & \texttt{codeparrot-clean} & 197{,}131 & 2.00\,GB & 2.16 & $\approx$928M \\
+English & Wikipedia (en) & 375{,}800 & 1.00\,GB & 4.23 & $\approx$237M \\
+Chinese & Wikipedia (zh) & 431{,}750 & 1.00\,GB & 1.41 & $\approx$711M \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Step 1: tokenizer grid.} We train byte-level BPE tokenizers with the HuggingFace \texttt{tokenizers} library, as in the base paper, on about 1\,GB of Python code and English Wikipedia, varying one lever at a time (Table~\ref{tab:grid}). No Unicode normalization is applied, so all tokenizers are reversible. We evaluate on 1{,}000 held-out files per subset with NSL relative to the GPT-2 tokenizer and with bytes per token. This step runs on CPU only and outputs one code tokenizer.
 
 \begin{table}[h]
 \centering
@@ -160,7 +178,22 @@ With a fixed vocabulary, a text can usually be segmented with fewer tokens than 
   \item \textbf{MBPP pass@$k$}~\citep{austin2021mbpp} on code, reported only if a 124M model scores clearly above zero.
 \end{itemize}
 
-\paragraph{Compute.} Training a 124M model costs about $6 \times 1.24\times10^{8}$ FLOPs per token. We estimate the throughput of one RTX 5050 at roughly 20k tokens per second in bf16, so a 200M-token run takes about 3 hours and a 50M-token run under 1 hour; we will measure this precisely in week~1. GPT-2 small with AdamW needs about 2--3\,GB of GPU memory for weights, gradients and optimizer states, which fits in 8\,GB with small micro-batches and gradient accumulation. The full plan (Phase~1: 6 runs; Phase~2: E on code plus A, B and E on Chinese, 8 runs) totals about 25 GPU-hours, which we will split across several cards.
+\paragraph{Compute.} Training a 124M model costs about $6 \times 1.24\times10^{8}$ FLOPs per token. We measured the training throughput of GPT-2 small on the RTX 5050 of our cluster (bf16, sequences of 1{,}024 tokens, Table~\ref{tab:speed}). The output layer dominates memory: with the 80k-token union vocabulary of Phase~2, a micro-batch of 4 sequences no longer fits in 8\,GB. We therefore train with micro-batches of 2 and 32 accumulation steps (65{,}536 tokens per optimizer step). A 50M-token run takes about 1 hour and a 200M-token run 4 to 5 hours. The full plan (Phase~1: 6 runs; Phase~2: E on code plus A, B and E on Chinese, 8 runs) totals about 37 GPU-hours, which we will split across our three cluster accounts.
+
+\begin{table}[h]
+\centering
+\caption{Measured training throughput of GPT-2 small on one RTX 5050 (8\,GB).}
+\label{tab:speed}
+\begin{tabular}{lrrrr}
+\toprule
+Vocabulary (conditions) & Micro-batch & Tokens/s & 200M tokens & Peak memory \\
+\midrule
+32k, new tokenizer (B, C) & 2 & 15{,}002 & 3.7\,h & 3.8\,GB \\
+50k, GPT-2 (A) & 4 & 12{,}697 & 4.4\,h & 7.2\,GB \\
+80k, union (E) & 2 & 11{,}880 & 4.7\,h & 5.4\,GB \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \paragraph{Risks and fallbacks.} If compute runs short, we drop the 200M-token run of condition C and Phase~3. If the model relies too long on old tokens, we use a shorter ramp. If GPT-2 small proves too weak, Pythia-160M~\citep{biderman2023pythia} is an alternative base model.
 
@@ -191,7 +224,7 @@ If the progressive transition does not help, this remains an informative negativ
 \label{fig:sketch}
 \end{figure}
 
-\paragraph{Planned timeline.} Weeks 1--2: Phase~1 (code tokenizer grid, runs A--C, throughput benchmark). Weeks 3--5: Phase~2 (union vocabulary and mixed data loader, Chinese tokenizer grid, runs on code and Chinese). Week 6: Phase~3 if time allows, analysis and final report.
+\paragraph{Planned timeline.} Weeks 1--2: Phase~1 (code tokenizer grid, runs A--C). Weeks 3--5: Phase~2 (union vocabulary and mixed data loader, Chinese tokenizer grid, runs on code and Chinese). Week 6: Phase~3 if time allows, analysis and final report.
 
 \bibliographystyle{plainnat}
 \bibliography{references}
