@@ -11,8 +11,8 @@ out: runs
 
 token_budget: 50_000_000           # tokens of the tokenizer being trained on (as in the paper)
 block_size: 1024
-micro_batch: 4                     # fits 8 GB with an ~80k-row union vocabulary in bf16
-grad_accum: 16                     # 4 * 16 * 1024 = 65,536 tokens per step (~763 steps for 50M)
+micro_batch: 2                     # RTX 5050 8 GB: micro 4 runs out of memory with the ~80k union vocabulary (measured)
+grad_accum: 32                     # 2 * 32 * 1024 = 65,536 tokens per step (~763 steps for 50M)
 lr: 3.0e-4
 warmup_frac: 0.02
 min_lr_ratio: 0.1

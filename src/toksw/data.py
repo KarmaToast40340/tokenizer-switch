@@ -1,8 +1,9 @@
 """Token storage (uint32 memmaps) and the mixed-tokenization batch sampler.
 
 On disk, one encoded corpus is two files:
-  ``<name>.bin``  uint32 token ids (raw ids of that tokenizer), each document
-                  followed by the end-of-text token
+  ``<name>.bin``  token ids (raw ids of that tokenizer), each document
+                  followed by the end-of-text token; uint16 when the vocabulary
+                  fits (GPT-2 and our tokenizers do), else uint32
   ``<name>.idx``  int64 offsets: start of document i, plus a final end offset
 
 The same ``train.jsonl`` is encoded once with every tokenizer we need, so
@@ -30,13 +31,35 @@ def iter_jsonl(path: str | Path, limit: int | None = None) -> Iterator[dict]:
             yield json.loads(line)
 
 
+def chunk_text(text: str, max_chars: int) -> list[str]:
+    """Cut ``text`` into consecutive pieces of at most ``max_chars`` characters,
+    at line breaks when possible. Joining the pieces gives back ``text``."""
+    pieces, start = [], 0
+    while len(text) - start > max_chars:
+        cut = text.rfind("\n", start, start + max_chars)
+        cut = start + max_chars if cut < start else cut + 1
+        pieces.append(text[start:cut])
+        start = cut
+    pieces.append(text[start:])
+    return pieces
+
+
 def encode_corpus(
-    tok: Tokenizer, jsonl: str | Path, out_prefix: str | Path, batch_docs: int = 2048
+    tok: Tokenizer,
+    jsonl: str | Path,
+    out_prefix: str | Path,
+    batch_docs: int = 2048,
+    max_bytes: int | None = None,
 ) -> tuple[int, int]:
-    """Encode every document of ``jsonl``; returns (n_docs, n_tokens)."""
+    """Encode the documents of ``jsonl``; returns (n_docs, n_tokens).
+
+    ``max_bytes`` stops after the document that reaches this many UTF-8 bytes of
+    text. The cut depends only on the text, so every tokenizer encodes the same
+    documents (the sampler requires it)."""
     out_prefix = Path(out_prefix)
     out_prefix.parent.mkdir(parents=True, exist_ok=True)
     eot = eot_id(tok)
+    dtype = np.uint16 if tok.get_vocab_size(with_added_tokens=True) <= 2**16 else np.uint32
     offsets = [0]
     n_tokens = 0
     with open(out_prefix.with_suffix(".bin"), "wb") as fbin:
@@ -45,16 +68,20 @@ def encode_corpus(
         def flush():
             nonlocal n_tokens
             for enc in tok.encode_batch(batch, add_special_tokens=False):
-                ids = np.asarray(enc.ids + [eot], dtype=np.uint32)
+                ids = np.asarray(enc.ids + [eot], dtype=dtype)
                 ids.tofile(fbin)
                 n_tokens += len(ids)
                 offsets.append(n_tokens)
             batch.clear()
 
+        n_bytes = 0
         for doc in iter_jsonl(jsonl):
             batch.append(doc["text"])
+            n_bytes += len(doc["text"].encode("utf-8"))
             if len(batch) == batch_docs:
                 flush()
+            if max_bytes is not None and n_bytes >= max_bytes:
+                break
         if batch:
             flush()
     np.asarray(offsets, dtype=np.int64).tofile(out_prefix.with_suffix(".idx"))
@@ -64,8 +91,12 @@ def encode_corpus(
 class TokenFile:
     def __init__(self, prefix: str | Path):
         prefix = Path(prefix)
-        self.tokens = np.memmap(prefix.with_suffix(".bin"), dtype=np.uint32, mode="r")
         self.offsets = np.fromfile(prefix.with_suffix(".idx"), dtype=np.int64)
+        # the token width (uint16 or uint32) follows from the file size
+        n_tokens = int(self.offsets[-1])
+        width = prefix.with_suffix(".bin").stat().st_size // max(1, n_tokens)
+        dtype = {2: np.uint16, 4: np.uint32}[width]
+        self.tokens = np.memmap(prefix.with_suffix(".bin"), dtype=dtype, mode="r")
         self.n_docs = len(self.offsets) - 1
 
     def window(self, doc: int, length: int) -> np.ndarray:

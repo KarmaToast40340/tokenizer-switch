@@ -56,3 +56,24 @@ def test_bits_per_byte_runs(old_tok, texts):
 
 def test_nsl_identity(old_tok, texts):
     assert nsl(old_tok, old_tok, texts[:10]) == 1.0
+
+
+def test_chunk_text_roundtrip():
+    from toksw.data import chunk_text
+    text = "\n".join(f"line {i} " + "x" * (i % 17) for i in range(300))
+    pieces = chunk_text(text, 120)
+    assert "".join(pieces) == text
+    assert all(len(p) <= 120 for p in pieces)
+    assert all(p.endswith("\n") for p in pieces[:-1])  # cut at line breaks
+    assert chunk_text("a" * 50, 20) == ["a" * 20, "a" * 20, "a" * 10]  # no line break: hard cut
+    assert chunk_text("short", 100) == ["short"]
+
+
+def test_encode_uint16_and_max_bytes(tmp_path, corpus, old_tok, new_tok):
+    n_old, _ = encode_corpus(old_tok, corpus, tmp_path / "o", max_bytes=2_000)
+    n_new, _ = encode_corpus(new_tok, corpus, tmp_path / "n", max_bytes=2_000)
+    assert n_old == n_new < len(list(iter_jsonl(corpus)))  # same documents for every tokenizer
+    f = TokenFile(tmp_path / "o")
+    assert f.tokens.dtype == np.uint16 and f.n_docs == n_old
+    docs = [d["text"] for d in iter_jsonl(corpus)]
+    assert old_tok.decode(f.tokens[f.offsets[2] : f.offsets[3] - 1].tolist()) == docs[2]
