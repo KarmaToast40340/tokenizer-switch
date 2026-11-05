@@ -43,12 +43,23 @@ fi
 python -c "import torch, transformers; print('   torch', torch.__version__, '| transformers', transformers.__version__)"
 
 echo "== GPT-2 in the Hugging Face cache (compute nodes are offline)"
-python - <<'EOF'
+# The login node caps virtual memory at 8 GB per process: importing torch and then running the
+# Rust hf_xet downloader went past it ("memory allocation ... failed"). So download with
+# huggingface_hub alone (no torch import), over plain HTTP, and only the files we load.
+HF_HUB_DISABLE_XET=1 python - <<'EOF'
+from huggingface_hub import snapshot_download
+files = ["config.json", "generation_config.json", "model.safetensors",
+         "tokenizer.json", "tokenizer_config.json", "vocab.json", "merges.txt"]
+path = snapshot_download("gpt2", allow_patterns=files)
+print("   cached in", path)
+EOF
+# check that the cache is complete without network (as on the compute nodes), still without torch
+HF_HUB_OFFLINE=1 python - <<'EOF'
+from huggingface_hub import hf_hub_download
 from tokenizers import Tokenizer
-from transformers import GPT2LMHeadModel
-GPT2LMHeadModel.from_pretrained("gpt2")
-Tokenizer.from_pretrained("gpt2")
-print("   ok")
+Tokenizer.from_file(hf_hub_download("gpt2", "tokenizer.json"))
+hf_hub_download("gpt2", "model.safetensors")
+print("   offline load ok")
 EOF
 
 echo "== folders"
