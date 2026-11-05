@@ -11,3 +11,4 @@ wandb/
 *.bin
 *.idx
 *.npy
+collected/
