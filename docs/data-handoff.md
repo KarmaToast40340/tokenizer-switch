@@ -125,3 +125,5 @@ model-quality or speed results exist yet. Compression figures in
 `results/milestone/` and `results/chinese/` come from measured held-out outputs.
 
 For exact regeneration of yesterday’s English pilot ordering, use the recorded dataset revision/seed and `prepare_milestone.py --reader hf`; new Wikipedia data defaults to the sequential reader. Existing English files are reused. The legacy HF Parquet path may hang at shutdown after writing complete files; the new sequential path passed both Chinese smoke and 400 MB processing.
+
+Storage clarification: 2 GiB assumes only one retained project checkpoint. Retaining all three Chinese 50M A/B/E checkpoints requires about 3 GiB of additional persistent project space with an approved shared environment; see `docs/cluster-preflight.md`.

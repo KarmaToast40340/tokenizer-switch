@@ -20,18 +20,17 @@ Sources: [NVIDIA capabilities](https://developer.nvidia.com/cuda/gpus),
 
 Home is near its 10 GB quota. Private diagnostics remain outside Git. Chinese
 transfer files total 743.1 MiB. Add about 0.5 GiB GPT-2 weights, about 0.5 GiB
-per retained checkpoint, plus logs/headroom. Request at least **2 GiB additional
-persistent project space** with an approved shared CUDA 12.8 environment.
+per retained checkpoint, plus logs/headroom. About **2 GiB additional persistent project space** covers assets/cache and one checkpoint; retaining all three A/B/E checkpoints needs **3 GiB** with an approved shared CUDA 12.8 environment.
 A private environment would need several more GiB; plan approximately
-**8 GiB extra total**, an estimate rather than a measured completed install.
+**8–10 GiB extra total**, an estimate rather than a measured completed install.
 
 Exact question for Djam or the administrator:
 
-> My course home is near its 10 GB limit. Where may I store about 2 GiB of
+> My course home is near its 10 GB limit. Where may I store about 3 GiB of
 > tokenizer-project data, GPT-2 cache and checkpoints on persistent storage
 > accessible to compute nodes, and which existing environment supports RTX
 > 5050 (sm_120), PyTorch with CUDA 12.8, transformers and tokenizers? If there
-> is no shared environment, can I obtain roughly 8 GiB additional quota for an
+> is no shared environment, can I obtain roughly 8–10 GiB additional quota for an
 > isolated environment plus assets without deleting other coursework?
 
 Before Chinese training: approved storage/runtime; copy and checksum assets;
