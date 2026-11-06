@@ -25,7 +25,7 @@ GPU allocations do not change implementation ownership. Extra innovations are un
 - [x] Selected code tokenizer test: Python NSL 0.5916, 2.973 bytes/token; English NSL 1.0813, 3.911 bytes/token. Round trips 100% on both.
 - [x] Pilot encodings: same 19,067 chunks; GPT-2 22,915,659 tokens, selected 12,489,572. These are **not 50M/200M assets**.
 - [x] Chinese sequential Parquet + OpenCC + compressed-storage smoke pipeline passed and exited cleanly. No repeat of the earlier Arrow scanner shutdown hang in this path.
-- [x] 30 offline integration tests plus two source-reader tests passed, including analytic bpb, split leakage, gzip logical checksums, checkpoint/speed CLIs, and tiny A/B/C/E training/pruning integration.
+- [x] 32 offline tests passed, including analytic bpb, split leakage, gzip logical checksums, checkpoint/speed CLIs, and tiny A/B/C/E training/pruning integration.
 - [x] Separate 250 MB code model-training assets: verified; see capacity table.
 - [x] Chinese 400 MB model-training assets + five-point tokenizer grid: verified; see capacity table.
 - [ ] Real model bpb, generation speed and training plots: require actual checkpoints/logs; none invented.
@@ -82,3 +82,5 @@ Before a model job: verify a released code revision, asset checksums, selected n
 Chinese tokenizer selected: `wiki_zh70_gpt4_50k`. Test NSL Chinese 0.3035 / English 1.0761; both lossless. Chinese assets are complete and verified for 50M A/B/E; Chinese GPT-2 alone covers 200M A. Other 200M assets remain incomplete.
 
 The school environment attempt hit quota and was removed. A compatible project environment and storage remain blocked. No project GPU jobs have been launched. The latest course-job status and diagnostic details are kept privately outside Git; see `docs/data-handoff.md` for conditional project commands.
+
+Read-only cluster follow-up: shared imports pass, but CUDA 12.4 lacks sm_120 for the scheduler’s RTX 5050 nodes. Latest queue was empty. No further installs or deletions; see `docs/cluster-preflight.md` for storage requirements and the administrator question. Private course diagnostics remain outside Git.
