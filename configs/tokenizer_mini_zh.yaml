@@ -1,0 +1,11 @@
+# Equal text budgets, one lever at a time around 70% Chinese / GPT-4 / 32k.
+domain: wiki_zh
+other: wiki_en
+total_mb: 20
+identity_total_mb: 20
+out: artifacts/chinese/tokenizers
+center: {domain_frac: 0.7, pretok: gpt4, vocab_size: 32000}
+levers:
+  domain_frac: [0.3, 0.7, 1.0]
+  pretok: [gpt4, identity]
+  vocab_size: [32000, 50000]

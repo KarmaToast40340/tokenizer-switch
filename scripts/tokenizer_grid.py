@@ -35,6 +35,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("config")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--raw", default="data/raw")
     args = ap.parse_args()
     cfg = yaml.safe_load(Path(args.config).read_text())
     out_root = Path(cfg.get("out", "artifacts/tokenizers"))
@@ -52,7 +53,7 @@ def main():
             total_mb = cfg.get("identity_total_mb", total_mb)
         cmd = [sys.executable, str(Path(__file__).with_name("train_tokenizer.py")), "--mix", *mix,
                "--pretok", pt["pretok"], "--vocab-size", str(pt["vocab_size"]),
-               "--total-mb", str(total_mb), "--out", str(out)]
+               "--total-mb", str(total_mb), "--raw", args.raw, "--out", str(out)]
         print(" ".join(cmd))
         if not args.dry_run:
             subprocess.run(cmd, check=True)

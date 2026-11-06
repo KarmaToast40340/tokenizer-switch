@@ -1,0 +1,11 @@
+# CPU milestone. Equal 20 MB text budgets; one lever at a time; no Identity
+# because its reduced budget would confound this small comparison.
+domain: code
+other: wiki_en
+total_mb: 20
+out: artifacts/milestone/tokenizers
+center: {domain_frac: 0.7, pretok: gpt4, vocab_size: 32000}
+levers:
+  domain_frac: [0.7, 1.0]
+  pretok: [gpt2, gpt4, punct]
+  vocab_size: [16000, 32000]

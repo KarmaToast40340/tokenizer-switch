@@ -11,6 +11,7 @@ from pathlib import Path
 from toksw.data import iter_jsonl
 from toksw.pretokenizers import PRETOKENIZERS
 from toksw.tok import mixed_text_iterator, train_bpe
+from toksw.splits import file_sha256
 
 
 def parse_mix(items: list[str]) -> dict[str, float]:
@@ -30,16 +31,27 @@ def main():
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
+    if Path(args.out).exists():
+        raise FileExistsError(f"preserving existing tokenizer output: {args.out}")
+
     mix = parse_mix(args.mix)
     sources = {k: (d["text"] for d in iter_jsonl(Path(args.raw) / k / "train.jsonl")) for k in mix}
-    texts = mixed_text_iterator(sources, mix, int(args.total_mb * 1e6))
+    used = {k: 0 for k in mix}
+    def measured(k, texts):
+        for text in texts:
+            used[k] += len(text.encode("utf-8"))
+            yield text
+    texts = mixed_text_iterator({k: measured(k, texts) for k, texts in sources.items()}, mix, int(args.total_mb * 1e6))
     t0 = time.time()
     tok = train_bpe(texts, args.vocab_size, args.pretok, args.min_frequency)
+    if any(used[k] < int(args.total_mb * 1e6 * mix[k]) for k in mix):
+        raise ValueError(f"insufficient training text for requested mixture: {used}")
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     tok.save(str(out / "tokenizer.json"))
     meta = vars(args) | {"mix": mix, "train_seconds": round(time.time() - t0, 1),
-                         "final_vocab_size": tok.get_vocab_size()}
+                         "final_vocab_size": tok.get_vocab_size(), "actual_source_bytes": used,
+                         "train_sha256": {k: file_sha256(Path(args.raw) / k / "train.jsonl") for k in mix}}
     (out / "meta.json").write_text(json.dumps(meta, indent=2))
     print(json.dumps(meta, indent=2))
 

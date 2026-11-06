@@ -29,7 +29,7 @@ def bytes_per_token(tok: Tokenizer, texts: Sequence[str]) -> float:
 def roundtrip_ok(tok: Tokenizer, texts: Sequence[str]) -> float:
     """Fraction of documents with decode(encode(x)) == x."""
     encs = tok.encode_batch(list(texts), add_special_tokens=False)
-    return float(np.mean([tok.decode(e.ids) == t for e, t in zip(encs, texts)]))
+    return float(np.mean([tok.decode(e.ids, skip_special_tokens=False) == t for e, t in zip(encs, texts)]))
 
 
 @torch.no_grad()
@@ -49,6 +49,11 @@ def bits_per_byte(
     targets are included in the loss (one per document, for every tokenizer).
     ``id_map`` maps raw tokenizer ids to model ids (``None`` = identity).
     """
+    if not texts or not sum(len(t.encode("utf-8")) for t in texts):
+        raise ValueError("bits per byte requires nonempty text")
+    if block_size <= 0 or batch_size <= 0:
+        raise ValueError("block_size and batch_size must be positive")
+    was_training = model.training
     model.eval()
     eot = eot_id(tok)
     stream = [eot]
@@ -80,7 +85,7 @@ def bits_per_byte(
     if s < n_pred:  # last, shorter window
         total_nll += nll_sum([ids_t[s:n_pred]], [ids_t[s + 1 :]])
     n_tok = n_pred
-    model.train()
+    model.train(was_training)
     return {
         "bpb": total_nll / math.log(2) / n_bytes,
         "nll_per_token": total_nll / n_tok,

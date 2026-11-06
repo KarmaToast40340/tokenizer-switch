@@ -65,7 +65,8 @@ def main():
 
     test_path = Path(cfg["raw_dir"]) / cfg["domain"] / "test.jsonl"
     test_texts = [d["text"] for d in iter_jsonl(test_path)]
-    eval_texts = test_texts[: cfg["eval_docs"]]
+    eval_path = Path(cfg["raw_dir"]) / cfg["domain"] / f"{cfg.get('eval_split', 'test')}.jsonl"
+    eval_texts = [d["text"] for d in iter_jsonl(eval_path, cfg["eval_docs"])]
 
     decay = [p for n, p in model.named_parameters() if p.dim() >= 2]
     no_decay = [p for n, p in model.named_parameters() if p.dim() < 2]
