@@ -84,3 +84,5 @@ Chinese tokenizer selected: `wiki_zh70_gpt4_50k`. Test NSL Chinese 0.3035 / Engl
 The school environment attempt hit quota and was removed. A compatible project environment and storage remain blocked. No project GPU jobs have been launched. The latest course-job status and diagnostic details are kept privately outside Git; see `docs/data-handoff.md` for conditional project commands.
 
 Read-only cluster follow-up: shared imports pass, but CUDA 12.4 lacks sm_120 for the scheduler’s RTX 5050 nodes. Latest queue was empty. No further installs or deletions; see `docs/cluster-preflight.md` for storage requirements and the administrator question. Private course diagnostics remain outside Git.
+
+- [x] Published the verified source/results checkpoint `0508678` to `origin/chloe/data-eval` after Chloé completed browser authentication. GitHub CLI is installed and configured as the HTTPS credential helper. Main was not changed; data, environments, weights and private cluster diagnostics remain excluded.
