@@ -1,0 +1,11 @@
+domain,tokenizer,train_mb,actual_bytes,vocab_size,train_seconds
+code,code70_gpt4_16k,20.0,20002102,16000,5.5
+code,code70_punct_32k,20.0,20002102,32000,6.1
+code,code100_gpt4_32k,20.0,20001965,32000,9.4
+code,code70_gpt2_32k,20.0,20002102,32000,5.6
+code,code70_gpt4_32k,20.0,20002102,32000,6.6
+wiki_zh,wiki_zh70_gpt4_32k,20.0,20001489,32000,13.2
+wiki_zh,wiki_zh70_identity_32k,20.0,20001489,32000,99.6
+wiki_zh,wiki_zh70_gpt4_50k,20.0,20001489,50000,15.9
+wiki_zh,wiki_zh30_gpt4_32k,20.0,20003160,32000,8.4
+wiki_zh,wiki_zh100_gpt4_32k,20.0,20001053,32000,19.0

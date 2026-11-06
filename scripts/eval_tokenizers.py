@@ -37,7 +37,7 @@ def main():
         print(row)
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     with open(args.out, "w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=list(rows[0]))
+        w = csv.DictWriter(f, fieldnames=list(rows[0]), lineterminator="\n")
         w.writeheader()
         w.writerows(rows)
 

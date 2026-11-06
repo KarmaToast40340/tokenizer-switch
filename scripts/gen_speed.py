@@ -65,7 +65,7 @@ def main():
     if args.out:
         Path(args.out).parent.mkdir(parents=True, exist_ok=True)
         with open(args.out, "w", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=list(results[0]))
+            writer = csv.DictWriter(f, fieldnames=list(results[0]), lineterminator="\n")
             writer.writeheader()
             writer.writerows(results)
 

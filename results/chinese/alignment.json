@@ -1,0 +1,21 @@
+{
+  "raw_sha256": "90c3358e2aea8047a445607ec051db39e3f6ffe2f7be947ce69569ae2ff96f8f",
+  "encodings": [
+    {
+      "prefix": "data/chinese/tokens/wiki_zh/gpt2",
+      "n_docs": 198793,
+      "n_tokens": 283162335,
+      "dtype": "uint16",
+      "bin_sha256": "1207f3e001395e682fe41c6d6ddd19e03724d7fc635048590f8d115f60e9a9a5",
+      "idx_sha256": "4b5a11e9ec62293b79f4db6843a75724929efc8ba7ad5beba69e81d6b7911fcd"
+    },
+    {
+      "prefix": "data/chinese/tokens/wiki_zh/wiki_zh70_gpt4_50k",
+      "n_docs": 198793,
+      "n_tokens": 91679979,
+      "dtype": "uint16",
+      "bin_sha256": "967efd2ce361ced5ce44c3e395e382f4a93d36c8d2eb1b876164bce702715a76",
+      "idx_sha256": "6c75a6061862fb96e2f71bb250706879fda503bd552f6a0d7c8e4a74809bdfd6"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+tokenizer,vocab_size,nsl_wiki_zh,bytes_per_token_wiki_zh,roundtrip_wiki_zh,nsl_wiki_en,bytes_per_token_wiki_en,roundtrip_wiki_en
+gpt2,50257,1.0,1.414,1.0,1.0,4.379,1.0
+wiki_zh100_gpt4_32k,32000,0.3082,4.589,1.0,1.7657,2.48,1.0
+wiki_zh30_gpt4_32k,32000,0.3472,4.074,1.0,1.0708,4.089,1.0
+wiki_zh70_gpt4_32k,32000,0.3213,4.402,1.0,1.1508,3.805,1.0
+wiki_zh70_gpt4_50k,50000,0.3036,4.658,1.0,1.0967,3.993,1.0
+wiki_zh70_identity_32k,32000,0.306,4.621,1.0,1.0023,4.369,1.0

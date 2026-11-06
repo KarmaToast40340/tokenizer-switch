@@ -1,0 +1,46 @@
+{
+  "source": "wiki_en",
+  "seed": 2026,
+  "split_method": "sha256(seed:repository_or_text_hash) modulo 100: 80/10/10",
+  "requested_train_bytes": 20000000,
+  "requested_eval_docs": 100,
+  "chunk_chars": 0,
+  "n_train": 7013,
+  "train_bytes": 20004203,
+  "dropped": {
+    "duplicate_document": 1,
+    "duplicate_chunk": 0,
+    "missing_group": 0
+  },
+  "complete": true,
+  "provenance": {
+    "hf_repo": "wikimedia/wikipedia",
+    "config": "20231101.en",
+    "revision": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa",
+    "shuffle_buffer": 1000,
+    "min_chars": 200
+  },
+  "audit": {
+    "train": {
+      "n_docs": 7013,
+      "utf8_bytes": 20004203,
+      "median_doc_bytes": 1387,
+      "max_doc_bytes": 355519,
+      "sha256": "ff0fd341631400917cc40a30c1be641c4497cbe808365b966132e842329ca503"
+    },
+    "validation": {
+      "n_docs": 100,
+      "utf8_bytes": 374628,
+      "median_doc_bytes": 1867,
+      "max_doc_bytes": 43631,
+      "sha256": "acd343ae7893c9087814ae0c61dddec3ff7cb387186042e1c8adea6289002bb2"
+    },
+    "test": {
+      "n_docs": 100,
+      "utf8_bytes": 278048,
+      "median_doc_bytes": 1878,
+      "max_doc_bytes": 28949,
+      "sha256": "c9825566258139a663a7c038f5032256c647bd3a8e1f93c1fc92fb8e3cfe139b"
+    }
+  }
+}

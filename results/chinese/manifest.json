@@ -1,0 +1,150 @@
+{
+  "status": "complete",
+  "selected": "wiki_zh70_gpt4_50k",
+  "token_capacity": {
+    "gpt2": 283162335,
+    "wiki_zh70_gpt4_50k": 91679979
+  },
+  "sufficient_without_corpus_reuse": {
+    "50000000": true,
+    "200000000": false
+  },
+  "tokenizers": {
+    "gpt2": {
+      "sha256": "8414cab924d8b9b33013f0d221c5862f365ee9be39c5c2bfae8a5a9e970478a6",
+      "metadata": {
+        "hf_repo": "gpt2",
+        "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e"
+      }
+    },
+    "wiki_zh100_gpt4_32k": {
+      "sha256": "6cfd6ac54c3f97d093f8f2bd33762b1155afd8cc006556d7d632db3db7ee00d0",
+      "metadata": {
+        "mix": {
+          "wiki_zh": 1.0
+        },
+        "pretok": "gpt4",
+        "vocab_size": 32000,
+        "total_mb": 20.0,
+        "raw": "data/chinese/raw",
+        "min_frequency": 2,
+        "out": "artifacts/chinese/tokenizers/wiki_zh100_gpt4_32k",
+        "train_seconds": 19.0,
+        "final_vocab_size": 32000,
+        "actual_source_bytes": {
+          "wiki_zh": 20001053
+        },
+        "train_sha256": {
+          "wiki_zh": "90c3358e2aea8047a445607ec051db39e3f6ffe2f7be947ce69569ae2ff96f8f"
+        }
+      }
+    },
+    "wiki_zh30_gpt4_32k": {
+      "sha256": "101470593fa547c1e4679f21047277acff179657f057d46adc58977d3ee66ef7",
+      "metadata": {
+        "mix": {
+          "wiki_zh": 0.3,
+          "wiki_en": 0.7
+        },
+        "pretok": "gpt4",
+        "vocab_size": 32000,
+        "total_mb": 20.0,
+        "raw": "data/chinese/raw",
+        "min_frequency": 2,
+        "out": "artifacts/chinese/tokenizers/wiki_zh30_gpt4_32k",
+        "train_seconds": 8.4,
+        "final_vocab_size": 32000,
+        "actual_source_bytes": {
+          "wiki_zh": 6002390,
+          "wiki_en": 14000770
+        },
+        "train_sha256": {
+          "wiki_zh": "90c3358e2aea8047a445607ec051db39e3f6ffe2f7be947ce69569ae2ff96f8f",
+          "wiki_en": "ff0fd341631400917cc40a30c1be641c4497cbe808365b966132e842329ca503"
+        }
+      }
+    },
+    "wiki_zh70_gpt4_32k": {
+      "sha256": "b21ab206f755e41c5cc84b903849a4dadbef3398c6f72b0086bb51812e53c4d9",
+      "metadata": {
+        "mix": {
+          "wiki_zh": 0.7,
+          "wiki_en": 0.3
+        },
+        "pretok": "gpt4",
+        "vocab_size": 32000,
+        "total_mb": 20.0,
+        "raw": "data/chinese/raw",
+        "min_frequency": 2,
+        "out": "artifacts/chinese/tokenizers/wiki_zh70_gpt4_32k",
+        "train_seconds": 13.2,
+        "final_vocab_size": 32000,
+        "actual_source_bytes": {
+          "wiki_zh": 14001214,
+          "wiki_en": 6000275
+        },
+        "train_sha256": {
+          "wiki_zh": "90c3358e2aea8047a445607ec051db39e3f6ffe2f7be947ce69569ae2ff96f8f",
+          "wiki_en": "ff0fd341631400917cc40a30c1be641c4497cbe808365b966132e842329ca503"
+        }
+      }
+    },
+    "wiki_zh70_gpt4_50k": {
+      "sha256": "6f23989f35f35cac9c883f15b7996ccd9a98b866f0d3be3144d5c510e2a92763",
+      "metadata": {
+        "mix": {
+          "wiki_zh": 0.7,
+          "wiki_en": 0.3
+        },
+        "pretok": "gpt4",
+        "vocab_size": 50000,
+        "total_mb": 20.0,
+        "raw": "data/chinese/raw",
+        "min_frequency": 2,
+        "out": "artifacts/chinese/tokenizers/wiki_zh70_gpt4_50k",
+        "train_seconds": 15.9,
+        "final_vocab_size": 50000,
+        "actual_source_bytes": {
+          "wiki_zh": 14001214,
+          "wiki_en": 6000275
+        },
+        "train_sha256": {
+          "wiki_zh": "90c3358e2aea8047a445607ec051db39e3f6ffe2f7be947ce69569ae2ff96f8f",
+          "wiki_en": "ff0fd341631400917cc40a30c1be641c4497cbe808365b966132e842329ca503"
+        }
+      }
+    },
+    "wiki_zh70_identity_32k": {
+      "sha256": "b0edb93b70469ab9c868485fc92e8ded6eaf0ff83a27b84636d5bd94fbf788c0",
+      "metadata": {
+        "mix": {
+          "wiki_zh": 0.7,
+          "wiki_en": 0.3
+        },
+        "pretok": "identity",
+        "vocab_size": 32000,
+        "total_mb": 20.0,
+        "raw": "data/chinese/raw",
+        "min_frequency": 2,
+        "out": "artifacts/chinese/tokenizers/wiki_zh70_identity_32k",
+        "train_seconds": 99.6,
+        "final_vocab_size": 32000,
+        "actual_source_bytes": {
+          "wiki_zh": 14001214,
+          "wiki_en": 6000275
+        },
+        "train_sha256": {
+          "wiki_zh": "90c3358e2aea8047a445607ec051db39e3f6ffe2f7be947ce69569ae2ff96f8f",
+          "wiki_en": "ff0fd341631400917cc40a30c1be641c4497cbe808365b966132e842329ca503"
+        }
+      }
+    }
+  },
+  "packages": {
+    "opencc": "1.1.9",
+    "datasets": "3.6.0",
+    "pyarrow": "18.1.0",
+    "tokenizers": "0.21.4"
+  },
+  "training_launched": false
+}

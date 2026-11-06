@@ -1,0 +1,21 @@
+{
+  "raw_sha256": "6d85f66b2973caf260cec6207fb9995bd755f654f855b2cbcc1f69cf8e45eb05",
+  "encodings": [
+    {
+      "prefix": "data/milestone/tokens/code/gpt2",
+      "n_docs": 19067,
+      "n_tokens": 22915659,
+      "dtype": "uint16",
+      "bin_sha256": "da9405dd642cd6ddcfa5599ac270654b9978c0371bef6948627e5bb0373375fe",
+      "idx_sha256": "6593f27c5c12b008d297b96fd332234c67611964961fa808f831260899a87420"
+    },
+    {
+      "prefix": "data/milestone/tokens/code/code70_gpt4_32k",
+      "n_docs": 19067,
+      "n_tokens": 12489572,
+      "dtype": "uint16",
+      "bin_sha256": "b5230565f5e369682fd5907db12f7bb3932c394f2bd146a5ba7ea4f5b4f2a772",
+      "idx_sha256": "20ddb04ff278eae1ec1e9b3e7630842e611999a265e9bd32500657a755175ee9"
+    }
+  ]
+}

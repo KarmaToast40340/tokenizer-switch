@@ -23,3 +23,4 @@ results/chinese-smoke/
 results/**/execution*.log
 results/**/workflow.log
 results/**/preparation.log
+results/cluster-readiness.json

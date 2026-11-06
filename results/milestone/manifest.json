@@ -1,0 +1,144 @@
+{
+  "python": "3.11.9 | packaged by conda-forge | (main, Apr 19 2024, 18:34:54) [Clang 16.0.6 ]",
+  "selected": "code70_gpt4_32k",
+  "packages": {
+    "torch": "2.6.0",
+    "transformers": "4.49.0",
+    "tokenizers": "0.21.4",
+    "datasets": "3.6.0",
+    "numpy": "2.4.6",
+    "matplotlib": "3.11.2",
+    "huggingface-hub": "0.36.2"
+  },
+  "tokenizers": {
+    "gpt2": {
+      "sha256": "8414cab924d8b9b33013f0d221c5862f365ee9be39c5c2bfae8a5a9e970478a6",
+      "metadata": {
+        "hf_repo": "gpt2",
+        "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e"
+      }
+    },
+    "code100_gpt4_32k": {
+      "sha256": "94cef8554661d948a80c7bd69079482d3691b242bdce5c0f0b6929f0552414e9",
+      "metadata": {
+        "mix": {
+          "code": 1.0
+        },
+        "pretok": "gpt4",
+        "vocab_size": 32000,
+        "total_mb": 20.0,
+        "raw": "data/milestone/raw",
+        "min_frequency": 2,
+        "out": "artifacts/milestone/tokenizers/code100_gpt4_32k",
+        "train_seconds": 9.4,
+        "final_vocab_size": 32000,
+        "actual_source_bytes": {
+          "code": 20001965
+        },
+        "train_sha256": {
+          "code": "6d85f66b2973caf260cec6207fb9995bd755f654f855b2cbcc1f69cf8e45eb05"
+        }
+      }
+    },
+    "code70_gpt2_32k": {
+      "sha256": "7c217064c0550068aec80d13867f25864ffd8db600935c0f27f2b24aaa5d99bd",
+      "metadata": {
+        "mix": {
+          "code": 0.7,
+          "wiki_en": 0.3
+        },
+        "pretok": "gpt2",
+        "vocab_size": 32000,
+        "total_mb": 20.0,
+        "raw": "data/milestone/raw",
+        "min_frequency": 2,
+        "out": "artifacts/milestone/tokenizers/code70_gpt2_32k",
+        "train_seconds": 5.6,
+        "final_vocab_size": 32000,
+        "actual_source_bytes": {
+          "code": 14001827,
+          "wiki_en": 6000275
+        },
+        "train_sha256": {
+          "code": "6d85f66b2973caf260cec6207fb9995bd755f654f855b2cbcc1f69cf8e45eb05",
+          "wiki_en": "ff0fd341631400917cc40a30c1be641c4497cbe808365b966132e842329ca503"
+        }
+      }
+    },
+    "code70_gpt4_16k": {
+      "sha256": "7ca1a675806ce1a01f489bba077618889e9b20077542422551bcba82b0bace35",
+      "metadata": {
+        "mix": {
+          "code": 0.7,
+          "wiki_en": 0.3
+        },
+        "pretok": "gpt4",
+        "vocab_size": 16000,
+        "total_mb": 20.0,
+        "raw": "data/milestone/raw",
+        "min_frequency": 2,
+        "out": "artifacts/milestone/tokenizers/code70_gpt4_16k",
+        "train_seconds": 5.5,
+        "final_vocab_size": 16000,
+        "actual_source_bytes": {
+          "code": 14001827,
+          "wiki_en": 6000275
+        },
+        "train_sha256": {
+          "code": "6d85f66b2973caf260cec6207fb9995bd755f654f855b2cbcc1f69cf8e45eb05",
+          "wiki_en": "ff0fd341631400917cc40a30c1be641c4497cbe808365b966132e842329ca503"
+        }
+      }
+    },
+    "code70_gpt4_32k": {
+      "sha256": "3dd5a347248b58c812497dbb7f87dfbeb19a41bd09ffcbfc2601fd29c66e9e9c",
+      "metadata": {
+        "mix": {
+          "code": 0.7,
+          "wiki_en": 0.3
+        },
+        "pretok": "gpt4",
+        "vocab_size": 32000,
+        "total_mb": 20.0,
+        "raw": "data/milestone/raw",
+        "min_frequency": 2,
+        "out": "artifacts/milestone/tokenizers/code70_gpt4_32k",
+        "train_seconds": 6.6,
+        "final_vocab_size": 32000,
+        "actual_source_bytes": {
+          "code": 14001827,
+          "wiki_en": 6000275
+        },
+        "train_sha256": {
+          "code": "6d85f66b2973caf260cec6207fb9995bd755f654f855b2cbcc1f69cf8e45eb05",
+          "wiki_en": "ff0fd341631400917cc40a30c1be641c4497cbe808365b966132e842329ca503"
+        }
+      }
+    },
+    "code70_punct_32k": {
+      "sha256": "7c04686fc85da9b1bd6e687b12a128f2327f6b81801517f1165574fc21f72408",
+      "metadata": {
+        "mix": {
+          "code": 0.7,
+          "wiki_en": 0.3
+        },
+        "pretok": "punct",
+        "vocab_size": 32000,
+        "total_mb": 20.0,
+        "raw": "data/milestone/raw",
+        "min_frequency": 2,
+        "out": "artifacts/milestone/tokenizers/code70_punct_32k",
+        "train_seconds": 6.1,
+        "final_vocab_size": 32000,
+        "actual_source_bytes": {
+          "code": 14001827,
+          "wiki_en": 6000275
+        },
+        "train_sha256": {
+          "code": "6d85f66b2973caf260cec6207fb9995bd755f654f855b2cbcc1f69cf8e45eb05",
+          "wiki_en": "ff0fd341631400917cc40a30c1be641c4497cbe808365b966132e842329ca503"
+        }
+      }
+    }
+  }
+}

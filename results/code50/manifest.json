@@ -1,0 +1,16 @@
+{
+  "status": "complete",
+  "selected": "code70_gpt4_32k",
+  "token_capacity": {
+    "gpt2": 113886429,
+    "code70_gpt4_32k": 63154284
+  },
+  "tokenizer_status": "frozen from 20 MB pilot validation selection",
+  "sufficient_without_corpus_reuse": {
+    "50000000": true,
+    "200000000": false
+  },
+  "raw_sha256": "d2a478b473919975eefa34fa5b3b3880002c32bd33a07625f9b8b42ccfb39573",
+  "tokenizer_sha256": "3dd5a347248b58c812497dbb7f87dfbeb19a41bd09ffcbfc2601fd29c66e9e9c",
+  "training_launched": false
+}
