@@ -24,3 +24,6 @@ results/**/execution*.log
 results/**/workflow.log
 results/**/preparation.log
 results/cluster-readiness.json
+
+# Cluster scheduler output (including persistent release-worktree links)
+/logs

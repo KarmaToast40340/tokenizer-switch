@@ -1,5 +1,8 @@
 # Separate RTX 5050 project runtime
 
+**Alternative only:** GTX 1060 has now passed with unchanged DL_HW (job 757153).
+Use `docs/gtx1060-handoff.md` for the viable path without a new installation.
+
 The user authorized a separate project environment on 9 November after Djam
 confirmed PyTorch needs updating. Preserve `DL_HW` and all lab environments.
 The selected build is **PyTorch 2.7.1+cu128**, Python 3.12, with the existing
@@ -26,7 +29,8 @@ zero-usage gcs row; filesystem-wide `df` availability is not this account’s qu
 
 The environment alone exceeds available space. Even moving completed
 checkpoints to the laptop after every run would not make the standard runtime
-fit. No package installation or Slurm job has been performed. Ask for either
+fit. No package installation or RTX 5050 Slurm job has been performed. This option
+would require either
 **20 GiB total home quota** or an **approved persistent runtime directory with
 at least 10 GiB free**, accessible to compute nodes. With a separate runtime
 location, the current home capacity can still cover project checkpoints.

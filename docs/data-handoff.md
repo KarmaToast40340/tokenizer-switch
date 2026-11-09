@@ -1,5 +1,11 @@
 # Data and evaluation handoff — verified 9 November 2026
 
+**Current execution path: validated GTX 1060 with unchanged DL_HW**, micro-batch
+1 / accumulation 64, using the text-only launcher. See `docs/gtx1060-handoff.md`
+for actual job results, checkpoint sizes and sequential-run status. The separate
+RTX 5050 installation remains blocked; its conditional commands below are an
+alternative, not the current GPU plan.
+
 Use the persistent checkout `$HOME/tokenizer-switch-local/repo` on branch
 `chloe/data-eval`. The old Desktop checkout remains a preservation copy.
 
@@ -80,7 +86,7 @@ account. Compare destination SHA-256 with `results/assets-manifest.json` after
 copying. Mathieu's Chinese A does not need the new encoding/tokenizer, but still
 needs held-out text and GPT-2 weights/tokenizer.
 
-## Conditional Chinese 50M commands (not submitted)
+## Conditional RTX 5050 Chinese 50M commands (not submitted)
 
 Current blocker: **additional persistent installation storage**. Djam confirmed
 the need to update PyTorch and the user authorized a separate project environment.
@@ -109,7 +115,8 @@ new installation. The private-runtime plan now needs about 15.48 GiB total.
 Evidence: `results/chinese-transfer-verification-2026-11-09.json` and
 `results/gpt2-cache-verification-2026-11-09.json`. The pinned weights’ SHA-256 is
 `248dfc3911869ec493c76e65bf2fcf7f615828b0254c12b473182f0f81d3a707`.
-No course jobs/files were changed; no tokenizer-project GPU jobs were submitted.
+No course jobs/files were changed. GTX diagnostic jobs 757113 and 757153 were
+submitted and completed; the latter validates the current fallback.
 
 Once environment, cache, data and GPU smoke verification pass, run **one** job,
 then wait for completion before submitting the next. Check `squeue -u "$USER"`

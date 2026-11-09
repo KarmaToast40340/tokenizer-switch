@@ -1,11 +1,15 @@
 # Cluster preflight — 9 November 2026
 
+**Latest: GTX 1060 fallback validated in job 757153.** No new environment or
+extra storage is needed for that path. Use `docs/gtx1060-handoff.md`; the isolated
+RTX 5050 installation budget below remains blocked.
+
 Chinese assets, source and pinned GPT-2 files are staged and verified. Djam and
 the user now authorize a separate CUDA 12.8 project environment. **Installation
 is blocked by the actual 10 GiB home quota**, not by missing permission. The
 resolved runtime alone expands to 6.28 GiB, versus 3.90 GiB currently free.
-No package installation or project GPU job has occurred; coursework, course jobs
-and shared environments remain unchanged. See `docs/project-environment.md`.
+No package installation has occurred. GTX diagnostic jobs 757113/757153 have
+now run; coursework, course jobs and shared environments remain unchanged. See `docs/project-environment.md`.
 
 ## Storage verified before and after staging
 
@@ -53,7 +57,7 @@ usable NVIDIA runtime. No alternate GPU experiment was substituted.
 For the capability/support rationale recorded on 6 November, see
 [NVIDIA capabilities](https://developer.nvidia.com/cuda/gpus) and
 [PyTorch 2.7 release](https://pytorch.org/blog/pytorch-2-7/).
-No GPU execution test was performed. The later user authorization permits a
+No RTX 5050 GPU execution test was performed. The later user authorization permits a
 fresh separate project environment, preserving all these environments. Official
 torch 2.7.1+cu128 is selected; additional persistent storage must be available
 before installing it.
@@ -128,4 +132,5 @@ project location was identified; do not use another person’s directories.
 
 Evidence: `results/project-environment-capacity-2026-11-09.json` and
 `cluster/project-runtime-cp312-cu128.lock`. No installation, Slurm test or training
-job was performed under this plan; submitted project job IDs remain empty.
+job was performed under this RTX installation plan. GTX assessment jobs are
+757113 and 757153; see the latest fallback handoff.

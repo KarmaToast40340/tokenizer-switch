@@ -11,7 +11,7 @@ import torch
 from transformers import GPT2LMHeadModel
 
 from toksw.data import iter_jsonl
-from toksw.tok import load_tokenizer
+from toksw.tok import eot_id, load_tokenizer
 
 
 @torch.no_grad()
@@ -35,6 +35,7 @@ def main():
     for ck in args.checkpoints:
         model = GPT2LMHeadModel.from_pretrained(ck, torch_dtype=torch.bfloat16 if device == "cuda" else torch.float32).to(device).eval()
         tok = load_tokenizer(ck)
+        eos = eot_id(tok)
         chars, secs = 0, 0.0
         max_prompt = model.config.n_positions - args.new_tokens
         encoded = [tok.encode(p, add_special_tokens=False).ids for p in prompts]
@@ -42,14 +43,16 @@ def main():
             raise ValueError("prompt exceeds context or is empty; reduce --prompt-chars or --new-tokens consistently for all checkpoints")
         # Warm up outside timing. Fixed token counts measure throughput, not task quality.
         model.generate(torch.tensor([encoded[0]], device=device), max_new_tokens=args.new_tokens,
-                       min_new_tokens=args.new_tokens, do_sample=False, pad_token_id=0)
+                       min_new_tokens=args.new_tokens, do_sample=False, eos_token_id=eos, pad_token_id=eos,
+                       attention_mask=torch.ones((1, len(encoded[0])), dtype=torch.long, device=device))
         for prompt_ids in encoded:
             ids = torch.tensor([prompt_ids], device=device)
+            mask = torch.ones_like(ids)
             if device == "cuda":
                 torch.cuda.synchronize()
             t0 = time.time()
             out = model.generate(ids, max_new_tokens=args.new_tokens, min_new_tokens=args.new_tokens,
-                                 do_sample=False, pad_token_id=0)
+                                 do_sample=False, eos_token_id=eos, pad_token_id=eos, attention_mask=mask)
             if device == "cuda":
                 torch.cuda.synchronize()
             secs += time.time() - t0

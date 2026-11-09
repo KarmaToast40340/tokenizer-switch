@@ -25,11 +25,12 @@ GPU allocations do not change implementation ownership. Extra innovations are un
 - [x] Selected code tokenizer test: Python NSL 0.5916, 2.973 bytes/token; English NSL 1.0813, 3.911 bytes/token. Round trips 100% on both.
 - [x] Pilot encodings: same 19,067 chunks; GPT-2 22,915,659 tokens, selected 12,489,572. These are **not 50M/200M assets**.
 - [x] Chinese sequential Parquet + OpenCC + compressed-storage smoke pipeline passed and exited cleanly. No repeat of the earlier Arrow scanner shutdown hang in this path.
-- [x] 38 offline tests passed (9 November), including analytic bpb, split leakage, gzip logical checksums, checkpoint/speed CLIs, and tiny A/B/C/E training/pruning integration.
+- [x] 41 offline tests passed (9 November), including analytic bpb, split leakage, gzip logical checksums, checkpoint/speed CLIs, and tiny A/B/C/E training/pruning integration.
 - [x] Separate 250 MB code model-training assets: verified; see capacity table.
 - [x] Chinese 400 MB model-training assets + five-point tokenizer grid: verified; see capacity table.
 - [ ] Real model bpb, generation speed and training plots: require actual checkpoints/logs; none invented.
-- [ ] Chinese Slurm runs: Djam/user now authorize a separate CUDA 12.8 project environment. Actual home quota is 10 GiB with only 3.90 GiB free; resolved runtime expands to 6.28 GiB before checkpoints. Waiting for approved additional persistent storage/quota, not runtime-install permission. No GPU smoke submitted.
+- [x] GTX 1060 fallback validated in Slurm job 757153 using unchanged DL_HW. All Chinese A/B/E pass at BF16 micro-batch 1 / accumulation 64; checkpoint reserve fits. Separate RTX installation remains blocked, but no administrator help is needed for this fallback.
+- [ ] Full Chinese 50M A/B/E: sequential workflow prepared with an actual trainer smoke gate, quota checks and post-training evaluation. See `docs/gtx1060-handoff.md` and the later job-status update.
 
 ## Capacity and storage
 
@@ -115,3 +116,30 @@ test commands are ready in `docs/project-environment.md`. No GPU test, training
 job ID or model result exists yet. Request either a 20 GiB home quota or an
 approved persistent runtime path with at least 10 GiB free, visible to compute
 nodes. Keep Chinese 50M A/B/E first once installation and GPU verification pass.
+
+## GTX fallback — latest 9 November update
+
+No extra path or quota increase is available. Job **757113** established CUDA
+execution but hit the optional OpenCV/libGL import. Job **757153** completed
+in **4m40s** after process-local text-only import isolation. All A/B/E pass
+forward/backward, AdamW, validation, E pruning and real checkpoint saves. No lab
+files/environments were changed. BF16 micro-batch 2 OOMs; use **micro 1 × accum
+64 for all conditions**, preserving 65,536 tokens/step and BF16 training math.
+
+Measured short-test training-rate estimates are 1,815 / 1,796 / 1,617 tokens/s
+for A/B/E: projected 7.64 / 7.72 / 8.58 hours of training only, plus evaluation.
+The three actual checkpoint files total **1.400 GiB**; the conservative 2.9 GiB
+checkpoint/save/log reserve fits with current 6.10 GiB home usage. No new runtime
+is installed. Both the full 6.284 GiB runtime and the optimistic 3.808 GiB
+version-matched five-package subset fail the new-runtime/checkpoint budget.
+
+The 36-hour sequential GTX allocation uses an immutable persistent release
+worktree and `cluster/run_chinese_gtx50.py`. It first exercises the unmodified
+trainer for two full accumulation steps per condition, then runs assigned
+Chinese 50M A/B/E and evaluates/plots their real outputs automatically. The
+training implementation remains unchanged. **41 offline tests pass**, including
+quota refusal and batch/schedule invariants. Actual launch/job status is recorded
+in the subsequent handoff update; no diagnostic weights are research results.
+
+Read `docs/gtx1060-handoff.md` first for the current path. Preserve the active
+release worktree. No 200M run, extra tokenizer fit or new environment is needed.
