@@ -23,7 +23,7 @@ def main():
     fields=['condition','estimated_training_tokens_per_second','projected_50M_train_hours','peak_allocated_bytes',
             'peak_reserved_bytes','checkpoint_bytes','checkpoint_save_seconds','micro_batch','grad_accum']
     with args.out.with_suffix('.csv').open('w') as f:
-        writer=csv.DictWriter(f,fieldnames=fields);writer.writeheader()
+        writer=csv.DictWriter(f,fieldnames=fields,lineterminator="\n");writer.writeheader()
         writer.writerows({k:r[k] for k in fields} for r in rows)
     labels=['A / GPT-2','B / FVT 50k','E / union 84,717']
     fig,axes=plt.subplots(1,3,figsize=(12,4.2),layout='constrained')
