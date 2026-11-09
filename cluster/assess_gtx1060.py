@@ -40,6 +40,12 @@ def trial(args):
     import time
     import torch
     import torch.nn.functional as F
+    # transformers 4.49 imports optional OpenCV/image modules while loading
+    # GPT-2. Compute nodes lack libGL; this text-only process needs neither.
+    # These flags affect only this worker, never the shared environment files.
+    import transformers.utils.import_utils as imports
+    imports._cv2_available = False
+    imports._torchvision_available = False
     from toksw import model as M
     from toksw.data import MixedBatchSampler, TokenFile, iter_jsonl
     from toksw.tok import load_tokenizer
@@ -200,17 +206,21 @@ def main():
     if not p.get('cuda_available') or 'GTX 1060' not in p.get('gpu', '') or p.get('fp32_forward_backward') != 'passed':
         report['status'] = 'incompatible'
     else:
-        for condition in ['A_keep', 'B_swap_fvt', 'E_progressive']:
-            for batch in [2, 1]:
-                result = run(['trial', '--condition', condition, '--micro-batch', str(batch)])
-                result.update(condition=condition, micro_batch=batch)
-                report['trials'].append(result)
-                args.out.write_text(json.dumps(report, indent=2)+'\n')
-                if result.get('status') == 'passed':
-                    break
-                if 'out of memory' not in result.get('error', '').lower():
-                    break
+        for precision in ['bf16', 'fp32']:
+            for condition in ['A_keep', 'B_swap_fvt', 'E_progressive']:
+                for batch in [2, 1]:
+                    result = run(['trial', '--condition', condition, '--precision', precision,
+                                  '--micro-batch', str(batch)])
+                    result.update(condition=condition, precision=precision, micro_batch=batch)
+                    report['trials'].append(result)
+                    args.out.write_text(json.dumps(report, indent=2)+'\n')
+                    if result.get('status') == 'passed':
+                        break
+                    if 'out of memory' not in result.get('error', '').lower():
+                        break
         report['status'] = 'assessed'
+        report['text_only_import_override'] = 'Disabled optional cv2/torchvision discovery in worker processes only'
+        report['full_training_launched'] = False
     args.out.write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(report, indent=2), flush=True)
 
