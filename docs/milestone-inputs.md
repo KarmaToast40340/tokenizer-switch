@@ -34,9 +34,10 @@ use the CPU fit times as GPU throughput or the historical 80k-union benchmark as
 the selected Chinese 84,717-row union’s measured performance.
 
 Chinese data and pinned GPT-2 are staged and checksummed on Chloé’s account.
-The queue is empty; no project GPU jobs were submitted. The next dependency is
-Djamel’s working CUDA environment and activation command, then compatibility/
-memory smoke and sequential Chinese 50M A/B/E. Mathieu owns the training
+The queue is empty; no project GPU jobs were submitted. The user authorized a separate CUDA runtime, but it needs 6.28 GiB unpacked
+against 3.90 GiB free quota. Additional approved persistent storage is the next
+dependency, then installation, compatibility/memory smoke and sequential Chinese
+50M A/B/E. Mathieu owns the training
 implementation; Djam coordinates the cluster experiments.
 
 ## Suggested five-minute story

@@ -82,10 +82,14 @@ needs held-out text and GPT-2 weights/tokenizer.
 
 ## Conditional Chinese 50M commands (not submitted)
 
-Current blocker: waiting for Djamel’s working RTX 5050-compatible runtime path
-and activation command. Chloé has asked him. No installation or further open-ended
-search while waiting. `DL_HW` remains torch 2.6.0+cu124 without sm_120; inspected
-alternatives are ROCm. Do not modify any shared environment.
+Current blocker: **additional persistent installation storage**. Djam confirmed
+the need to update PyTorch and the user authorized a separate project environment.
+The resolved torch 2.7.1+cu128 runtime needs 6.28 GiB unpacked, versus 3.90 GiB free
+under the actual 10 GiB home quota. Existing files + runtime + overhead + planned
+checkpoint reserve total 15.48 GiB. Installation is not yet performed. Request
+20 GiB home quota or an approved persistent runtime directory with at least
+10 GiB free, visible from GPU nodes. The pinned lock and installation steps are
+in `docs/project-environment.md`; preserve all shared/course environments.
 
 Chloé’s account now has `~/tokenizer-switch` on the published branch, all Chinese
 transfer assets at the canonical paths above, and the pinned GPT-2 cache below.
@@ -97,9 +101,10 @@ private environment or project checkpoint is stored on the cluster.
 Before staging the conservative peak calculation was 4.86 GiB existing + 0.73
 assets + 0.6 GPT-2 + 1.8 three final checkpoints + 0.6 saving allowance + 0.55
 source/logs/headroom = **9.14 GiB**. Recheck home use before each submission.
-The quota utility’s current row refers to a different filesystem and reports
-zero usage; use the measured home consumption and conservative known ceiling,
-not the large filesystem-wide `df` free-space number.
+The default quota command reports the unrelated gcs row. Querying
+`quota -vs -f /net/course` confirmed the actual 10 GiB hard limit. The earlier
+9.14 GiB budget above excludes a private environment and cannot support the
+new installation. The private-runtime plan now needs about 15.48 GiB total.
 
 Evidence: `results/chinese-transfer-verification-2026-11-09.json` and
 `results/gpt2-cache-verification-2026-11-09.json`. The pinned weights’ SHA-256 is
@@ -113,16 +118,16 @@ directory; the trainer appends logs and has no optimizer/RNG resume support.
 
 ```bash
 cd ~/tokenizer-switch
-export VENV="$HOME/APPROVED_PROJECT_ENV"  # wait for Djamel’s exact path/activation
+export VENV="$HOME/tokenizer-switch-env-cu128"  # only AFTER storage approval and installation; see project-environment.md
 export HF_HOME="$PWD/data/hf-cache"
 export BASE_MODEL="$HF_HOME/hub/models--gpt2/snapshots/607a30d783dfa663caf39e06633721c8d4cfcd7e"
-# Confirm job.sbatch activates Djamel’s environment correctly. It currently
-# sources "$VENV/bin/activate"; adapt it to his command if that differs.
+# Confirm the separate venv exists and job.sbatch activates it:
+test -r "$VENV/bin/activate"
 # Revalidate without uploading or regenerating completed files:
 python3 scripts/verify_assets.py --layout destination --profiles chinese
 test -f "$BASE_MODEL/model.safetensors"
 squeue -u "$USER"
-# Submit this smoke ONLY after the supplied environment has been verified:
+# Submit this smoke ONLY after the separate environment has been installed and verified:
 sbatch --gres=gpu:nvidia_geforce_rtx_5050:1 --time=00:15:00 -J zh_gpu_check cluster/job.sbatch python -u cluster/check_chinese_gpu.py --base-model "$BASE_MODEL" --out results/chinese_gpu_check_2026-11-09.json
 # Wait for COMPLETED / exit 0 AND JSON status=passed for all three conditions.
 # Diagnostic output is excluded from model comparisons; use a new output name

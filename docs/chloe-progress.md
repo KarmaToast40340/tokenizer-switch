@@ -29,7 +29,7 @@ GPU allocations do not change implementation ownership. Extra innovations are un
 - [x] Separate 250 MB code model-training assets: verified; see capacity table.
 - [x] Chinese 400 MB model-training assets + five-point tokenizer grid: verified; see capacity table.
 - [ ] Real model bpb, generation speed and training plots: require actual checkpoints/logs; none invented.
-- [ ] Chinese Slurm runs: waiting for Djamel’s working RTX 5050 environment path and activation command. Storage and staging are now ready; GPU smoke has not been submitted.
+- [ ] Chinese Slurm runs: Djam/user now authorize a separate CUDA 12.8 project environment. Actual home quota is 10 GiB with only 3.90 GiB free; resolved runtime expands to 6.28 GiB before checkpoints. Waiting for approved additional persistent storage/quota, not runtime-install permission. No GPU smoke submitted.
 
 ## Capacity and storage
 
@@ -79,7 +79,9 @@ export MPLCONFIGDIR="$HOME/tokenizer-switch-local/data/mpl-cache"
 - [x] Cloned the published branch to `~/tokenizer-switch` on Chloé’s cluster account. Uploaded only the 743.1 MiB Chinese transfer set; all 13 destination hashes passed. Local code assets remain ready for the other accounts; no duplicate uploads or raw training text.
 - [x] Cached all seven GPT-2 files at revision `607a30d783dfa663caf39e06633721c8d4cfcd7e`. Offline resolution passed; weights SHA-256 matches its LFS content address, and tokenizer SHA-256 matches the encoded corpus’s GPT-2 tokenizer.
 - [x] Read-only queue and storage checks: queue empty, no project run files, home 6.11 GiB after staging (6,405,356 KiB). No coursework, course jobs or environments changed.
-- [ ] Djamel supplies the working environment path and activation command. Chloé has asked him; no repeated searches or new environment installation while waiting.
+- [x] Djam confirmed PyTorch must be updated; user authorized a separate project environment. Selected official torch 2.7.1+cu128 / Python 3.12; resolved 40 wheels with exact URLs and SHA-256.
+- [x] Queried the actual course-home quota with `quota -vs -f /net/course` / `quota -vs -A`: hard limit 10 GiB, used 6.10 GiB, free 3.90 GiB. Wheel ZIP-directory sizing gives 6.28 GiB unpacked; environment plus existing data/checkpoint reserves is 15.48 GiB.
+- [ ] Obtain an approved persistent runtime directory with at least 10 GiB free, or increase home quota to 20 GiB. No installation under the insufficient quota. See `docs/project-environment.md` and the capacity audit.
 - [ ] Verify that activation works in `cluster/job.sbatch`, then run the 15-minute Chinese A/B/E smoke job. Only proceed after its Slurm exit status and diagnostic JSON both pass.
 - [ ] Run Chinese 50M A, B, E sequentially, with validation-only periodic evaluation and `eval_batch=1`, then evaluate saved checkpoints, measure generation speed and plot actual logs.
 
@@ -87,10 +89,29 @@ export MPLCONFIGDIR="$HOME/tokenizer-switch-local/data/mpl-cache"
 
 Before staging, measured home usage was 4.86 GiB (5,099,172 KiB), down from the earlier near-full state. Using the known 10 GiB planning limit, the conservative additional allowance was: assets 0.73 GiB; GPT-2 0.6; three checkpoints 1.8; checkpoint-save allowance 0.6; source/logs/headroom 0.55. Total planned peak about 9.14 GiB. After staging, reserve 2.9 GiB for checkpoints/save/logs; no new environment fits within this plan.
 
-`DL_HW` still imports the dependencies, but remains torch 2.6.0+cu124 with no sm_120. The alternate shared environments inspected were ROCm builds. These are observations, not GPU execution tests. Wait for Djamel’s compatible runtime details; do not repeat the failed large installation or switch the experiment to AMD/older GPUs.
+`DL_HW` still imports the dependencies, but remains torch 2.6.0+cu124 with no sm_120. The alternate shared environments inspected were ROCm builds. These are observations, not GPU execution tests. The user subsequently authorized a separate project environment; installation is now blocked by confirmed quota capacity. Do not repeat a quota-failing installation or switch the experiment to AMD/older GPUs.
 
 The selected Chinese tokenizer is `wiki_zh70_gpt4_50k`; its actual union with GPT-2 has **84,717 rows**, so the previous 80k throughput benchmark is not a measurement for this run. `cluster/check_chinese_gpu.py` exercises exact A/B/E vocabularies, two AdamW steps with the real micro-batch/accumulation settings, validation evaluation at batch 1, and E pruning. It saves no checkpoint and reads no test data. CPU fixture tests passing do not establish GPU compatibility.
 
 Evidence: `results/assets-verification-2026-11-09.json`, `results/chinese-transfer-verification-2026-11-09.json`, `results/gpt2-cache-verification-2026-11-09.json`. Summary figure: `results/milestone_summary.{png,pdf}`. It shows measured test compression and corpus capacity, explicitly labeled as 20 MB tokenizer pilots. Full 1 GB tokenizer studies, real model bpb, generation speed and training comparisons are still pending. No project GPU job has been submitted.
 
 See `docs/data-handoff.md` for the pinned model path and conditional smoke/training commands, and `docs/cluster-preflight.md` for the storage calculation. Get useful A/B/E results and handoff materials ready by **11 November**, before the **12 November** departure and **17 November** presentation. 200M expansions and additional innovations remain lower priority.
+
+## Authorized isolated runtime — later 9 November update
+
+The user authorized a separate PyTorch/CUDA environment after Djam confirmed the
+RTX 5050 requirement. The earlier “wait for Djamel’s runtime path” gate is
+superseded. The current gate is **additional persistent storage**.
+
+`results/project-environment-capacity-2026-11-09.json` records the resolved
+package sizes and actual quota. `cluster/project-runtime-cp312-cu128.lock` pins
+all 40 runtime wheels and hashes. No package installation was performed. The
+pip dry-run downloaded wheels into temporary staging (despite dry-run mode);
+it retained no cache and cleaned up those files. The original full resolver
+report is kept privately outside Git. Shared environments remain unchanged.
+
+The approved fresh-environment installation and existing Slurm forward/backward
+test commands are ready in `docs/project-environment.md`. No GPU test, training
+job ID or model result exists yet. Request either a 20 GiB home quota or an
+approved persistent runtime path with at least 10 GiB free, visible to compute
+nodes. Keep Chinese 50M A/B/E first once installation and GPU verification pass.

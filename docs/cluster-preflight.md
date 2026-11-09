@@ -1,10 +1,11 @@
 # Cluster preflight — 9 November 2026
 
-Chinese assets, source and pinned GPT-2 files are staged and verified. **Wait for
-Djamel’s working environment path and activation command before GPU submission.**
-Chloé has requested those details. No new environment installation or further
-open-ended environment search while waiting. No project GPU job has been
-submitted; no coursework, course jobs or shared environments were modified.
+Chinese assets, source and pinned GPT-2 files are staged and verified. Djam and
+the user now authorize a separate CUDA 12.8 project environment. **Installation
+is blocked by the actual 10 GiB home quota**, not by missing permission. The
+resolved runtime alone expands to 6.28 GiB, versus 3.90 GiB currently free.
+No package installation or project GPU job has occurred; coursework, course jobs
+and shared environments remain unchanged. See `docs/project-environment.md`.
 
 ## Storage verified before and after staging
 
@@ -29,12 +30,12 @@ After staging, measured home use is 6,405,356 KiB (**6.11 GiB**), leaving about
 and logs. Recheck consumption before each job. A private CUDA environment is
 **not** included and must not be installed under this plan.
 
-`quota -vs` currently reports a zero-usage row for a different home filesystem;
-it does not establish the effective quota on the mounted course home. `df`
-reports filesystem-wide capacity, not this account’s allowance. The plan uses
-the measured `du` consumption and conservative known 10 GiB ceiling. The earlier
-write failure and failed installation remain historical facts; no deletion or
-installation was attempted today.
+The default `quota -vs` shows the unrelated zero-usage gcs row. This was resolved
+by `quota -vs -A --show-mntpoint` and `quota -v -f /net/course`: actual course-home
+quota is 10,485,760 KiB, usage at the sizing check 6,398,908 KiB, free 3.90 GiB.
+`df` remains filesystem-wide capacity, not account allowance. The earlier
+checkpoint failure and failed installation remain historical facts. No package
+installation was attempted under the insufficient quota.
 
 ## Runtime findings and remaining blocker
 
@@ -52,8 +53,10 @@ usable NVIDIA runtime. No alternate GPU experiment was substituted.
 For the capability/support rationale recorded on 6 November, see
 [NVIDIA capabilities](https://developer.nvidia.com/cuda/gpus) and
 [PyTorch 2.7 release](https://pytorch.org/blog/pytorch-2-7/).
-No GPU execution test was performed today. Wait for Djamel’s already-working
-environment details; do not modify any of these environments.
+No GPU execution test was performed. The later user authorization permits a
+fresh separate project environment, preserving all these environments. Official
+torch 2.7.1+cu128 is selected; additional persistent storage must be available
+before installing it.
 
 ## What is staged
 
@@ -84,9 +87,10 @@ diagnostics remain outside Git.
 
 ## Gate before Chinese 50M A/B/E
 
-1. Receive Djamel’s environment and activation command. Verify activation inside
-   `cluster/job.sbatch` (currently it sources `$VENV/bin/activate`; a conda
-   activation command may require adapting this). Do not assume a path is enough.
+1. Obtain sufficient approved persistent storage, then install the separate
+   hash-pinned project environment using `docs/project-environment.md`. Verify
+   it with `pip check` and use its venv activation in `cluster/job.sbatch`. Do not
+   change `DL_HW` or any course environment.
 2. Recheck queue, storage, exact revision and asset hashes. Existing run
    directories must not be reused; the trainer has no optimizer/RNG resume and
    appends logs. Check the staged pinned model path explicitly.
@@ -105,3 +109,23 @@ diagnostics remain outside Git.
 
 200M B/E corpus expansions, a full 1 GB tokenizer study and extra innovations
 remain pending and lower priority than useful A/B/E results before 11 November.
+
+## Separate environment capacity audit
+
+Resolved torch 2.7.1+cu128 with matching CUDA dependencies and project training
+libraries for Python 3.12. The 40 wheels contain **6.284 GiB** uncompressed;
+compressed downloads total **3.621 GiB**. These are archive-directory sizes, not
+a completed installation measurement. Add 0.195 GiB for venv/filesystem overhead
+and retain the existing 2.9 GiB checkpoint/save/log allowance.
+
+Existing home 6.102 + runtime 6.284 + overhead 0.195 + training reserve 2.9 =
+**15.482 GiB**. Even the environment without checkpoints exceeds the 10 GiB hard
+limit. Thus a normal isolated installation cannot proceed safely in home.
+Request 20 GiB total home quota, or an approved persistent directory with at
+least 10 GiB free for the runtime (keeping training assets/checkpoints in home).
+The latter must be accessible on compute nodes. No writable assigned shared
+project location was identified; do not use another person’s directories.
+
+Evidence: `results/project-environment-capacity-2026-11-09.json` and
+`cluster/project-runtime-cp312-cu128.lock`. No installation, Slurm test or training
+job was performed under this plan; submitted project job IDs remain empty.
