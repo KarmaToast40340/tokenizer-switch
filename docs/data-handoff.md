@@ -1,4 +1,4 @@
-# Data and evaluation handoff — verified 6 November 2026
+# Data and evaluation handoff — verified 9 November 2026
 
 Use the persistent checkout `$HOME/tokenizer-switch-local/repo` on branch
 `chloe/data-eval`. The old Desktop checkout remains a preservation copy.
@@ -49,8 +49,11 @@ local and is transparently readable by the preparation/encoding tools. Logical
 raw checksums refer to decompressed JSONL; transfer manifest hashes refer to the
 actual files being transferred.
 
-After Djam provisions sufficient quota and a compatible project environment,
-clone the verified branch on each member's own account:
+For a new account only, clone the verified branch on that member’s own account.
+Chloé already has this checkout and the Chinese assets; do not clone or upload
+a second copy. The 9 November origin/main integration was already up to date,
+and Djam’s download fix is included. The referenced `runs-v1` tag does not exist
+yet; record the exact verified feature-branch commit instead:
 
 ```bash
 git clone --branch chloe/data-eval https://github.com/KarmaToast40340/tokenizer-switch.git ~/tokenizer-switch
@@ -58,7 +61,8 @@ cd ~/tokenizer-switch
 git rev-parse HEAD
 ```
 
-On the laptop, after choosing the correct account through its own SSH config:
+For accounts still needing transfer, on the laptop after choosing that account
+through its own SSH config (Chloé’s transfer is already verified):
 
 ```bash
 cd "$HOME/tokenizer-switch-local/repo"
@@ -78,14 +82,29 @@ needs held-out text and GPT-2 weights/tokenizer.
 
 ## Conditional Chinese 50M commands (not submitted)
 
-Current blocker: school home quota is near 10 GB. A separate CUDA environment
-installation failed with quota exceeded and was removed. Existing shared Lab5
-torch is 2.6.0+cu124; do not modify it. The project target is a separately verified
-CUDA 12.8 build for the planned RTX 5050 nodes. Official installation choices:
-https://pytorch.org/get-started/previous-versions/ . There is no verified project
-environment, cached GPT-2 weights or project data on this account yet.
+Current blocker: waiting for Djamel’s working RTX 5050-compatible runtime path
+and activation command. Chloé has asked him. No installation or further open-ended
+search while waiting. `DL_HW` remains torch 2.6.0+cu124 without sm_120; inspected
+alternatives are ROCm. Do not modify any shared environment.
 
-Existing course jobs were checked without cancellation or modification. Resolve project storage with Djam before environment setup or transfer; do not delete unrelated coursework automatically. No tokenizer-project GPU jobs have been submitted.
+Chloé’s account now has `~/tokenizer-switch` on the published branch, all Chinese
+transfer assets at the canonical paths above, and the pinned GPT-2 cache below.
+All 13 destination hashes and seven cached GPT-2 files are verified. Home usage
+after staging is 6.11 GiB under the known 10 GiB planning limit; the remaining
+3.89 GiB covers the 2.9 GiB checkpoint/save/log allowance. No raw training text,
+private environment or project checkpoint is stored on the cluster.
+
+Before staging the conservative peak calculation was 4.86 GiB existing + 0.73
+assets + 0.6 GPT-2 + 1.8 three final checkpoints + 0.6 saving allowance + 0.55
+source/logs/headroom = **9.14 GiB**. Recheck home use before each submission.
+The quota utility’s current row refers to a different filesystem and reports
+zero usage; use the measured home consumption and conservative known ceiling,
+not the large filesystem-wide `df` free-space number.
+
+Evidence: `results/chinese-transfer-verification-2026-11-09.json` and
+`results/gpt2-cache-verification-2026-11-09.json`. The pinned weights’ SHA-256 is
+`248dfc3911869ec493c76e65bf2fcf7f615828b0254c12b473182f0f81d3a707`.
+No course jobs/files were changed; no tokenizer-project GPU jobs were submitted.
 
 Once environment, cache, data and GPU smoke verification pass, run **one** job,
 then wait for completion before submitting the next. Check `squeue -u "$USER"`
@@ -94,12 +113,24 @@ directory; the trainer appends logs and has no optimizer/RNG resume support.
 
 ```bash
 cd ~/tokenizer-switch
-export VENV="$HOME/APPROVED_PROJECT_ENV"  # Djam supplies the verified path
-# GPT-2 model cache must be complete for offline compute nodes.
-# Run each sbatch separately, with an empty account queue:
-sbatch -J A_zh50 cluster/job.sbatch python -u scripts/train.py configs/train/A_keep.yaml run_name=A_keep_zh domain=wiki_zh old_tokenizer=artifacts/tokenizers/gpt2 token_budget=50000000 eval_split=validation eval_batch=1 account="$USER" commit="'$(git rev-parse --short HEAD)'"
-sbatch -J B_zh50 cluster/job.sbatch python -u scripts/train.py configs/train/B_swap_fvt.yaml run_name=B_swap_fvt_zh domain=wiki_zh old_tokenizer=artifacts/tokenizers/gpt2 new_tokenizer=artifacts/tokenizers/wiki_zh70_gpt4_50k new_name=wiki_zh70_gpt4_50k token_budget=50000000 eval_split=validation eval_batch=1 account="$USER" commit="'$(git rev-parse --short HEAD)'"
-sbatch -J E_zh50 cluster/job.sbatch python -u scripts/train.py configs/train/E_progressive.yaml run_name=E_progressive_zh domain=wiki_zh old_tokenizer=artifacts/tokenizers/gpt2 new_tokenizer=artifacts/tokenizers/wiki_zh70_gpt4_50k new_name=wiki_zh70_gpt4_50k token_budget=50000000 eval_split=validation eval_batch=1 account="$USER" commit="'$(git rev-parse --short HEAD)'"
+export VENV="$HOME/APPROVED_PROJECT_ENV"  # wait for Djamel’s exact path/activation
+export HF_HOME="$PWD/data/hf-cache"
+export BASE_MODEL="$HF_HOME/hub/models--gpt2/snapshots/607a30d783dfa663caf39e06633721c8d4cfcd7e"
+# Confirm job.sbatch activates Djamel’s environment correctly. It currently
+# sources "$VENV/bin/activate"; adapt it to his command if that differs.
+# Revalidate without uploading or regenerating completed files:
+python3 scripts/verify_assets.py --layout destination --profiles chinese
+test -f "$BASE_MODEL/model.safetensors"
+squeue -u "$USER"
+# Submit this smoke ONLY after the supplied environment has been verified:
+sbatch --gres=gpu:nvidia_geforce_rtx_5050:1 --time=00:15:00 -J zh_gpu_check cluster/job.sbatch python -u cluster/check_chinese_gpu.py --base-model "$BASE_MODEL" --out results/chinese_gpu_check_2026-11-09.json
+# Wait for COMPLETED / exit 0 AND JSON status=passed for all three conditions.
+# Diagnostic output is excluded from model comparisons; use a new output name
+# for a justified retry. Then run each sbatch separately with an empty queue,
+# only when its run directory does not exist:
+sbatch --gres=gpu:nvidia_geforce_rtx_5050:1 -J A_zh50 cluster/job.sbatch python -u scripts/train.py configs/train/A_keep.yaml run_name=A_keep_zh domain=wiki_zh base_model="$BASE_MODEL" old_tokenizer=artifacts/tokenizers/gpt2 token_budget=50000000 eval_split=validation eval_batch=1 account="$USER" commit="'$(git rev-parse --short HEAD)'"
+sbatch --gres=gpu:nvidia_geforce_rtx_5050:1 -J B_zh50 cluster/job.sbatch python -u scripts/train.py configs/train/B_swap_fvt.yaml run_name=B_swap_fvt_zh domain=wiki_zh base_model="$BASE_MODEL" old_tokenizer=artifacts/tokenizers/gpt2 new_tokenizer=artifacts/tokenizers/wiki_zh70_gpt4_50k new_name=wiki_zh70_gpt4_50k token_budget=50000000 eval_split=validation eval_batch=1 account="$USER" commit="'$(git rev-parse --short HEAD)'"
+sbatch --gres=gpu:nvidia_geforce_rtx_5050:1 -J E_zh50 cluster/job.sbatch python -u scripts/train.py configs/train/E_progressive.yaml run_name=E_progressive_zh domain=wiki_zh base_model="$BASE_MODEL" old_tokenizer=artifacts/tokenizers/gpt2 new_tokenizer=artifacts/tokenizers/wiki_zh70_gpt4_50k new_name=wiki_zh70_gpt4_50k token_budget=50000000 eval_split=validation eval_batch=1 account="$USER" commit="'$(git rev-parse --short HEAD)'"
 ```
 
 The selected Chinese name is **50k**, overriding the 32k placeholder in
@@ -124,6 +155,17 @@ E/model is post-pruning; pre-pruning eval is in its real JSONL log only. No real
 model-quality or speed results exist yet. Compression figures in
 `results/milestone/` and `results/chinese/` come from measured held-out outputs.
 
-For exact regeneration of yesterday’s English pilot ordering, use the recorded dataset revision/seed and `prepare_milestone.py --reader hf`; new Wikipedia data defaults to the sequential reader. Existing English files are reused. The legacy HF Parquet path may hang at shutdown after writing complete files; the new sequential path passed both Chinese smoke and 400 MB processing.
+For exact regeneration of the original 5 November English pilot ordering, use the recorded dataset revision/seed and `prepare_milestone.py --reader hf`; new Wikipedia data defaults to the sequential reader. Existing English files are reused. The legacy HF Parquet path may hang at shutdown after writing complete files; the new sequential path passed both Chinese smoke and 400 MB processing.
 
-Storage clarification: 2 GiB assumes only one retained project checkpoint. Retaining all three Chinese 50M A/B/E checkpoints requires about 3 GiB of additional persistent project space with an approved shared environment; see `docs/cluster-preflight.md`.
+Tokenizer and corpus scales must be stated separately: both selected tokenizers
+come from **20 MB pilot fits**, not the proposed 1 GB tokenizer study. Code
+250 MB and Chinese 400 MB model corpora are **50M-ready**, with exact capacities
+in the table. Neither profile covers 200M for both encodings; Chinese GPT-2
+alone covers Mathieu’s 200M A. No model-quality or generation-speed claim follows
+from these compression/capacity results.
+
+Current presentation figure: `results/milestone_summary.{png,pdf}`, regenerated
+with `.venv/bin/python scripts/plot_milestone_summary.py` only when its source
+measurements change. The 9 November handoff and GPU gate are described in
+`docs/cluster-preflight.md`. Prioritize A/B/E results before the 11 November
+handoff target; do not begin 200M extensions while these comparisons are pending.

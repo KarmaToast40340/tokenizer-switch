@@ -1,40 +1,107 @@
-# Read-only cluster preflight — 6 November 2026
+# Cluster preflight — 9 November 2026
 
-No project GPU job was submitted. Later checks were read-only: no further
-installation, coursework deletion or job changes.
+Chinese assets, source and pinned GPT-2 files are staged and verified. **Wait for
+Djamel’s working environment path and activation command before GPU submission.**
+Chloé has requested those details. No new environment installation or further
+open-ended environment search while waiting. No project GPU job has been
+submitted; no coursework, course jobs or shared environments were modified.
 
-`/opt/conda/miniconda3/envs/DL_HW` imports torch, transformers, tokenizers, YAML
-and NumPy successfully. Python 3.12.7; torch 2.6.0+cu124; transformers 4.49.0;
-tokenizers 0.21.0. CPU/library compatibility is present. CUDA is unavailable on
-the login node, as expected without an allocation; this is not a GPU test.
+## Storage verified before and after staging
 
-Compiled architectures: sm_50, sm_60, sm_70, sm_75, sm_80, sm_86, sm_90.
-The scheduler confirms RTX 5050 nodes, matching the planned hardware. RTX 5050
-is compute capability 12.0; this build lacks sm_120. Official Blackwell support
-arrived with PyTorch 2.7/CUDA 12.8. Thus this environment is not a verified or
-supported runtime for the planned RTX 5050 experiments. We did not modify it
-or silently switch experiments to older GPUs.
+Before staging, measured home usage was 5,099,172 KiB (**4.86 GiB**), down from
+the 6 November near-full state. The queue was empty. The project directory did
+not exist, so no existing runs/uploads were duplicated.
 
-Sources: [NVIDIA capabilities](https://developer.nvidia.com/cuda/gpus),
+Conservative peak calculation against the known 10 GiB planning ceiling:
+
+| Component | Allowance (GiB) |
+|---|---:|
+| Existing home use before staging | 4.86 |
+| Chinese transfer assets (743.1 MiB actual) | 0.73 |
+| Pinned GPT-2 cache | 0.60 |
+| Three retained final A/B/E checkpoints | 1.80 |
+| Checkpoint-save allowance | 0.60 |
+| Source, logs and headroom | 0.55 |
+| Planned peak | **9.14** |
+
+After staging, measured home use is 6,405,356 KiB (**6.11 GiB**), leaving about
+3.89 GiB against that ceiling. Reserve 2.9 GiB for the checkpoints, save allowance
+and logs. Recheck consumption before each job. A private CUDA environment is
+**not** included and must not be installed under this plan.
+
+`quota -vs` currently reports a zero-usage row for a different home filesystem;
+it does not establish the effective quota on the mounted course home. `df`
+reports filesystem-wide capacity, not this account’s allowance. The plan uses
+the measured `du` consumption and conservative known 10 GiB ceiling. The earlier
+write failure and failed installation remain historical facts; no deletion or
+installation was attempted today.
+
+## Runtime findings and remaining blocker
+
+`/opt/conda/miniconda3/envs/DL_HW` imports torch, transformers, tokenizers, NumPy
+and YAML. It remains torch **2.6.0+cu124**, CUDA **12.4**, transformers **4.49.0**,
+tokenizers **0.21.0**. Compiled architectures are sm_50, sm_60, sm_70, sm_75,
+sm_80, sm_86, sm_90; there is no sm_120. The scheduler still advertises RTX
+5050 nodes. System CUDA 12.8 being installed does not change this torch build.
+
+The other standard shared environment (`amd`) is
+2.11.0.dev20260108+rocm7.1, with no CUDA build. The additional shared RL Lab5
+environment inspected is 2.10.0+rocm7.1. These observations do not establish a
+usable NVIDIA runtime. No alternate GPU experiment was substituted.
+
+For the capability/support rationale recorded on 6 November, see
+[NVIDIA capabilities](https://developer.nvidia.com/cuda/gpus) and
 [PyTorch 2.7 release](https://pytorch.org/blog/pytorch-2-7/).
+No GPU execution test was performed today. Wait for Djamel’s already-working
+environment details; do not modify any of these environments.
 
-Home is near its 10 GB quota. Private diagnostics remain outside Git. Chinese
-transfer files total 743.1 MiB. Add about 0.5 GiB GPT-2 weights, about 0.5 GiB
-per retained checkpoint, plus logs/headroom. About **2 GiB additional persistent project space** covers assets/cache and one checkpoint; retaining all three A/B/E checkpoints needs **3 GiB** with an approved shared CUDA 12.8 environment.
-A private environment would need several more GiB; plan approximately
-**8–10 GiB extra total**, an estimate rather than a measured completed install.
+## What is staged
 
-Exact question for Djam or the administrator:
+`~/tokenizer-switch` is a clone of `chloe/data-eval`. The source/diagnostic
+checkpoint `bd44fc8` contains Djam’s reviewed download fix (`60a4e3e`,
+cherry-picked as `7689a74`). `origin/main` at `4dfef36` was fetched and integrated;
+it was already an ancestor. No `runs-v1` tag exists yet. Record the exact
+feature-branch commit in every run and align it across accounts.
 
-> My course home is near its 10 GB limit. Where may I store about 3 GiB of
-> tokenizer-project data, GPT-2 cache and checkpoints on persistent storage
-> accessible to compute nodes, and which existing environment supports RTX
-> 5050 (sm_120), PyTorch with CUDA 12.8, transformers and tokenizers? If there
-> is no shared environment, can I obtain roughly 8–10 GiB additional quota for an
-> isolated environment plus assets without deleting other coursework?
+- Both Chinese encodings at `data/tokens/wiki_zh/`, matching document ordering.
+- Chinese validation/test/stats at `data/raw/wiki_zh/`; no raw training text.
+- GPT-2 and selected 50k tokenizer at `artifacts/tokenizers/`.
+- Seven GPT-2 files pinned to revision
+  `607a30d783dfa663caf39e06633721c8d4cfcd7e` under `data/hf-cache/`.
+- No project checkpoints, logs or Slurm runs yet.
 
-Before Chinese training: approved storage/runtime; copy and checksum assets;
-cache GPT-2; run a small Slurm GPU compatibility/memory test; recheck queue and
-duplicate run directories; submit one assigned 50M job at a time. Chinese 200M
-B/E still need expanded corpora. The trainer does not support an unchanged
-50M-to-200M continuation with optimizer/RNG state.
+The 13 destination asset sizes/checksums and encoding structures pass
+`scripts/verify_assets.py --layout destination --profiles chinese`.
+All seven cached model files resolve offline. The 548,105,171-byte weights have
+SHA-256 `248dfc3911869ec493c76e65bf2fcf7f615828b0254c12b473182f0f81d3a707`,
+matching their LFS content address. Their GPT-2 tokenizer hash equals the
+tokenizer used for the frozen encodings; the embedding shape is 50,257 × 768.
+This is a file/cache verification, not a GPU model-load test.
+
+Portable evidence is in `results/chinese-transfer-verification-2026-11-09.json`
+and `results/gpt2-cache-verification-2026-11-09.json`. Private account and course
+diagnostics remain outside Git.
+
+## Gate before Chinese 50M A/B/E
+
+1. Receive Djamel’s environment and activation command. Verify activation inside
+   `cluster/job.sbatch` (currently it sources `$VENV/bin/activate`; a conda
+   activation command may require adapting this). Do not assume a path is enough.
+2. Recheck queue, storage, exact revision and asset hashes. Existing run
+   directories must not be reused; the trainer has no optimizer/RNG resume and
+   appends logs. Check the staged pinned model path explicitly.
+3. Submit the 15-minute smoke command in `docs/data-handoff.md`, constrained to
+   RTX 5050. `cluster/check_chinese_gpu.py` checks a real CUDA kernel, bf16,
+   the exact Chinese A/B/E vocabularies, two AdamW steps with micro-batch 2 and
+   accumulation 32, validation evaluation at batch 1, and E pruning. The actual
+   union is **84,717** rows, not the earlier 80k benchmark. It reads no test text,
+   writes no checkpoint and is excluded from model comparisons.
+4. Require Slurm COMPLETED / exit 0 and diagnostic JSON `status=passed` for all
+   conditions. The 38 passing offline tests include tiny CPU fixtures, which
+   cannot validate GPU compatibility or memory capacity.
+5. Run A, then B, then E at 50M on Chloé’s account, one at a time, using the pinned
+   base path, selected 50k name, `eval_split=validation` and `eval_batch=1`.
+   Evaluate real saved checkpoints, generation speed and real training logs.
+
+200M B/E corpus expansions, a full 1 GB tokenizer study and extra innovations
+remain pending and lower priority than useful A/B/E results before 11 November.

@@ -1,4 +1,4 @@
-# Chloé progress — 6 November 2026
+# Chloé progress — 9 November 2026
 
 Objective: compare GPT-2 small tokenizer switching on code and Chinese (A keep, B FVT swap, C random swap, E progressive/pruned). Compression gains are measured; quality gains from E remain hypotheses.
 
@@ -16,20 +16,20 @@ GPU allocations do not change implementation ownership. Extra innovations are un
 
 ## Verified checklist
 
-- [x] Verified all 56 preserved files (85,955,238 bytes) against yesterday’s SHA-256 inventory.
+- [x] Verified all 56 preserved files (85,955,238 bytes) against the 5 November SHA-256 inventory.
 - [x] Preserved all 28 original edited/untracked files in `backups/2026-11-06-before-integration/` before integration.
-- [x] Active repository: `$HOME/tokenizer-switch-local/repo`, branch `chloe/data-eval`, based on teammate main `4dfef36`. Original Desktop checkout is preserved; use the persistent checkout for further work.
-- [x] Integrated upstream account plan/setup/collector; kept both sets of `.gitignore` rules. The unmerged Djam setup fix was inspected, not silently merged.
+- [x] Active repository: `$HOME/tokenizer-switch-local/repo`, branch `chloe/data-eval`, includes teammate main `4dfef36` (re-fetched and merged on 9 November; already an ancestor). Original Desktop checkout is preserved; use the persistent checkout for further work.
+- [x] Integrated upstream account plan/setup/collector; kept both sets of `.gitignore` rules. Djam’s later GPT-2 download fix `60a4e3e` was reviewed and cherry-picked as `7689a74` on 9 November.
 - [x] Code pilot: five equal 20 MB BPE fits, frozen validation selection, held-out metrics, PNG/PDF compression figures, complete alignment verification.
 - [x] Code pilot selected `code70_gpt4_32k` (70% code, GPT-4 regex, 32,000 vocabulary). Validation NSL: Python 0.5589, English 1.0978. Code-only NSL 0.5463 failed the English <=1.25 cap (1.3872).
 - [x] Selected code tokenizer test: Python NSL 0.5916, 2.973 bytes/token; English NSL 1.0813, 3.911 bytes/token. Round trips 100% on both.
 - [x] Pilot encodings: same 19,067 chunks; GPT-2 22,915,659 tokens, selected 12,489,572. These are **not 50M/200M assets**.
 - [x] Chinese sequential Parquet + OpenCC + compressed-storage smoke pipeline passed and exited cleanly. No repeat of the earlier Arrow scanner shutdown hang in this path.
-- [x] 32 offline tests passed, including analytic bpb, split leakage, gzip logical checksums, checkpoint/speed CLIs, and tiny A/B/C/E training/pruning integration.
+- [x] 38 offline tests passed (9 November), including analytic bpb, split leakage, gzip logical checksums, checkpoint/speed CLIs, and tiny A/B/C/E training/pruning integration.
 - [x] Separate 250 MB code model-training assets: verified; see capacity table.
 - [x] Chinese 400 MB model-training assets + five-point tokenizer grid: verified; see capacity table.
 - [ ] Real model bpb, generation speed and training plots: require actual checkpoints/logs; none invented.
-- [ ] Chinese Slurm runs: blocked by project storage/environment readiness; recheck the account queue before any submission.
+- [ ] Chinese Slurm runs: waiting for Djamel’s working RTX 5050 environment path and activation command. Storage and staging are now ready; GPU smoke has not been submitted.
 
 ## Capacity and storage
 
@@ -69,20 +69,28 @@ export MPLCONFIGDIR="$HOME/tokenizer-switch-local/data/mpl-cache"
 .venv/bin/python scripts/run_chinese.py --train-mb 400
 ```
 
-## Cluster and next steps
+## 9 November verification and publication
 
-Read-only queue checks were performed without changing existing course jobs. Latest project blocker is home quota and lack of a verified CUDA 12.8 project environment. Shared torch is 2.6.0+cu124; do not modify the shared environment. A failed separate installation was removed. Djam must resolve storage/environment availability before project data transfer or GPU verification.
+- [x] Persistent checkout was clean at `1b879e2`; GitHub authentication works and every existing commit was already pushed. Desktop preservation checkout was left untouched.
+- [x] Fetched origin, reviewed PR/branch updates and requested integration of `origin/main`: already up to date at `4dfef36`. No new Mathieu training changes or `runs-v1` tag were found. No main push or force push.
+- [x] Cherry-picked Djam’s `60a4e3e` download fix as `7689a74`: use huggingface_hub without importing torch or hf_xet on the constrained login node.
+- [x] Published `bd44fc8`: reusable `verify_assets.py`, exact A/B/E GPU memory diagnostic, tiny CPU tests, full 26-file verification report and measured milestone summary PNG/PDF.
+- [x] Rechecked all physical transfer hashes, document offsets, token counts and 1,000-document held-out splits. Rechecked both compressed training corpora’s logical SHA-256; unchanged full alignment reports remain applicable. No fitting/preparation experiments repeated.
+- [x] Cloned the published branch to `~/tokenizer-switch` on Chloé’s cluster account. Uploaded only the 743.1 MiB Chinese transfer set; all 13 destination hashes passed. Local code assets remain ready for the other accounts; no duplicate uploads or raw training text.
+- [x] Cached all seven GPT-2 files at revision `607a30d783dfa663caf39e06633721c8d4cfcd7e`. Offline resolution passed; weights SHA-256 matches its LFS content address, and tokenizer SHA-256 matches the encoded corpus’s GPT-2 tokenizer.
+- [x] Read-only queue and storage checks: queue empty, no project run files, home 6.11 GiB after staging (6,405,356 KiB). No coursework, course jobs or environments changed.
+- [ ] Djamel supplies the working environment path and activation command. Chloé has asked him; no repeated searches or new environment installation while waiting.
+- [ ] Verify that activation works in `cluster/job.sbatch`, then run the 15-minute Chinese A/B/E smoke job. Only proceed after its Slurm exit status and diagnostic JSON both pass.
+- [ ] Run Chinese 50M A, B, E sequentially, with validation-only periodic evaluation and `eval_batch=1`, then evaluate saved checkpoints, measure generation speed and plot actual logs.
 
-Handoff: consult `docs/data-handoff.md` for actual files and overrides. Djam/Mathieu need code assets; Chloé needs both Chinese encodings; Mathieu’s Chinese A needs only GPT-2 encoding **plus validation/test text and GPT-2 tokenizer/weights**. Copy no raw training text to the cluster.
+## Cluster readiness and next steps
 
-Before a model job: verify a released code revision, asset checksums, selected names, validation override, eval_batch=1, CUDA build, checkpoint capacity, disk quota and queue. Basic A/B/E first. No duplicate job submission. No GPU training or benchmark has been launched by these CPU pipelines.
+Before staging, measured home usage was 4.86 GiB (5,099,172 KiB), down from the earlier near-full state. Using the known 10 GiB planning limit, the conservative additional allowance was: assets 0.73 GiB; GPT-2 0.6; three checkpoints 1.8; checkpoint-save allowance 0.6; source/logs/headroom 0.55. Total planned peak about 9.14 GiB. After staging, reserve 2.9 GiB for checkpoints/save/logs; no new environment fits within this plan.
 
-## Latest cluster checkpoint
+`DL_HW` still imports the dependencies, but remains torch 2.6.0+cu124 with no sm_120. The alternate shared environments inspected were ROCm builds. These are observations, not GPU execution tests. Wait for Djamel’s compatible runtime details; do not repeat the failed large installation or switch the experiment to AMD/older GPUs.
 
-Chinese tokenizer selected: `wiki_zh70_gpt4_50k`. Test NSL Chinese 0.3035 / English 1.0761; both lossless. Chinese assets are complete and verified for 50M A/B/E; Chinese GPT-2 alone covers 200M A. Other 200M assets remain incomplete.
+The selected Chinese tokenizer is `wiki_zh70_gpt4_50k`; its actual union with GPT-2 has **84,717 rows**, so the previous 80k throughput benchmark is not a measurement for this run. `cluster/check_chinese_gpu.py` exercises exact A/B/E vocabularies, two AdamW steps with the real micro-batch/accumulation settings, validation evaluation at batch 1, and E pruning. It saves no checkpoint and reads no test data. CPU fixture tests passing do not establish GPU compatibility.
 
-The school environment attempt hit quota and was removed. A compatible project environment and storage remain blocked. No project GPU jobs have been launched. The latest course-job status and diagnostic details are kept privately outside Git; see `docs/data-handoff.md` for conditional project commands.
+Evidence: `results/assets-verification-2026-11-09.json`, `results/chinese-transfer-verification-2026-11-09.json`, `results/gpt2-cache-verification-2026-11-09.json`. Summary figure: `results/milestone_summary.{png,pdf}`. It shows measured test compression and corpus capacity, explicitly labeled as 20 MB tokenizer pilots. Full 1 GB tokenizer studies, real model bpb, generation speed and training comparisons are still pending. No project GPU job has been submitted.
 
-Read-only cluster follow-up: shared imports pass, but CUDA 12.4 lacks sm_120 for the scheduler’s RTX 5050 nodes. Latest queue was empty. No further installs or deletions; see `docs/cluster-preflight.md` for storage requirements and the administrator question. Private course diagnostics remain outside Git.
-
-- [x] Published the verified source/results checkpoint `0508678` to `origin/chloe/data-eval` after Chloé completed browser authentication. GitHub CLI is installed and configured as the HTTPS credential helper. Main was not changed; data, environments, weights and private cluster diagnostics remain excluded.
+See `docs/data-handoff.md` for the pinned model path and conditional smoke/training commands, and `docs/cluster-preflight.md` for the storage calculation. Get useful A/B/E results and handoff materials ready by **11 November**, before the **12 November** departure and **17 November** presentation. 200M expansions and additional innovations remain lower priority.
