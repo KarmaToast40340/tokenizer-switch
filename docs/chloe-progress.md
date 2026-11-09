@@ -25,12 +25,12 @@ GPU allocations do not change implementation ownership. Extra innovations are un
 - [x] Selected code tokenizer test: Python NSL 0.5916, 2.973 bytes/token; English NSL 1.0813, 3.911 bytes/token. Round trips 100% on both.
 - [x] Pilot encodings: same 19,067 chunks; GPT-2 22,915,659 tokens, selected 12,489,572. These are **not 50M/200M assets**.
 - [x] Chinese sequential Parquet + OpenCC + compressed-storage smoke pipeline passed and exited cleanly. No repeat of the earlier Arrow scanner shutdown hang in this path.
-- [x] 41 offline tests passed (9 November), including analytic bpb, split leakage, gzip logical checksums, checkpoint/speed CLIs, and tiny A/B/C/E training/pruning integration.
+- [x] 42 offline tests passed (9 November), including analytic bpb, split leakage, gzip logical checksums, checkpoint/speed CLIs, and tiny A/B/C/E training/pruning integration.
 - [x] Separate 250 MB code model-training assets: verified; see capacity table.
 - [x] Chinese 400 MB model-training assets + five-point tokenizer grid: verified; see capacity table.
 - [ ] Real model bpb, generation speed and training plots: require actual checkpoints/logs; none invented.
 - [x] GTX 1060 fallback validated in Slurm job 757153 using unchanged DL_HW. All Chinese A/B/E pass at BF16 micro-batch 1 / accumulation 64; checkpoint reserve fits. Separate RTX installation remains blocked, but no administrator help is needed for this fallback.
-- [ ] Full Chinese 50M A/B/E: sequential workflow prepared with an actual trainer smoke gate, quota checks and post-training evaluation. See `docs/gtx1060-handoff.md` and the later job-status update.
+- [ ] Full Chinese 50M A/B/E: Slurm job **757238** submitted and running on cmpt053, all three exact trainer smoke gates passed; formal A_keep is active. See the latest execution update and `docs/gtx1060-handoff.md`; formal checkpoint results remain pending.
 
 ## Capacity and storage
 
@@ -82,7 +82,7 @@ export MPLCONFIGDIR="$HOME/tokenizer-switch-local/data/mpl-cache"
 - [x] Read-only queue and storage checks: queue empty, no project run files, home 6.11 GiB after staging (6,405,356 KiB). No coursework, course jobs or environments changed.
 - [x] Djam confirmed PyTorch must be updated; user authorized a separate project environment. Selected official torch 2.7.1+cu128 / Python 3.12; resolved 40 wheels with exact URLs and SHA-256.
 - [x] Queried the actual course-home quota with `quota -vs -f /net/course` / `quota -vs -A`: hard limit 10 GiB, used 6.10 GiB, free 3.90 GiB. Wheel ZIP-directory sizing gives 6.28 GiB unpacked; environment plus existing data/checkpoint reserves is 15.48 GiB.
-- [ ] Obtain an approved persistent runtime directory with at least 10 GiB free, or increase home quota to 20 GiB. No installation under the insufficient quota. See `docs/project-environment.md` and the capacity audit.
+- [ ] Deferred RTX option: it would require extra persistent space or quota. Do not attempt installation under the insufficient quota; use the validated GTX fallback instead.
 - [ ] Verify that activation works in `cluster/job.sbatch`, then run the 15-minute Chinese A/B/E smoke job. Only proceed after its Slurm exit status and diagnostic JSON both pass.
 - [ ] Run Chinese 50M A, B, E sequentially, with validation-only periodic evaluation and `eval_batch=1`, then evaluate saved checkpoints, measure generation speed and plot actual logs.
 
@@ -94,7 +94,7 @@ Before staging, measured home usage was 4.86 GiB (5,099,172 KiB), down from the 
 
 The selected Chinese tokenizer is `wiki_zh70_gpt4_50k`; its actual union with GPT-2 has **84,717 rows**, so the previous 80k throughput benchmark is not a measurement for this run. `cluster/check_chinese_gpu.py` exercises exact A/B/E vocabularies, two AdamW steps with the real micro-batch/accumulation settings, validation evaluation at batch 1, and E pruning. It saves no checkpoint and reads no test data. CPU fixture tests passing do not establish GPU compatibility.
 
-Evidence: `results/assets-verification-2026-11-09.json`, `results/chinese-transfer-verification-2026-11-09.json`, `results/gpt2-cache-verification-2026-11-09.json`. Summary figure: `results/milestone_summary.{png,pdf}`. It shows measured test compression and corpus capacity, explicitly labeled as 20 MB tokenizer pilots. Full 1 GB tokenizer studies, real model bpb, generation speed and training comparisons are still pending. No project GPU job has been submitted.
+Evidence: `results/assets-verification-2026-11-09.json`, `results/chinese-transfer-verification-2026-11-09.json`, `results/gpt2-cache-verification-2026-11-09.json`. Summary figure: `results/milestone_summary.{png,pdf}`. It shows measured test compression and corpus capacity, explicitly labeled as 20 MB tokenizer pilots. Full 1 GB tokenizer studies, real model bpb, generation speed and training comparisons are still pending. That checkpoint preceded the later GTX diagnostics and active allocation documented below.
 
 See `docs/data-handoff.md` for the pinned model path and conditional smoke/training commands, and `docs/cluster-preflight.md` for the storage calculation. Get useful A/B/E results and handoff materials ready by **11 November**, before the **12 November** departure and **17 November** presentation. 200M expansions and additional innovations remain lower priority.
 
@@ -112,8 +112,8 @@ it retained no cache and cleaned up those files. The original full resolver
 report is kept privately outside Git. Shared environments remain unchanged.
 
 The approved fresh-environment installation and existing Slurm forward/backward
-test commands are ready in `docs/project-environment.md`. No GPU test, training
-job ID or model result exists yet. Request either a 20 GiB home quota or an
+test commands are ready in `docs/project-environment.md`. At that checkpoint no GPU test or training job had been launched; the later
+GTX diagnostics and allocation 757238 supersede that state. Request either a 20 GiB home quota or an
 approved persistent runtime path with at least 10 GiB free, visible to compute
 nodes. Keep Chinese 50M A/B/E first once installation and GPU verification pass.
 
@@ -137,9 +137,44 @@ The 36-hour sequential GTX allocation uses an immutable persistent release
 worktree and `cluster/run_chinese_gtx50.py`. It first exercises the unmodified
 trainer for two full accumulation steps per condition, then runs assigned
 Chinese 50M A/B/E and evaluates/plots their real outputs automatically. The
-training implementation remains unchanged. **41 offline tests pass**, including
+training implementation remains unchanged. **42 offline tests pass**, including
 quota refusal and batch/schedule invariants. Actual launch/job status is recorded
 in the subsequent handoff update; no diagnostic weights are research results.
 
 Read `docs/gtx1060-handoff.md` first for the current path. Preserve the active
 release worktree. No 200M run, extra tokenizer fit or new environment is needed.
+
+## Active Chinese allocation — 9 November, 17:30 Taipei
+
+Slurm job **757238** is running on **cmpt053**, using unchanged DL_HW and immutable
+release **31dbce7f645018eb221d55f5b7756872396de9b5** at
+`~/tokenizer-switch-releases/zh50-31dbce7f6450/`. It reserves one GTX 1060 for at
+most 36 hours, runs validation-only actual-trainer smoke checks first, and then
+assigned Chinese 50M A → B → E sequentially. All use micro-batch 1 / accumulation
+64, BF16, 49,938,432 actual tokens and validation-only periodic evaluation.
+
+The allocation automatically saves/hashes the real checkpoints, evaluates the
+saved models, measures generation speed, collects results and plots real logs.
+Its quota guard reserves 2.9 GiB for remaining checkpoints/save/log headroom;
+preflight passed around 6.10 GiB used under the hard 10 GiB limit. Compute nodes
+use a conservative `du` fallback against that confirmed limit when quota tools
+are unavailable. No additional runtime, dataset upload or coursework deletion.
+
+Monitor release `results/chinese_gtx50_757238.json` and canonical
+`~/tokenizer-switch/logs/zh50_ABE_757238.out`. Checkpoints are canonical
+`~/tokenizer-switch/runs/{A_keep_zh,B_swap_fvt_zh,E_progressive_zh}_50M/model`.
+The detached release must not be changed or removed; the parent/main checkout
+may synchronize handoff documents independently. Formal model quality/speed
+results remain pending while this allocation runs. No 200M work is queued.
+
+All **42 offline tests passed**, including quota/batch invariants and swapped-
+vocabulary generation EOT regression. The generation benchmark now suppresses
+each tokenizer’s actual EOT and uses a matching padding ID/explicit attention
+mask. This is an evaluation correction; Mathieu’s training algorithms are
+unchanged.
+
+Verified after launch: **A/B/E exact trainer smoke gates all passed** (two full
+accumulation steps each), and the controller advanced to **training_A_keep** at
+17:36 Taipei. `results/chinese_gtx50_status_757238_2026-11-09.json` is a launch-day
+snapshot; read the cluster controller for live status. No formal 50M checkpoint
+has completed yet.

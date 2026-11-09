@@ -1,6 +1,6 @@
 # Cluster preflight — 9 November 2026
 
-**Latest: GTX 1060 fallback validated in job 757153.** No new environment or
+**Latest: GTX fallback validated in job 757153; allocation 757238 now runs the assigned A/B/E sequence. All exact trainer gates passed and formal A_keep is active.** No new environment or
 extra storage is needed for that path. Use `docs/gtx1060-handoff.md`; the isolated
 RTX 5050 installation budget below remains blocked.
 
@@ -89,7 +89,7 @@ Portable evidence is in `results/chinese-transfer-verification-2026-11-09.json`
 and `results/gpt2-cache-verification-2026-11-09.json`. Private account and course
 diagnostics remain outside Git.
 
-## Gate before Chinese 50M A/B/E
+## RTX-specific gate (the current GTX path is in its dedicated handoff)
 
 1. Obtain sufficient approved persistent storage, then install the separate
    hash-pinned project environment using `docs/project-environment.md`. Verify

@@ -1,0 +1,33 @@
+{
+  "job_id": "757238",
+  "submitted_date": "2026-11-09",
+  "submitted_time_approx_taipei": "17:30",
+  "last_verified_slurm_state": "RUNNING",
+  "last_verified_stage": "training_A_keep",
+  "release_commit": "31dbce7f645018eb221d55f5b7756872396de9b5",
+  "release_path": "~/tokenizer-switch-releases/zh50-31dbce7f6450",
+  "node": "cmpt053",
+  "wall_limit_hours": 36,
+  "gpu": "NVIDIA GeForce GTX 1060 6GB",
+  "environment": "unchanged /opt/conda/miniconda3/envs/DL_HW",
+  "torch": "2.6.0+cu124",
+  "micro_batch": 1,
+  "grad_accum": 64,
+  "precision": "bf16",
+  "tokens_per_step": 65536,
+  "actual_tokens_per_run": 49938432,
+  "conditions": [
+    "A",
+    "B",
+    "E"
+  ],
+  "offline_tests_passed": 42,
+  "new_environment_installed": false,
+  "formal_training_complete": false,
+  "checkpoint_directory": "~/tokenizer-switch/runs",
+  "progress_file": "~/tokenizer-switch-releases/zh50-31dbce7f6450/results/chinese_gtx50_757238.json",
+  "followups": "Automatic sequential training, checkpoint evaluation, speed measurement and figures after trainer smoke passes",
+  "scope": "Launch snapshot; read live controller for current state",
+  "actual_trainer_smoke": "all three passed, two full accumulation steps each",
+  "controller_stage_updated_at": "2026-11-09T09:36:24.596421+00:00"
+}

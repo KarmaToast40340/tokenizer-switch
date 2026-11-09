@@ -2,7 +2,8 @@
 
 **Current execution path: validated GTX 1060 with unchanged DL_HW**, micro-batch
 1 / accumulation 64, using the text-only launcher. See `docs/gtx1060-handoff.md`
-for actual job results, checkpoint sizes and sequential-run status. The separate
+for actual job results, checkpoint sizes and sequential-run status. Job 757238
+has passed all exact trainer smoke gates and is running formal A_keep. The separate
 RTX 5050 installation remains blocked; its conditional commands below are an
 alternative, not the current GPU plan.
 
@@ -21,7 +22,8 @@ Each model-data corpus has 1,000 validation and 1,000 test documents. Chinese
 GPT-2 encoding alone is large enough for Mathieu's Chinese A at 200M. Code at
 200M and Chinese B/E at 200M still require expanded, reverified corpora.
 Capacity is not a promise of unique sampling: the existing sampler samples with
-replacement. Model training has not been launched.
+replacement. Full Chinese training is now active in job 757238, using the validated
+GTX fallback; formal checkpoint comparisons are pending.
 
 Both tokenizers were selected on validation using a predeclared rule: lossless on
 target + English, English NSL <=1.25, minimum target NSL. All mini-grid fits use

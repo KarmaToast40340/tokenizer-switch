@@ -103,3 +103,37 @@ was identified that fits this quota and the planned checkpoints. Evidence:
 Additional storage would be required for the RTX 5050 option; **it is not
 required for this validated GTX fallback**. Continue useful 50M results and
 handoff before 11 November rather than repeatedly requesting a storage path.
+
+## Active job and monitoring
+
+**757238**, submitted 9 November at approximately 17:30 Taipei, is running on
+cmpt053 with a 36-hour wall limit. Release: `31dbce7f645018eb221d55f5b7756872396de9b5`
+at `~/tokenizer-switch-releases/zh50-31dbce7f6450/`. The parent checkout may advance
+without changing this detached release. Do not remove or modify the release.
+
+The controller first performs validation-only actual-trainer smoke checks. Its
+current stage and passed gates are authoritative in:
+
+```bash
+cat ~/tokenizer-switch-releases/zh50-31dbce7f6450/results/chinese_gtx50_757238.json
+squeue -j 757238
+sacct -j 757238 --format=JobID,State,Elapsed,ExitCode
+tail -30 ~/tokenizer-switch/logs/zh50_ABE_757238.out
+```
+
+After all three pass, A/B/E run sequentially without further submission or SSH
+access. They preserve BF16 and use the same micro-batch 1 / accumulation 64.
+Formal checkpoints stay at canonical `~/tokenizer-switch/runs/`. Final saved-
+model bpb, generation speed CSV, run summary and PNG/PDF curves will be under
+`~/tokenizer-switch-releases/zh50-31dbce7f6450/results/chinese_models_gtx50_757238/`.
+There are no completed formal checkpoint results yet at this launch update.
+
+The launch record is `results/chinese_gtx50_launch_757238.json`. All 42 offline
+tests pass. The generation-speed CLI explicitly uses each tokenizer’s true EOT,
+matching padding and an all-ones prompt attention mask; this prevents the old
+GPT-2 EOT ID in a swapped model’s generation config from changing the protocol.
+
+Verified launch-day status: all three exact trainer smoke gates passed and
+**formal A_keep is active** (controller `training_A_keep`, 17:36 Taipei). The
+committed status JSON is a snapshot, not live monitoring. No formal 50M model
+quality/speed result is claimed yet.

@@ -52,3 +52,8 @@ implementation; Djam coordinates the cluster experiments.
    otherwise state their status and the concrete runtime dependency.
 5. Next priority: finish the basic comparison before extensions. Hypotheses
    about E remain hypotheses until the real checkpoints are evaluated.
+
+Live execution: job **757238** passed all exact trainer smoke gates and entered
+formal Chinese A_keep 50M on 9 November at about 17:36 Taipei. B/E and saved-model
+evaluation/figures follow automatically. Diagnostic figures are not model-quality
+results; read the live controller before updating the presentation.
