@@ -116,11 +116,14 @@ check stops publication; numbers are not silently promoted to verified results.
 The new job reuses checkpoints/data in place and needs only small logs/figures,
 with a 1.1 GiB free-space guard; no environment or weight copies are needed.
 
-Do not automatically start corrected 50M runs. First test actual train-mode
-forward/backward memory on the selected GPU, budget fresh checkpoints, and
-review the corrected protocol with Mathieu/Djam. They should review trainer
-mode ownership, scorer restoration, explicit eval metadata and E post-pruning
-score matching. A 200M extension remains lower priority.
+The user subsequently authorized **fresh corrected Chinese 50M A/B/E**, after
+preserving/validating the pilot. This supersedes the earlier no-auto-retrain
+gate. The independent cluster watcher at `4cc7bff` runs a measured train-mode GPU
+check, calculates actual checkpoint/quota/runtime reserves, then submits the
+fresh matched sequence only if all checks pass. See
+[corrected-chinese-handoff.md](corrected-chinese-handoff.md). Mathieu/Djam should
+review mode ownership, restoration, no-overwrite guards, matching settings and
+E post-pruning evaluation. 200M extensions remain deferred.
 
 ## Durable monitoring and publication
 
@@ -161,3 +164,11 @@ training and verification continue independently. A stopped collector is not
 proof that the GPU job failed. Inspect its `collector.json`, the remote watcher
 state and Slurm accounting before restarting. Do not publish partial or failed
 verification output. No real E score or speed/figure is claimed before this gate.
+
+
+The original Mac collector stopped at 14:40 on DNS/SSH failure. At 16:35 both
+cluster watchers remained alive, parent PID 1 and independent session IDs.
+The newly deployed corrected watcher does not depend on that collector. Closing
+the laptop does not stop cluster submission, training or evaluation; downloading
+results and GitHub publication require a connected authenticated Mac. No GitHub
+credentials are stored on the cluster. See the corrected handoff for actual IDs.

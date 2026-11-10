@@ -44,3 +44,11 @@ figures, provenance and audit reports are included. See the
 locations. Job 757238 uses a frozen release; publishing this catalog does not
 change its source or inputs. Formal checkpoint metrics should be collected from
 the real run after completion, never inferred from smoke-test losses.
+
+
+`corrected-chinese-deployment-2026-11-10.json` is **deployment/capacity evidence,
+not corrected model results**. The independent cluster watcher prioritizes fresh
+Chinese 50M A/B/E after verified pilot completion; the measured GPU gate and full
+training job IDs do not exist yet. Corrected outputs use a separate run/results
+root and explicit dropout-0.1 labels; pilot outputs retain dropout-disabled /
+provisional labels. See the [corrected handoff](../docs/corrected-chinese-handoff.md).

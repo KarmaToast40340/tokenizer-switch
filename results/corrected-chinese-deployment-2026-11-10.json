@@ -1,0 +1,45 @@
+{
+  "scope": "Corrected follow-up armed, not submitted training or measured corrected runtime",
+  "root": "$HOME/tokenizer-switch-releases/zh50-corrected-4cc7bff72953",
+  "source_commit": "4cc7bff729537e17b471bef36e3a40cd2e11e5d3",
+  "watcher": {
+    "status": "waiting_pilot_verification",
+    "pid": 8980,
+    "commit": "4cc7bff729537e17b471bef36e3a40cd2e11e5d3",
+    "pilot_job_id": "757238",
+    "corrected_gate_job_id": null,
+    "corrected_training_job_id": null,
+    "survives_laptop_disconnect": true,
+    "github_publication": "Local/manual; no credentials on cluster",
+    "updated_at": "2026-11-10T08:34:34.126074+00:00"
+  },
+  "interpreter": "/opt/conda/miniconda3/envs/DL_HW/bin/python",
+  "source_hashes_unchanged": {
+    "scripts/train.py": "3d705ca762f0e82bb34ecd6be6de27591fba329a95ab5623189b63180f6e2b7f",
+    "src/toksw/metrics.py": "63a7e2e7f2dfedad457651bb47e3aeaa38f4cb8592c2339df789316ad49f42dc",
+    "scripts/eval_bpb.py": "a99cc6e846a81740cfa7e1b5497d553fac557a87bb8b994bfd8836ebbc34396d",
+    "scripts/gen_speed.py": "3b88e2ae13c37ace17f33c0dbabc4def3ed00d758e0353082ee0e939eb6efe94",
+    "cluster/run_chinese_gtx50.py": "389f37f4a4870c042afa8ca9e43ec6233e4b0462d42ac4b1ab85820f437babc5"
+  },
+  "quota": {
+    "used_bytes": 7565180928,
+    "hard_limit_bytes": 10737418240,
+    "method": "quota /net/course"
+  },
+  "measured_A_B_checkpoint_directory_bytes": [
+    501332991,
+    500956042
+  ],
+  "estimated_storage_after_E": {
+    "used_bytes": 8082914186,
+    "hard_limit_bytes": 10737418240,
+    "free_bytes": 2654504054,
+    "remaining_final_checkpoint_bytes": 1528410899,
+    "save_workspace_bytes": 509721599,
+    "logs_and_headroom_bytes": 402653184,
+    "required_free_bytes": 2440785682,
+    "projected_reserved_peak_bytes": 10523699868,
+    "fits": true
+  },
+  "planning_caveat": "E size approximated by B plus 16 MiB pilot-output allowance. Actual sizes/quota and corrected GPU memory/runtime gate required before full submission."
+}

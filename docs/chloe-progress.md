@@ -5,13 +5,22 @@ Objective: compare GPT-2 small tokenizer switching on code and Chinese (A keep, 
 Milestone: **17 November 2026**, English, 5 minutes + 3 minutes Q&A. Deliver Chloé’s assets and presentation inputs by **11 November**; travel 12–21 November. Basic 50M comparisons precede rho ablations, 200M extensions or unspecified innovations.
 
 
-## Current priority — confirmed train/eval regression (10 November)
+## Current priority — preserve pilot; fresh corrected A/B/E authorized (10 November)
 
 **All model scores from job 757238 are PROVISIONAL for the intended study:**
 training used eval mode, so dropout 0.1 was disabled throughout A/B/E. Gradients
 and updates still occurred. Evaluation itself correctly uses eval mode; valid
 reevaluation describes the existing weights, but cannot repair their training.
 Fresh training is necessary for the intended dropout-enabled comparison.
+
+
+**Latest authorization:** finish/preserve this pilot, then prioritize fresh corrected
+Chinese 50M A/B/E. A cluster-only watcher is now deployed and alive at revision
+**4cc7bff**, waiting for pilot verification; no corrected Slurm job ID exists yet.
+See [the corrected-run handoff](corrected-chinese-handoff.md) and the deployment
+update below. Historical instructions against automatic corrected submission are
+superseded. Full submissions require measured train-mode GPU/runtime and quota
+checks; 200M work remains deferred.
 
 The exact release/source hashes and six controlled A/B/E CLI traces establish
 this diagnosis; see [train-mode-diagnosis.md](train-mode-diagnosis.md) and the
@@ -20,7 +29,7 @@ explicitly enables training and restores metric mode in `finally`. It was
 implemented/tested in a separate local worktree. The active cluster release,
 inputs, checkpoints, DL_HW and coursework remain unchanged.
 
-**14:24 Taipei:** job **757238 RUNNING**, E logged step 250/762 (16,449,536 tokens).
+**16:35 Taipei:** job **757238 RUNNING**, E logged step 410/762 (26,935,296 tokens).
 A/B checkpoints are saved and controller-hashed. Their logged test bpb values
 are **1.864271 / 1.646345**, respectively: provisional dropout-disabled pilot
 measurements, not yet independently verified checkpoint results. Finishing E
@@ -245,3 +254,52 @@ collector can publish only manifest-verified small outputs, requiring a clean
 unchanged local/remote branch; it stops on authentication or concurrent edits.
 Its durable state lives outside Git under `tokenizer-switch-local/diagnostics`.
 See [the diagnosis](train-mode-diagnosis.md) for restart and handoff instructions.
+
+
+## Independent corrected follow-up deployed — 10 November, 16:35 Taipei
+
+| Stage | Actual Slurm job ID | Verified status |
+|---|---|---|
+| Dropout-disabled pilot A/B/E | **757238** | RUNNING, E logged step 410/762; A/B saved |
+| Independent pilot verification | Not assigned yet | Original cluster watcher waiting for 757238/account queue to clear |
+| Corrected training-mode GPU/memory/runtime gate | Not assigned yet | New cluster watcher waits for verified pilot/Slurm exit 0 |
+| Fresh corrected Chinese 50M A/B/E | Not assigned yet | Conditional on measured gate/runtime/checkpoint reserve; no premature submission |
+
+Pilot watcher **PID 4149846** and corrected watcher **PID 8980** were both alive
+on hpclogin02, parent PID 1, separate session IDs, after their launching SSH
+commands exited. **They survive laptop closure/SSH disconnect.** The new watcher
+uses immutable persistent release
+`~/tokenizer-switch-releases/zh50-corrected-4cc7bff72953/` (HEAD **4cc7bff**).
+Read `results/corrected_followup.json` for future real job IDs, quotas, measured
+runtime and accounting; logs are `logs/corrected_followup.log`. Slurm manages
+submitted GPU jobs independently. A login-node reboot is a separate failure;
+inspect durable state/locks before any restart.
+
+**The Mac result collector is stopped** following DNS/SSH failure at 14:40.
+Downloading/publishing results and future GitHub PR updates require reconnecting
+the Mac; no GitHub credentials were copied to the cluster. Computation and
+cluster result/state recording continue independently. Do not promise automatic
+GitHub updates while the laptop is closed.
+
+Measured quota after new source staging: **7,565,180,928 / 10,737,418,240 bytes**.
+A/B checkpoint directories contain **501,332,991 / 500,956,042 bytes**. Approximating
+E by B plus 16 MiB for pilot outputs, the initial corrected resource calculation
+reserves **2.273 GiB** and projects a reserved peak of **9.801/10 GiB**. This is a
+tight planning estimate, not a submission decision. Actual E size, quota and the
+larger corrected gate saves are rechecked before full submission and each case.
+Only final checkpoints are saved in a separate root; the pilot is never removed
+or overwritten. No new runtime/cache copy or coursework changes.
+
+**65 offline tests pass (60.32 s)**, including all A/B/C/E real toy CLI modes,
+restoration after evaluation, existing-checkpoint refusal, matched settings,
+quota/runtime failure gates, simulated Slurm sequence and pilot/corrected figure
+scope labels. Shell syntax/whitespace checks pass. Corrected GPU memory/runtime
+is pending the scheduled post-pilot gate; completed dropout-disabled A/B trainer
+wall times are 9.05/7.95 h and are not corrected-mode benchmarks.
+
+The new controller uses the pinned common GPT-2 base, model/data seeds 0/1234,
+block 1024, BF16 micro 1 × accumulation 64, common optimizer/LR settings and
+49,938,432 actual tokens. It verifies mode before every training step and after
+every evaluation, then saves/hashes/evaluates corrected checkpoints and produces
+separate correctly labelled CSV/PNG/PDF comparisons. 20 MB tokenizer fits remain
+pilots, not the proposed 1 GB study. See the handoff for exact paths and gates.

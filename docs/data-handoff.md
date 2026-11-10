@@ -1,5 +1,14 @@
 # Data and evaluation handoff — verified 9 November 2026
 
+> **Latest authorized sequence (10 November, 16:35):** preserve pilot job 757238,
+> then run fresh corrected Chinese 50M A/B/E through the independent cluster
+> watcher. Per-step mode checks, matched settings, separate outputs and measured
+> GPU/quota/runtime gates are ready. See
+> [corrected-chinese-handoff.md](corrected-chinese-handoff.md) for current paths,
+> actual job IDs and laptop-independent monitoring. No corrected job is submitted
+> until the post-pilot gates pass. Mac/GitHub publication remains separate.
+
+
 > **10 November correction:** job 757238 trains in eval mode (dropout disabled).
 > Keep its immutable release unchanged. All scores are provisional for the
 > intended dropout-0.1 comparison; correct inference evaluation cannot repair
