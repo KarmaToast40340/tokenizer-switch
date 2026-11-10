@@ -32,6 +32,24 @@ def command(script,*args):
     subprocess.run([sys.executable,'-u','cluster/text_only.py',script,*map(str,args)],check=True)
 
 
+def comparison_figure(comparison,out,scope_title):
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    fig,axes=plt.subplots(1,3,figsize=(12,4.5),layout='constrained')
+    for ax,key,title in zip(axes,['test_bpb','characters_per_second','trainer_wall_hours'],
+                              ['Test bits / UTF-8 byte (lower)','Generation characters / second (higher)','Reported trainer wall time (hours)']):
+        values=[c[key] for c in comparison]
+        ax.bar(['A / keep','B / FVT','E / pruned'],values,color=['#3568a6','#d9842e','#3d9178'])
+        for i,value in enumerate(values):ax.text(i,value+max(values)*.025,f'{value:.3f}' if key=='test_bpb' else f'{value:.1f}',ha='center')
+        ax.set_title(title,fontsize=9);ax.set_ylim(0,max(values)*1.18);ax.grid(axis='y',alpha=.15);ax.set_axisbelow(True)
+    fig.suptitle(scope_title+'\nGTX 1060')
+    fig.supxlabel('20 MB tokenizer fits, not the proposed 1 GB study. Trainer wall_s includes periodic/final evaluation;\n'
+                  'excludes initial evaluation, E pruning and checkpoint save. Speed: 20 shared prompts × 128 greedy tokens.',fontsize=8)
+    for ext in ['png','pdf']:fig.savefig(out/f'comparison.{ext}',dpi=180)
+    plt.close(fig)
+
+
 def main():
     ap=argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--job-state',type=Path,required=True)
@@ -160,21 +178,7 @@ def main():
                 trainer_wall_hours=c['trainer_wall_hours'],training_scope=scope,provisional=provisional))
         with (args.out/'comparison.csv').open('w',newline='') as f:
             w=csv.DictWriter(f,fieldnames=list(comparison[0]),lineterminator='\n');w.writeheader();w.writerows(comparison)
-        import matplotlib
-        matplotlib.use('Agg')
-        import matplotlib.pyplot as plt
-        fig,axes=plt.subplots(1,3,figsize=(12,4.5),layout='constrained')
-        for ax,key,title in zip(axes,['test_bpb','characters_per_second','trainer_wall_hours'],
-                                  ['Test bits / UTF-8 byte (lower)','Generation characters / second (higher)','Reported trainer wall time (hours)']):
-            values=[c[key] for c in comparison]
-            ax.bar(['A / keep','B / FVT','E / pruned'],values,color=['#3568a6','#d9842e','#3d9178'])
-            for i,value in enumerate(values):ax.text(i,value+max(values)*.025,f'{value:.3f}' if key=='test_bpb' else f'{value:.1f}',ha='center')
-            ax.set_title(title,fontsize=9);ax.set_ylim(0,max(values)*1.18);ax.grid(axis='y',alpha=.15);ax.set_axisbelow(True)
-        fig.suptitle(title+'\nGTX 1060')
-        fig.supxlabel('20 MB tokenizer fits, not the proposed 1 GB study. Trainer wall_s includes periodic/final evaluation;\n'
-                      'excludes initial evaluation, E pruning and checkpoint save. Speed: 20 shared prompts × 128 greedy tokens.',fontsize=8)
-        for ext in ['png','pdf']:fig.savefig(args.out/f'comparison.{ext}',dpi=180)
-        plt.close(fig)
+        comparison_figure(comparison,args.out,title)
         command('scripts/plot_results.py','--logs',*log_paths,'--out',args.out/'training',
                 '--title',title)
         description=('Fresh matched dropout-0.1 training with mode checks on every training phase. '

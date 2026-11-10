@@ -42,6 +42,15 @@ def main():
         answer=subprocess.check_output(cmd,cwd=root,text=True).strip();job=answer.split(';')[0]
         if not job.isdecimal():raise ValueError(f'unexpected sbatch output: {answer}')
         return job
+    def completed(job,key):
+        text=subprocess.check_output(['sacct','-n','-X','-j',job,'--parsable2',
+            '--format=JobIDRaw,State,ExitCode'],text=True).strip()
+        state[key]=text
+        rows=[line.split('|') for line in text.splitlines() if line.split('|')[0]==job]
+        if not rows:return False  # Slurm accounting can lag the queue briefly.
+        if rows[0][1:3]!=['COMPLETED','0:0']:
+            raise RuntimeError(f'job {job} did not complete successfully: {text}')
+        return True
     write()
     deadline=time.monotonic()+args.hours*3600
     try:
@@ -55,6 +64,8 @@ def main():
                 if pilot['status']!='submitted':
                     time.sleep(args.interval);continue
                 state['pilot_verification_job_id']=pilot['verification_job_id']
+                if not completed(pilot['verification_job_id'],'pilot_verification_accounting'):
+                    write();time.sleep(args.interval);continue
                 manifest=Path(pilot['result_dir'])/'manifest.json'
                 report=Path(pilot['result_dir'])/'verification.json'
                 if not manifest.is_file() or not report.is_file():
@@ -73,6 +84,8 @@ def main():
                 check=json.loads(gate.read_text())
                 if check['status']!='passed' or check['commit']!=commit:
                     raise RuntimeError('corrected GPU gate failed or revision mismatch; no training submitted')
+                if not completed(state['corrected_gate_job_id'],'corrected_gate_accounting'):
+                    write();time.sleep(args.interval);continue
                 plan=runtime_plan(check['trials']);state['runtime']=plan
                 # Use the larger of pilot sizes and the gate's measured saves.
                 sizes=[max(a,b['checkpoint_bytes']) for a,b in zip(checkpoint_sizes(args.assets),check['trials'])]
@@ -83,6 +96,8 @@ def main():
                 result=root/f'results/corrected_train_{state["corrected_training_job_id"]}.json'
                 check=json.loads(result.read_text())
                 if check['status']!='completed':raise RuntimeError('corrected allocation ended before verified completion')
+                if not completed(state['corrected_training_job_id'],'corrected_training_accounting'):
+                    write();time.sleep(args.interval);continue
                 state.update(status='completed',corrected_controller=str(result));write();return
             else:
                 raise RuntimeError('ambiguous prior submission state; inspect queue before retry')

@@ -33,6 +33,7 @@ def test_submits_only_after_verified_pilot_and_measured_safe_gate(tmp_path,monke
     def output(cmd,**kwargs):
         if cmd[0]=='git':return 'abc\n'
         if cmd[0]=='squeue':return ''
+        if cmd[0]=='sacct':return f'{cmd[cmd.index("-j")+1]}|COMPLETED|0:0|\n'
         assert cmd[0]=='sbatch'
         submitted.append(cmd)
         return f'{800000+len(submitted)}\n'

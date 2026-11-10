@@ -82,7 +82,7 @@ def train(assets,out,commit,gate_file):
     check=json.loads(gate_file.read_text())
     if check['status']!='passed' or check['commit']!=commit:raise RuntimeError('matching corrected GPU gate required')
     plan=runtime_plan(check['trials'])
-    sizes=checkpoint_sizes(assets)
+    sizes=[max(a,b['checkpoint_bytes']) for a,b in zip(checkpoint_sizes(assets),check['trials'])]
     used,limit,method=usage();reserve=storage_plan(used,limit,sizes)
     # All new output lives here; never under a pilot run directory.
     runs=assets/'runs/chinese_corrected_dropout01_20261110'
