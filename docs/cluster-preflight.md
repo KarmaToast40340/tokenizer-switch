@@ -1,5 +1,14 @@
 # Cluster preflight — 9 November 2026
 
+> **10 November correction:** job 757238 trains in eval mode (dropout disabled).
+> Keep its immutable release unchanged. All scores are provisional for the
+> intended dropout-0.1 comparison; correct inference evaluation cannot repair
+> the learned trajectory. A/B have saved checkpoints; E is running. Read
+> [the confirmed diagnosis and separate post-run workflow](train-mode-diagnosis.md)
+> before interpreting results or launching corrected training. Historical GPU
+> gates do not establish corrected train-mode memory/speed. No automatic retrain.
+
+
 **Latest: GTX fallback validated in job 757153; allocation 757238 now runs the assigned A/B/E sequence. All exact trainer gates passed and formal A_keep is active.** No new environment or
 extra storage is needed for that path. Use `docs/gtx1060-handoff.md`; the isolated
 RTX 5050 installation budget below remains blocked.

@@ -1,5 +1,14 @@
 # Chinese 50M on GTX 1060 — verified 9 November 2026
 
+> **10 November correction:** job 757238 trains in eval mode (dropout disabled).
+> Keep its immutable release unchanged. All scores are provisional for the
+> intended dropout-0.1 comparison; correct inference evaluation cannot repair
+> the learned trajectory. A/B have saved checkpoints; E is running. Read
+> [the confirmed diagnosis and separate post-run workflow](train-mode-diagnosis.md)
+> before interpreting results or launching corrected training. Historical GPU
+> gates do not establish corrected train-mode memory/speed. No automatic retrain.
+
+
 The GTX 1060 fallback works with the **unchanged DL_HW environment**. No new
 environment is needed. The user authorized assessing this fallback while
 preserving coursework and staying below quota; the original assigned Chinese

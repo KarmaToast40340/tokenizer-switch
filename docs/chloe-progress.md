@@ -1,8 +1,51 @@
-# Chloé progress — 9 November 2026
+# Chloé progress — 10 November 2026
 
 Objective: compare GPT-2 small tokenizer switching on code and Chinese (A keep, B FVT swap, C random swap, E progressive/pruned). Compression gains are measured; quality gains from E remain hypotheses.
 
 Milestone: **17 November 2026**, English, 5 minutes + 3 minutes Q&A. Deliver Chloé’s assets and presentation inputs by **11 November**; travel 12–21 November. Basic 50M comparisons precede rho ablations, 200M extensions or unspecified innovations.
+
+
+## Current priority — confirmed train/eval regression (10 November)
+
+**All model scores from job 757238 are PROVISIONAL for the intended study:**
+training used eval mode, so dropout 0.1 was disabled throughout A/B/E. Gradients
+and updates still occurred. Evaluation itself correctly uses eval mode; valid
+reevaluation describes the existing weights, but cannot repair their training.
+Fresh training is necessary for the intended dropout-enabled comparison.
+
+The exact release/source hashes and six controlled A/B/E CLI traces establish
+this diagnosis; see [train-mode-diagnosis.md](train-mode-diagnosis.md) and the
+small synthetic report `results/train-mode-diagnosis-2026-11-10.json`. The fix
+explicitly enables training and restores metric mode in `finally`. It was
+implemented/tested in a separate local worktree. The active cluster release,
+inputs, checkpoints, DL_HW and coursework remain unchanged.
+
+**14:10 Taipei:** job **757238 RUNNING**, E step 230/762 (15,138,816 tokens).
+A/B checkpoints are saved and controller-hashed. Their logged test bpb values
+are **1.864271 / 1.646345**, respectively: provisional dropout-disabled pilot
+measurements, not yet independently verified checkpoint results. Finishing E
+is worthwhile for this consistent pilot. No cancellation, restart, corrected
+50M run or 200M submission was made.
+
+**Validation:** 49 full-suite tests passed in 99.57 seconds, followed by six
+publication-guard tests (55 passing checks total). The first expanded run hit
+local macOS ENOSPC; after disk headroom recovered, the complete rerun passed.
+The paired six-CLI source reproduction passed independently. Slurm shell syntax
+and branch whitespace checks passed. GPU post-verification remains pending.
+
+The prior 42 tests did not assert actual forward-pass training mode and missed
+this regression; corrected mode/exception/CLI tests and paired saved-checkpoint
+proof now cover it. Earlier claims below that training behavior was unchanged
+are superseded by this confirmed diagnosis. Old GPU gates also used dropout
+disabled: retest corrected train-mode memory/speed before any fresh runs.
+
+A separate, locked post-run watcher can submit read-only checkpoint verification
+only after the original allocation ends and the account queue is empty. The
+verifier checks all weight hashes, tokenizer behavior, all 1,000 held-out docs,
+saved/logged score agreement, speed protocol and unchanged weights afterward.
+It produces fresh clearly labelled provisional CSVs and PNG/PDF comparisons.
+Its current deployment/job IDs are recorded below when verified; preparation is
+not a claim that the pending results already exist.
 
 ## Responsibility and allocation
 
@@ -30,7 +73,7 @@ GPU allocations do not change implementation ownership. Extra innovations are un
 - [x] Chinese 400 MB model-training assets + five-point tokenizer grid: verified; see capacity table.
 - [ ] Real model bpb, generation speed and training plots: require actual checkpoints/logs; none invented.
 - [x] GTX 1060 fallback validated in Slurm job 757153 using unchanged DL_HW. All Chinese A/B/E pass at BF16 micro-batch 1 / accumulation 64; checkpoint reserve fits. Separate RTX installation remains blocked, but no administrator help is needed for this fallback.
-- [ ] Full Chinese 50M A/B/E: Slurm job **757238** submitted and running on cmpt053, all three exact trainer smoke gates passed; formal A_keep is active. See the latest execution update and `docs/gtx1060-handoff.md`; formal checkpoint results remain pending.
+- [ ] Full Chinese 50M A/B/E: Slurm job **757238** submitted and running on cmpt053, all three exact trainer smoke gates passed; A/B have saved checkpoints and E is active (10 November). These are dropout-disabled pilots. See the latest execution update and `docs/gtx1060-handoff.md`; formal checkpoint results remain pending.
 
 ## Capacity and storage
 

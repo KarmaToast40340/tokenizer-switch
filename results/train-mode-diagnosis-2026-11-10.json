@@ -1,0 +1,172 @@
+{
+  "scope": "Synthetic tiny-model CPU diagnosis, not project model quality",
+  "seed": 2026,
+  "original_snapshot": "audit-31dbce7",
+  "traces": {
+    "A_keep/release": {
+      "source_commit": "31dbce7f645018eb221d55f5b7756872396de9b5",
+      "source_hashes": {
+        "scripts/train.py": "3d705ca762f0e82bb34ecd6be6de27591fba329a95ab5623189b63180f6e2b7f",
+        "src/toksw/metrics.py": "63a7e2e7f2dfedad457651bb47e3aeaa38f4cb8592c2339df789316ad49f42dc",
+        "src/toksw/model.py": "1a1a52f81fced4876b2b4463e30e00c259978ad3919890bf73269f3452cbfc23"
+      },
+      "loaded_training": false,
+      "configured_dropout_rates": [
+        0.1
+      ],
+      "training_forwards": 4,
+      "training_modes": [
+        false
+      ],
+      "active_dropout_counts": [
+        0
+      ],
+      "evaluation_modes": [
+        false
+      ],
+      "nonzero_backward_calls": 4,
+      "reevaluation_same_checkpoint_max_bpb_difference": 0.0,
+      "saved_checkpoint_vs_logged_bpb_difference": 0.0
+    },
+    "A_keep/fixed": {
+      "source_commit": "6c9a0ee0539d957f539d660f6bbc30c8d2d6162f",
+      "source_hashes": {
+        "scripts/train.py": "58cabce939d3340ea2e8f3adaa8b12733da59552aef04a7b79303c149b3fc1f6",
+        "src/toksw/metrics.py": "9ff2554dd61f23444b052354a70afb38235a2cbab3b1a8a5f7430adba3a91dca",
+        "src/toksw/model.py": "1a1a52f81fced4876b2b4463e30e00c259978ad3919890bf73269f3452cbfc23"
+      },
+      "loaded_training": false,
+      "configured_dropout_rates": [
+        0.1
+      ],
+      "training_forwards": 4,
+      "training_modes": [
+        true
+      ],
+      "active_dropout_counts": [
+        4
+      ],
+      "evaluation_modes": [
+        false
+      ],
+      "nonzero_backward_calls": 4,
+      "reevaluation_same_checkpoint_max_bpb_difference": 0.0,
+      "saved_checkpoint_vs_logged_bpb_difference": 0.0
+    },
+    "B_swap_fvt/release": {
+      "source_commit": "31dbce7f645018eb221d55f5b7756872396de9b5",
+      "source_hashes": {
+        "scripts/train.py": "3d705ca762f0e82bb34ecd6be6de27591fba329a95ab5623189b63180f6e2b7f",
+        "src/toksw/metrics.py": "63a7e2e7f2dfedad457651bb47e3aeaa38f4cb8592c2339df789316ad49f42dc",
+        "src/toksw/model.py": "1a1a52f81fced4876b2b4463e30e00c259978ad3919890bf73269f3452cbfc23"
+      },
+      "loaded_training": false,
+      "configured_dropout_rates": [
+        0.1
+      ],
+      "training_forwards": 4,
+      "training_modes": [
+        false
+      ],
+      "active_dropout_counts": [
+        0
+      ],
+      "evaluation_modes": [
+        false
+      ],
+      "nonzero_backward_calls": 4,
+      "reevaluation_same_checkpoint_max_bpb_difference": 0.0,
+      "saved_checkpoint_vs_logged_bpb_difference": 0.0
+    },
+    "B_swap_fvt/fixed": {
+      "source_commit": "6c9a0ee0539d957f539d660f6bbc30c8d2d6162f",
+      "source_hashes": {
+        "scripts/train.py": "58cabce939d3340ea2e8f3adaa8b12733da59552aef04a7b79303c149b3fc1f6",
+        "src/toksw/metrics.py": "9ff2554dd61f23444b052354a70afb38235a2cbab3b1a8a5f7430adba3a91dca",
+        "src/toksw/model.py": "1a1a52f81fced4876b2b4463e30e00c259978ad3919890bf73269f3452cbfc23"
+      },
+      "loaded_training": false,
+      "configured_dropout_rates": [
+        0.1
+      ],
+      "training_forwards": 4,
+      "training_modes": [
+        true
+      ],
+      "active_dropout_counts": [
+        4
+      ],
+      "evaluation_modes": [
+        false
+      ],
+      "nonzero_backward_calls": 4,
+      "reevaluation_same_checkpoint_max_bpb_difference": 0.0,
+      "saved_checkpoint_vs_logged_bpb_difference": 0.0
+    },
+    "E_progressive/release": {
+      "source_commit": "31dbce7f645018eb221d55f5b7756872396de9b5",
+      "source_hashes": {
+        "scripts/train.py": "3d705ca762f0e82bb34ecd6be6de27591fba329a95ab5623189b63180f6e2b7f",
+        "src/toksw/metrics.py": "63a7e2e7f2dfedad457651bb47e3aeaa38f4cb8592c2339df789316ad49f42dc",
+        "src/toksw/model.py": "1a1a52f81fced4876b2b4463e30e00c259978ad3919890bf73269f3452cbfc23"
+      },
+      "loaded_training": false,
+      "configured_dropout_rates": [
+        0.1
+      ],
+      "training_forwards": 4,
+      "training_modes": [
+        false
+      ],
+      "active_dropout_counts": [
+        0
+      ],
+      "evaluation_modes": [
+        false
+      ],
+      "nonzero_backward_calls": 4,
+      "reevaluation_same_checkpoint_max_bpb_difference": 0.0,
+      "saved_checkpoint_vs_logged_bpb_difference": 0.0
+    },
+    "E_progressive/fixed": {
+      "source_commit": "6c9a0ee0539d957f539d660f6bbc30c8d2d6162f",
+      "source_hashes": {
+        "scripts/train.py": "58cabce939d3340ea2e8f3adaa8b12733da59552aef04a7b79303c149b3fc1f6",
+        "src/toksw/metrics.py": "9ff2554dd61f23444b052354a70afb38235a2cbab3b1a8a5f7430adba3a91dca",
+        "src/toksw/model.py": "1a1a52f81fced4876b2b4463e30e00c259978ad3919890bf73269f3452cbfc23"
+      },
+      "loaded_training": false,
+      "configured_dropout_rates": [
+        0.1
+      ],
+      "training_forwards": 4,
+      "training_modes": [
+        true
+      ],
+      "active_dropout_counts": [
+        4
+      ],
+      "evaluation_modes": [
+        false
+      ],
+      "nonzero_backward_calls": 4,
+      "reevaluation_same_checkpoint_max_bpb_difference": 0.0,
+      "saved_checkpoint_vs_logged_bpb_difference": 0.0
+    }
+  },
+  "paired_update_comparisons": [
+    {
+      "condition": "A_keep",
+      "paired_dense_weight_max_abs_difference": 0.0016363300383090973
+    },
+    {
+      "condition": "B_swap_fvt",
+      "paired_dense_weight_max_abs_difference": 0.001706872135400772
+    },
+    {
+      "condition": "E_progressive",
+      "paired_dense_weight_max_abs_difference": 0.0017699860036373138
+    }
+  ],
+  "conclusion": "Original A/B/E update weights with dropout disabled; fixed trainer enables dropout. Same saved weights score identically from either entry mode; reevaluation cannot undo the changed updates."
+}

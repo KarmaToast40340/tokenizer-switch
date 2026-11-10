@@ -1,5 +1,13 @@
 # Verified results and their scope
 
+**10 November:** all checkpoint scores from job 757238 are provisional for the
+intended study. Its A/B/E make updates with dropout disabled. See
+[the exact-source diagnosis](../docs/train-mode-diagnosis.md). The small
+`train-mode-diagnosis-2026-11-10.json` is synthetic CPU regression evidence,
+not a Chinese model result. Independent real-checkpoint evaluation/speed and
+labelled comparison figures remain pending E and the verification gate.
+
+
 The tokenizer comparisons here are **20 MB fits per candidate: pilot results**,
 smaller than the proposed 1 GB tokenizer study. Model-training corpus capacity,
 tokenizer compression and model quality are separate measurements. A completed
