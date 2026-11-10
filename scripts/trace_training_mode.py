@@ -1,4 +1,4 @@
-"""Passively trace an actual training CLI on toy data; never use on a live job."""
+"""Trace isolated training diagnostics; never attach to an existing/live trainer."""
 import argparse
 import hashlib
 import json
@@ -6,6 +6,7 @@ from pathlib import Path
 import runpy
 import subprocess
 import sys
+import time
 
 import torch
 from transformers import GPT2LMHeadModel
@@ -15,6 +16,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--script', type=Path, required=True)
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--scope', default='passive toy CLI trace; not project model results')
     ap.add_argument('args', nargs=argparse.REMAINDER)
     args = ap.parse_args()
     if args.out.exists():
@@ -40,11 +42,16 @@ def main():
     script = args.script.resolve()
     forwarded = args.args[1:] if args.args[:1] == ['--'] else args.args
     sys.argv = [str(script), *forwarded]
+    start = time.perf_counter()
     try:
         runpy.run_path(str(script), run_name='__main__')
     finally:
         root = script.parents[1]
-        report = dict(scope='passive toy CLI trace; not project model results',
+        report = dict(scope=args.scope, cli_wall_seconds=time.perf_counter()-start,
+                      gpu=torch.cuda.get_device_name() if torch.cuda.is_available() else None,
+                      torch=str(torch.__version__),
+                      gpu_peak_allocated_bytes=torch.cuda.max_memory_allocated() if torch.cuda.is_available() else None,
+                      gpu_peak_reserved_bytes=torch.cuda.max_memory_reserved() if torch.cuda.is_available() else None,
                       source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),
                       source_hashes={rel:hashlib.sha256((root/rel).read_bytes()).hexdigest()
                                      for rel in ['scripts/train.py','src/toksw/metrics.py','src/toksw/model.py']},

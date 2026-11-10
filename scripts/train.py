@@ -16,6 +16,7 @@ import torch.nn.functional as F
 from toksw import model as M
 from toksw.data import MixedBatchSampler, TokenFile, iter_jsonl
 from toksw.metrics import bits_per_byte
+from toksw.modes import require_mode
 from toksw.schedule import lr_at, p_new
 from toksw.tok import load_tokenizer
 from toksw.utils import JsonlLogger, load_config
@@ -24,12 +25,16 @@ from toksw.vocab import prune_to_new
 
 def evaluate(setup, old_tok, new_tok, texts, cfg, device):
     out = {}
-    if setup.old_map is not None:
-        out["old"] = bits_per_byte(setup.model, old_tok, texts, setup.old_map,
-                                   cfg["block_size"], cfg["eval_batch"], device)["bpb"]
-    if setup.new_map is not None:
-        out["new"] = bits_per_byte(setup.model, new_tok, texts, setup.new_map,
-                                   cfg["block_size"], cfg["eval_batch"], device)["bpb"]
+    was_training = setup.model.training
+    try:
+        if setup.old_map is not None:
+            out["old"] = bits_per_byte(setup.model, old_tok, texts, setup.old_map,
+                                       cfg["block_size"], cfg["eval_batch"], device)["bpb"]
+        if setup.new_map is not None:
+            out["new"] = bits_per_byte(setup.model, new_tok, texts, setup.new_map,
+                                       cfg["block_size"], cfg["eval_batch"], device)["bpb"]
+    finally:
+        require_mode(setup.model, was_training)
     return out
 
 
@@ -43,7 +48,8 @@ def main():
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     run = Path(cfg["out"]) / f"{cfg['run_name']}_{cfg['token_budget'] // 1_000_000}M"
-    run.mkdir(parents=True, exist_ok=True)
+    # There is no optimizer/RNG resume support: existing runs must be preserved.
+    run.mkdir(parents=True, exist_ok=False)
     (run / "config.json").write_text(json.dumps(cfg, indent=2))
     log = JsonlLogger(run / "log.jsonl")
 
@@ -53,6 +59,7 @@ def main():
     model = setup.model.to(device)
     # Hugging Face loads in eval mode; the trainer owns the training policy.
     model.train()
+    require_mode(model, True, cfg.get("expected_dropout"))
 
     tokens = Path(cfg["tokens_dir"]) / cfg["domain"]
     old_file = TokenFile(tokens / cfg["old_name"]) if setup.old_map is not None else None
@@ -85,6 +92,8 @@ def main():
     t0 = time.time()
     bytes_seen = 0
     for step in range(total_steps):
+        # Check every training phase, including the first one after evaluation.
+        require_mode(model, True, cfg.get("expected_dropout"))
         lr = lr_at(step, total_steps, cfg["lr"], warmup, cfg["min_lr_ratio"])
         for g in opt.param_groups:
             g["lr"] = lr
@@ -116,7 +125,8 @@ def main():
                     model_training_after_eval=model.training)
 
     final = evaluate(setup, old_tok, new_tok, test_texts, cfg, device)
-    log.log(step=total_steps, final_eval=final, wall_s=time.time() - t0)
+    log.log(step=total_steps, final_eval=final, wall_s=time.time() - t0,
+            model_training_after_eval=model.training, training_mode_checks=total_steps)
     print(f"[final] {final}")
 
     ckpt = run / "model"
@@ -128,7 +138,7 @@ def main():
         setup = M.Setup(model, None, np.arange(pruned.shape[0]), setup.token_bytes[setup.union.new2union])
         model.to(device)
         pruned_eval = evaluate(setup, old_tok, new_tok, test_texts, cfg, device)
-        log.log(step=total_steps, final_eval_pruned=pruned_eval)
+        log.log(step=total_steps, final_eval_pruned=pruned_eval, model_training_after_eval=model.training)
         print(f"[final pruned] {pruned_eval}")
     model.save_pretrained(ckpt)
     tok_src = cfg["new_tokenizer"] if cfg["condition"] != "keep" else None

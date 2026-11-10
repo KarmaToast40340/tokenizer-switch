@@ -40,6 +40,16 @@ def test_all_conditions_with_validation_and_pruning(tmp_path, corpus, old_tok, n
         rows=[json.loads(line) for line in (run/"log.jsonl").read_text().splitlines()]
         assert any(r.get("step")==2 and "eval" in r for r in rows)
         final=next(r["final_eval"] for r in rows if "final_eval" in r)
+        final_row=next(r for r in rows if "final_eval" in r)
+        assert final_row["training_mode_checks"]==4 and final_row["model_training_after_eval"]
+        assert all(r["model_training"] for r in rows if "train_bpb" in r)
+        assert all(r["model_training_after_eval"] for r in rows if "eval" in r)
+        if condition=="A_keep":
+            before=(run/"model/model.safetensors").read_bytes()
+            retry=subprocess.run([sys.executable,"scripts/train.py",*command[command.index("--")+1:]],
+                cwd=root,env=env,capture_output=True,text=True,timeout=180)
+            assert retry.returncode and "FileExistsError" in retry.stderr
+            assert (run/"model/model.safetensors").read_bytes()==before
         cfg=json.loads((run/"model/config.json").read_text())
         assert cfg["vocab_size"] == (old_tok.get_vocab_size() if condition=="A_keep" else new_tok.get_vocab_size())
         if condition=="E_progressive":
