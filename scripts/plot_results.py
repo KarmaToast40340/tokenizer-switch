@@ -30,8 +30,10 @@ def compression(csv_path, out):
     plt.close(fig)
 
 
-def training(logs, out):
+def training(logs, out, title=None):
     fig, axes = plt.subplots(1, 2, figsize=(12, 4), constrained_layout=True)
+    if title:
+        fig.suptitle(title)
     measured = False
     for log in logs:
         path = Path(log)
@@ -72,11 +74,12 @@ def main():
     group.add_argument("--compression")
     group.add_argument("--logs", nargs="+")
     ap.add_argument("--out", required=True, help="output prefix without extension")
+    ap.add_argument("--title", help="explicit scope label for training figures")
     args = ap.parse_args()
     if args.compression:
         compression(args.compression, args.out)
     else:
-        training(args.logs, args.out)
+        training(args.logs, args.out, args.title)
 
 
 if __name__ == "__main__":

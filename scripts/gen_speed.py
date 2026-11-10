@@ -12,6 +12,7 @@ from transformers import GPT2LMHeadModel
 
 from toksw.data import iter_jsonl
 from toksw.tok import eot_id, load_tokenizer
+from toksw.splits import file_sha256
 
 
 @torch.no_grad()
@@ -50,17 +51,21 @@ def main():
             mask = torch.ones_like(ids)
             if device == "cuda":
                 torch.cuda.synchronize()
-            t0 = time.time()
+            t0 = time.perf_counter()
             out = model.generate(ids, max_new_tokens=args.new_tokens, min_new_tokens=args.new_tokens,
                                  do_sample=False, eos_token_id=eos, pad_token_id=eos, attention_mask=mask)
             if device == "cuda":
                 torch.cuda.synchronize()
-            secs += time.time() - t0
+            secs += time.perf_counter() - t0
             chars += len(tok.decode(out[0, ids.shape[1]:].tolist(), skip_special_tokens=True))
         print(f"{ck}: {chars / secs:.0f} chars/s ({chars / (len(prompts) * args.new_tokens):.2f} chars/token)")
         results.append(dict(checkpoint=ck, domain=args.domain, split=args.split, device=device,
                             n_prompts=len(prompts), prompt_chars=args.prompt_chars,
                             new_tokens=args.new_tokens, chars=chars, seconds=secs,
+                            eos_token_id=eos, pad_token_id=eos, prompt_attention_mask="all_ones",
+                            raw_sha256=file_sha256(Path(args.raw) / args.domain / f"{args.split}.jsonl"),
+                            tokenizer_sha256=file_sha256(Path(ck) / "tokenizer.json"),
+                            torch=str(torch.__version__), gpu=torch.cuda.get_device_name() if device == "cuda" else None,
                             chars_per_second=chars/secs, tokens_per_second=len(prompts)*args.new_tokens/secs))
         del model
         if device == "cuda":

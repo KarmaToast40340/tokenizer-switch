@@ -36,6 +36,21 @@ def test_generation_suppresses_actual_tokenizer_eot(tmp_path, old_tok):
                    cwd=root,env=env,check=True,capture_output=True,text=True,timeout=180)
     row = next(csv.DictReader(out.open()))
     assert int(row['chars']) > 0
+    assert row['eos_token_id'] == row['pad_token_id'] == '0'
+    assert row['prompt_attention_mask'] == 'all_ones'
+    assert float(row['seconds']) > 0
+    from toksw.splits import file_sha256
+    assert row['raw_sha256'] == file_sha256(raw/'test.jsonl')
+    assert row['tokenizer_sha256'] == file_sha256(ckpt/'tokenizer.json')
+    bpb = tmp_path/'bpb.json'
+    subprocess.run([sys.executable,'scripts/eval_bpb.py',str(ckpt),'--domain','code','--raw',str(raw.parent),
+                    '--block-size','32','--batch-size','1','--out',str(bpb)],
+                   cwd=root,env=env,check=True,capture_output=True,text=True,timeout=180)
+    evaluation = json.loads(bpb.read_text())
+    assert evaluation['model_training_after_eval'] is False
+    assert evaluation['n_bytes'] == len('def f(): return 42'.encode())
+    assert evaluation['raw_sha256'] == row['raw_sha256']
+    assert evaluation['tokenizer_sha256'] == row['tokenizer_sha256']
 
 
 def test_saved_checkpoint_bpb_and_speed_cli(tmp_path, old_tok):
