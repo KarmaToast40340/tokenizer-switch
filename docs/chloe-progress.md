@@ -20,7 +20,7 @@ explicitly enables training and restores metric mode in `finally`. It was
 implemented/tested in a separate local worktree. The active cluster release,
 inputs, checkpoints, DL_HW and coursework remain unchanged.
 
-**14:10 Taipei:** job **757238 RUNNING**, E step 230/762 (15,138,816 tokens).
+**14:24 Taipei:** job **757238 RUNNING**, E logged step 250/762 (16,449,536 tokens).
 A/B checkpoints are saved and controller-hashed. Their logged test bpb values
 are **1.864271 / 1.646345**, respectively: provisional dropout-disabled pilot
 measurements, not yet independently verified checkpoint results. Finishing E
@@ -221,3 +221,27 @@ accumulation steps each), and the controller advanced to **training_A_keep** at
 17:36 Taipei. `results/chinese_gtx50_status_757238_2026-11-09.json` is a launch-day
 snapshot; read the cluster controller for live status. No formal 50M checkpoint
 has completed yet.
+
+
+## Post-E verification armed — 10 November, 14:24 Taipei
+
+The remote watcher is running independently (PID **4149846**) in new persistent
+`~/tokenizer-switch-postcheck/0c375eedccad`, detached at **0c375ee**. Its durable
+state is `results/postwatch757238.json`; stdout/stderr is
+`logs/postwatch757238.log`. It was checked alive after SSH logout. Status is
+**waiting**, so there is **no verification Slurm job ID yet**. It will submit
+one read-only four-hour GTX 1060 job only after 757238 and any account lab jobs
+leave the queue and all three checkpoint-save records exist.
+
+The active release remains clean at **31dbce7**, and hashes of trainer, metric,
+checkpoint scorer, generation benchmark and controller were identical before
+and after staging. Quota before staging: **7,384,332 / 10,485,760 KiB** used;
+new staging is only source, small logs and figures, with no model/data/runtime
+copies. Checkpoint reserve remains available. The post-verifier retains a
+1.1 GiB free-space guard. No coursework/environment changes were made.
+
+Source/checkpoint scores remain provisional. After verification, the local
+collector can publish only manifest-verified small outputs, requiring a clean
+unchanged local/remote branch; it stops on authentication or concurrent edits.
+Its durable state lives outside Git under `tokenizer-switch-local/diagnostics`.
+See [the diagnosis](train-mode-diagnosis.md) for restart and handoff instructions.
