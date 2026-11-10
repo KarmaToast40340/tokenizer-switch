@@ -58,6 +58,8 @@ def trial(args):
     torch.manual_seed(cfg['seed'])
     setup = M.build(cfg['condition'], old_tok, new_tok, args.base_model, 'fvt', cfg['seed'])
     model = setup.model.to('cuda')
+    model.train()  # Match the explicit policy in the corrected trainer.
+    training_forward_mode = model.training
     old = TokenFile('data/tokens/wiki_zh/gpt2') if setup.old_map is not None else None
     new = TokenFile('data/tokens/wiki_zh/wiki_zh70_gpt4_50k') if setup.new_map is not None else None
     tokens_per_step = cfg['block_size'] * cfg['micro_batch'] * cfg['grad_accum']
@@ -152,6 +154,7 @@ def trial(args):
         checkpoint_bytes = sum(p.stat().st_size for p in Path(directory).rglob('*') if p.is_file())
         save_s = time.perf_counter() - start
     return dict(status='passed', condition=args.condition, precision=args.precision,
+                training_forward_mode=training_forward_mode,
                 vocab_size=vocab_size, final_vocab_size=model.config.vocab_size,
                 block_size=cfg['block_size'], micro_batch=args.micro_batch, grad_accum=accum,
                 tokens_per_optimizer_step=tokens_per_step, measured_micro_batches=args.measure_micro,

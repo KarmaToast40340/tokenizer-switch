@@ -25,12 +25,17 @@ def test_all_conditions_with_validation_and_pruning(tmp_path, corpus, old_tok, n
         encode_corpus(tok,corpus,tmp_path/"tokens/code"/name)
     env = os.environ | dict(PYTHONPATH=str(root/"src"),HF_HUB_OFFLINE="1",TRANSFORMERS_OFFLINE="1",OMP_NUM_THREADS="1",TOKENIZERS_PARALLELISM="false")
     for condition in ["A_keep","B_swap_fvt","C_swap_random","E_progressive"]:
-        command=[sys.executable,"scripts/train.py",f"configs/train/{condition}.yaml",
+        trace=tmp_path/f"{condition}_mode_trace.json"
+        command=[sys.executable,"scripts/trace_training_mode.py","--script","scripts/train.py","--out",str(trace),"--",f"configs/train/{condition}.yaml",
                  f"base_model={base}",f"old_tokenizer={old}",f"new_tokenizer={new}","old_name=old","new_name=new",
                  f"raw_dir={tmp_path/'raw'}",f"tokens_dir={tmp_path/'tokens'}",f"out={tmp_path/'runs'}",
                  f"run_name={condition}","token_budget=128","block_size=32","micro_batch=1","grad_accum=1",
                  "eval_every=2","eval_docs=1","eval_batch=1","eval_split=validation","log_every=1"]
         subprocess.run(command,cwd=root,env=env,check=True,capture_output=True,text=True,timeout=180)
+        modes=json.loads(trace.read_text())
+        assert modes["training_forwards"] and all(e["model_training"] and e["active_dropout_modules"]>0 for e in modes["training_forwards"])
+        assert modes["evaluation_forwards"] and all(not e["model_training"] and not e["active_dropout_modules"] for e in modes["evaluation_forwards"])
+        assert any(g>0 for g in modes["backward_gradient_norms"])
         run=tmp_path/"runs"/f"{condition}_0M"
         rows=[json.loads(line) for line in (run/"log.jsonl").read_text().splitlines()]
         assert any(r.get("step")==2 and "eval" in r for r in rows)

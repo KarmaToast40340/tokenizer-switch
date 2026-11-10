@@ -28,6 +28,8 @@ def check_condition(cfg, old_tok, new_tok, texts, device='cuda'):
     torch.manual_seed(cfg['seed'])
     setup = M.build(cfg['condition'], old_tok, new_tok, cfg['base_model'], 'fvt', cfg['seed'])
     model = setup.model.to(device)
+    model.train()  # Match the explicit policy in the corrected trainer.
+    training_forward_mode = model.training
     vocab_size = model.config.vocab_size
     tokens = Path(cfg['tokens_dir']) / cfg['domain']
     old_file = TokenFile(tokens / cfg['old_name']) if setup.old_map is not None else None
@@ -79,6 +81,7 @@ def check_condition(cfg, old_tok, new_tok, texts, device='cuda'):
     if device == 'cuda':
         torch.cuda.synchronize()
     return dict(status='passed', condition=cfg['condition'], vocab_size=vocab_size,
+                training_forward_mode=training_forward_mode,
                 final_vocab_size=model.config.vocab_size, optimizer_steps=2,
                 block_size=cfg['block_size'], micro_batch=cfg['micro_batch'], grad_accum=cfg['grad_accum'],
                 elapsed_s=time.monotonic()-start, finite_losses=len(losses),

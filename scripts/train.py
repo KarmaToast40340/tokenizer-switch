@@ -51,6 +51,8 @@ def main():
     new_tok = load_tokenizer(cfg["new_tokenizer"]) if cfg["condition"] != "keep" else None
     setup = M.build(cfg["condition"], old_tok, new_tok, cfg["base_model"], cfg.get("init", "fvt"), cfg["seed"])
     model = setup.model.to(device)
+    # Hugging Face loads in eval mode; the trainer owns the training policy.
+    model.train()
 
     tokens = Path(cfg["tokens_dir"]) / cfg["domain"]
     old_file = TokenFile(tokens / cfg["old_name"]) if setup.old_map is not None else None
@@ -78,7 +80,8 @@ def main():
     warmup = max(1, int(cfg["warmup_frac"] * total_steps))
     print(f"[train] {run.name}: {total_steps} steps x {tokens_per_step} tokens, device={device}")
 
-    log.log(step=0, eval=evaluate(setup, old_tok, new_tok, eval_texts, cfg, device))
+    log.log(step=0, eval=evaluate(setup, old_tok, new_tok, eval_texts, cfg, device),
+            model_training_after_eval=model.training)
     t0 = time.time()
     bytes_seen = 0
     for step in range(total_steps):
@@ -106,9 +109,11 @@ def main():
             log.log(step=step, lr=lr, train_bpb=nll_sum / math.log(2) / n_bytes,
                     train_loss=nll_sum / (tokens_per_step), p_new=info["p_new"], frac_new=frac_new,
                     grad_norm=float(gnorm), tokens=(step + 1) * tokens_per_step, bytes_seen=bytes_seen,
-                    tok_per_s=(step + 1) * tokens_per_step / max(elapsed, 1e-9))
+                    tok_per_s=(step + 1) * tokens_per_step / max(elapsed, 1e-9),
+                    model_training=model.training)
         if (step + 1) % cfg["eval_every"] == 0 and step + 1 < total_steps:
-            log.log(step=step + 1, eval=evaluate(setup, old_tok, new_tok, eval_texts, cfg, device))
+            log.log(step=step + 1, eval=evaluate(setup, old_tok, new_tok, eval_texts, cfg, device),
+                    model_training_after_eval=model.training)
 
     final = evaluate(setup, old_tok, new_tok, test_texts, cfg, device)
     log.log(step=total_steps, final_eval=final, wall_s=time.time() - t0)
