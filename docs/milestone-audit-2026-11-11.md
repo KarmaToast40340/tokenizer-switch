@@ -1,5 +1,54 @@
 # Milestone audit — 11 November 2026
 
+## Approved corrected sequence — 11 November, 15:51 Taipei
+
+The user explicitly approved **one corrected sequence**. It was submitted once
+as Slurm job **766353**, **RUNNING on cmpt053**, start **15:50:27 Taipei**, wall
+limit **37 hours** (scheduler limit 13 November 04:50:27, not a completion ETA).
+The earlier approval block is resolved. No continuation/submission watcher is
+needed or running: the single GPU allocation drives A → B → E → saved-checkpoint
+verification → bpb/speed/figures itself, independently of laptop/SSH closure.
+
+Source is immutable **d11b8b5e7188321b881101081c1119a89ec3276b**, passing gate
+**766279**. Queue and absent corrected output root were rechecked before the
+single `sbatch`; an exclusive persistent launch lock prevents an accidental
+repeat. No duplicate training, 200M run, innovation or environment installation.
+The pilot remains unchanged and separately labelled.
+
+At **15:51:54**, the controller reports **training_A_keep**, configured dropout
+0.1 enabled. A is starting/performing initial evaluation; **no gradient-token
+record has been logged yet** (A/B/E last logged tokens 0/0/0). B/E are waiting
+inside the same allocation. No corrected checkpoint or final result exists yet.
+The source checks mode before every training step and restoration after eval;
+actual mode/token evidence is read from the live logs as they appear.
+
+Corrected outputs:
+`~/tokenizer-switch/runs/chinese_corrected_dropout01_20261110/` (the date is the
+original plan name; this actual sequence started 11 November). Frozen release:
+`~/tokenizer-switch-releases/zh50-memory-d11b8b5e7188/`.
+Controller: `results/corrected_train_766353.json`.
+Slurm stdout/stderr: `logs/zh50_corrected_ABE_766353.out`.
+Final verified outputs: `results/corrected_verified_766353/` after all stages pass.
+No final metrics are claimed before that verification completes. Publication to
+GitHub still requires a connected authenticated Mac; computation does not.
+
+Quota recheck before submission: **2,665,304,064 bytes free** versus
+**2,440,785,846 bytes reserved** for all fresh checkpoints/save workspace/headroom.
+The controller rechecks reserve before each condition. It reuses existing
+DL_HW and assets; no pilot/model-cache copies or lab-file changes.
+
+Use the immutable release to monitor (read only):
+
+```bash
+squeue -j 766353
+cat ~/tokenizer-switch-releases/zh50-memory-d11b8b5e7188/results/corrected_train_766353.json
+tail -n 5 ~/tokenizer-switch/runs/chinese_corrected_dropout01_20261110/A_keep_zh_dropout01_50M/log.jsonl
+```
+
+Launch evidence: `results/corrected_chinese_launch_766353_2026-11-11.json`.
+The previous approval-blocked / unsubmitted snapshots below are historical.
+
+
 ## Latest verified outcome — 15:41 Taipei
 
 - **DONE:** data/splits/selected tokenizers/20 MB mini-grids, measured compression

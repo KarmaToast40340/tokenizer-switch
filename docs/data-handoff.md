@@ -1,5 +1,13 @@
 # Data and evaluation handoff — verified 9 November 2026
 
+> **Approved launch, 11 November 15:51:** corrected Chinese 50M A/B/E is now
+> **RUNNING as job 766353 on cmpt053**, frozen source d11b8b5, 37-hour limit.
+> Controller stage A startup/initial eval; zero gradient tokens logged at this
+> snapshot, B/E waiting. Earlier approval block is resolved; exactly one job was
+> submitted. [Current audit](milestone-audit-2026-11-11.md) has paths/progress.
+> Slurm itself handles the sequence/evaluation independently of the laptop.
+
+
 > **Latest 11 November:** E-only corrected memory gate **766279 COMPLETED / 0:0**;
 > prior A/B compatibility is preserved. Formal corrected training is still
 > **not submitted (0 tokens)**: automatic approval review blocked unattended

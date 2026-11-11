@@ -1,5 +1,23 @@
 # Chloé progress — 11 November 2026
 
+## Approved corrected sequence — 11 November, 15:53 Taipei
+
+The explicit user approval is now fulfilled: **one job 766353 RUNNING on
+cmpt053**, start 15:50:27, 37-hour limit, immutable source **d11b8b5**, passed
+gate **766279**. The prior approval block is resolved. Controller stage is
+**training_A_keep**, performing initial validation; no gradient-token log yet
+(A/B/E latest logged tokens 0/0/0). B/E wait in this same sequential allocation.
+No errors or corrected checkpoints/results yet. Pilot outputs remain preserved.
+
+Slurm drives A → B → E → checkpoint verification → bpb/speed/figures without the
+laptop or another submission watcher. No duplicate, 200M or innovation job.
+Read `~/tokenizer-switch-releases/zh50-memory-d11b8b5e7188/results/corrected_train_766353.json`.
+Outputs are separate under `~/tokenizer-switch/runs/chinese_corrected_dropout01_20261110/`.
+See [the current audit](milestone-audit-2026-11-11.md) and
+`results/corrected_chinese_launch_766353_2026-11-11.json` for launch/storage and
+monitoring evidence. Historical unsubmitted/blocked snapshots below are superseded.
+
+
 ## Latest audit outcome — 11 November, 15:41 Taipei
 
 **Pilot results/figures DONE; corrected compatibility DONE; full corrected

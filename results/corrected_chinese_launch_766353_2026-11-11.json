@@ -1,0 +1,98 @@
+{
+  "observed_at": "2026-11-11T15:51:54.167673+08:00",
+  "launch": {
+    "status": "submitted",
+    "scope": "Exactly one approved fresh corrected Chinese 50M A/B/E sequence",
+    "source_commit": "d11b8b5e7188321b881101081c1119a89ec3276b",
+    "gate_job_id": "766279",
+    "hours": 37,
+    "quota": {
+      "used_bytes": 8072114176,
+      "hard_limit_bytes": 10737418240,
+      "free_bytes": 2665304064,
+      "remaining_final_checkpoint_bytes": 1528411022,
+      "save_workspace_bytes": 509721640,
+      "logs_and_headroom_bytes": 402653184,
+      "required_free_bytes": 2440785846,
+      "projected_reserved_peak_bytes": 10512900022,
+      "fits": true
+    },
+    "quota_method": "quota /net/course",
+    "output_root": "$HOME/tokenizer-switch/runs/chinese_corrected_dropout01_20261110",
+    "job_id": "766353"
+  },
+  "controller": {
+    "status": "running",
+    "stage": "training_A_keep",
+    "job_id": "766353",
+    "commit": "d11b8b5e7188321b881101081c1119a89ec3276b",
+    "training_mode": "train",
+    "configured_dropout": 0.1,
+    "effective_dropout": "enabled",
+    "protocol": "corrected",
+    "runs_root": "$HOME/tokenizer-switch/runs/chinese_corrected_dropout01_20261110",
+    "gate_job_id": "766279",
+    "runtime_plan": {
+      "cases": [
+        {
+          "condition": "A_keep",
+          "measured_seconds_per_step": 37.5269889831543,
+          "projected_training_hours": 7.943212668100993,
+          "reserved_hours": 11.32617646853129
+        },
+        {
+          "condition": "B_swap_fvt",
+          "measured_seconds_per_step": 36.92053437232971,
+          "projected_training_hours": 7.814846442143122,
+          "reserved_hours": 11.159300374786058
+        },
+        {
+          "condition": "E_progressive",
+          "measured_seconds_per_step": 43.29907727241516,
+          "projected_training_hours": 9.164971355994542,
+          "reserved_hours": 12.914462762792907
+        }
+      ],
+      "requested_hours": 37,
+      "caveat": "Two exact optimizer steps per condition; projection, not completed runtime. Includes 30% margin, 1h/case evaluation allowance and 1h allocation margin."
+    },
+    "quota": {
+      "used_bytes": 8079831040,
+      "hard_limit_bytes": 10737418240,
+      "free_bytes": 2657587200,
+      "remaining_final_checkpoint_bytes": 1528411022,
+      "save_workspace_bytes": 509721640,
+      "logs_and_headroom_bytes": 402653184,
+      "required_free_bytes": 2440785846,
+      "projected_reserved_peak_bytes": 10520616886,
+      "fits": true,
+      "method": "du against confirmed 10 GiB course-home quota"
+    },
+    "runs": []
+  },
+  "progress": {
+    "A": {
+      "last_logged_tokens": 0,
+      "train_events": 0,
+      "recorded_training_modes": [],
+      "modes_after_evaluation": [],
+      "saved_checkpoint": false
+    },
+    "B": {
+      "last_logged_tokens": 0,
+      "train_events": 0,
+      "recorded_training_modes": [],
+      "modes_after_evaluation": [],
+      "saved_checkpoint": false
+    },
+    "E": {
+      "last_logged_tokens": 0,
+      "train_events": 0,
+      "recorded_training_modes": [],
+      "modes_after_evaluation": [],
+      "saved_checkpoint": false
+    }
+  },
+  "queue": "766353|RUNNING|1:27|cmpt053",
+  "pilot_release_clean": true
+}

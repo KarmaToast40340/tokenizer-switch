@@ -146,14 +146,19 @@
     "error": "E_progressive CUDA OOM during backward: requested 332 MiB; 279.62 MiB free on GTX 1060 6GB. Full training was not submitted."
   },
   "corrected_full_training": {
-    "status": "NOT STARTED",
-    "job_id": null,
-    "tokens_completed": {
+    "status": "RUNNING",
+    "job_id": "766353",
+    "observed_at": "2026-11-11T15:51:54+08:00",
+    "stage": "training_A_keep",
+    "last_logged_tokens": {
       "A": 0,
       "B": 0,
       "E": 0
     },
-    "blocker": "Compatibility/resource gates now pass. Automatic approval review rejected full-sequence continuation; no formal training submitted."
+    "source_commit": "d11b8b5e7188321b881101081c1119a89ec3276b",
+    "user_approved": true,
+    "blocked": false,
+    "caution": "Startup/initial evaluation; zero logged gradient events at this snapshot. Later token logs are lower-bound progress."
   },
   "slurm_accounting": [
     "757238|COMPLETED|0:0|1-05:10:32",

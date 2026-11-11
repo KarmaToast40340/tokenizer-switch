@@ -1,5 +1,11 @@
 # Verified results and their scope
 
+**11 November approved launch:** corrected full sequence **766353 is RUNNING**,
+source d11b8b5, gate 766279 passed. `corrected_chinese_launch_766353_2026-11-11.json`
+is launch/status evidence, not completed corrected model results. Current
+verified model figures remain the separate dropout-disabled pilot.
+
+
 **11 November:** [verified dropout-disabled Chinese pilot](chinese757238_dropout_disabled/README.md)
 now includes actual bpb/speed, numeric logs and labelled PNG/PDF comparisons.
 See [the milestone audit](../docs/milestone-audit-2026-11-11.md) for exact
