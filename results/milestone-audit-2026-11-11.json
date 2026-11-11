@@ -153,7 +153,7 @@
       "B": 0,
       "E": 0
     },
-    "blocker": "Corrected E GPU backward OOM in gate 764704"
+    "blocker": "Compatibility/resource gates now pass. Automatic approval review rejected full-sequence continuation; no formal training submitted."
   },
   "slurm_accounting": [
     "757238|COMPLETED|0:0|1-05:10:32",
@@ -161,5 +161,38 @@
     "764704|FAILED|1:0|00:05:03"
   ],
   "queue_at_initial_audit": "",
-  "scope": "Actual milestone audit; pilot and corrected results are separate"
+  "scope": "Actual milestone audit; pilot and corrected results are separate",
+  "corrected_memory_recovery": {
+    "job_id": "766279",
+    "status": "COMPLETED",
+    "exit_code": "0:0",
+    "gate_status": "passed",
+    "source_commit": "d11b8b5e7188321b881101081c1119a89ec3276b",
+    "E_actual_diagnostic_tokens": 131072,
+    "E_training_forwards": 128,
+    "mode_and_restoration_verified": true
+  },
+  "current_checkpoint_storage": {
+    "used_bytes": 8072114176,
+    "hard_limit_bytes": 10737418240,
+    "free_bytes": 2665304064,
+    "remaining_final_checkpoint_bytes": 1528411022,
+    "save_workspace_bytes": 509721640,
+    "logs_and_headroom_bytes": 402653184,
+    "required_free_bytes": 2440785846,
+    "projected_reserved_peak_bytes": 10512900022,
+    "fits": true
+  },
+  "corrected_runtime_reserved_hours": 37,
+  "pilot_weight_hashes_rechecked_today": true,
+  "offline_validation": {
+    "full_suite_passed": 70,
+    "full_suite_seconds": 76.11,
+    "paired_exact_CLI_loss_and_weight_equality": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ]
+  }
 }

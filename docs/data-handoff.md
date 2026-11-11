@@ -1,5 +1,13 @@
 # Data and evaluation handoff — verified 9 November 2026
 
+> **Latest 11 November:** E-only corrected memory gate **766279 COMPLETED / 0:0**;
+> prior A/B compatibility is preserved. Formal corrected training is still
+> **not submitted (0 tokens)**: automatic approval review blocked unattended
+> full continuation. No new watcher is running. Pilot results/figures are verified
+> and published. See [today's audit](milestone-audit-2026-11-11.md) for the exact
+> prepared 37-hour command and presentation-ready claims.
+
+
 > **11 November audit:** pilot 757238 and verifier 764463 COMPLETED. Corrected
 > gate 764704 FAILED on E CUDA OOM after A/B passed; formal corrected A/B/E was
 > **not submitted**. Read [the current audit](milestone-audit-2026-11-11.md),

@@ -9,7 +9,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 
-def compression(csv_path, out):
+def compression(csv_path, out, title=None):
     rows = list(csv.DictReader(open(csv_path)))
     labels = [r["tokenizer"] for r in rows]
     domain = "wiki_zh" if "nsl_wiki_zh" in rows[0] else "code"
@@ -23,7 +23,7 @@ def compression(csv_path, out):
         ax.legend()
         ax.grid(axis="y", alpha=.2)
     axes[0].axhline(1, color="black", linewidth=.8, linestyle="--")
-    fig.suptitle(f"Measured tokenizer compression — {Path(csv_path).stem}")
+    fig.suptitle(title or f"Measured tokenizer compression — {Path(csv_path).stem}")
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     for ext in ("png", "pdf"):
         fig.savefig(f"{out}.{ext}", dpi=180)
@@ -78,10 +78,10 @@ def main():
     group.add_argument("--compression")
     group.add_argument("--logs", nargs="+")
     ap.add_argument("--out", required=True, help="output prefix without extension")
-    ap.add_argument("--title", help="explicit scope label for training figures")
+    ap.add_argument("--title", help="explicit scope label for figures")
     args = ap.parse_args()
     if args.compression:
-        compression(args.compression, args.out)
+        compression(args.compression, args.out, args.title)
     else:
         training(args.logs, args.out, args.title)
 

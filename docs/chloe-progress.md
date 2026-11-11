@@ -1,5 +1,23 @@
 # Chloé progress — 11 November 2026
 
+## Latest audit outcome — 11 November, 15:41 Taipei
+
+**Pilot results/figures DONE; corrected compatibility DONE; full corrected
+training NOT STARTED (0 tokens, no Slurm ID).** Pilot 757238 and verifier 764463
+completed and all three preserved hashes still match. Corrected gate 764704
+initially failed E OOM; standalone E retry **766279** passed after a tensor-
+lifetime-only fix. All 128 E gradient forwards/backwards and post-eval mode
+restoration passed. Prior A/B passes are reused under unchanged protocol.
+
+**70 tests pass**, including bit-identical paired A/B/C/E loss/weights against
+4cc7bff. The gate supports 37 hours and the checkpoint/quota reserve fits. Full
+continuation is currently blocked by automatic action approval review; no
+continuation watcher was launched. It needs approval to submit the prepared
+single corrected sequence. [The current audit](milestone-audit-2026-11-11.md)
+contains the exact command, source, IDs, errors and presentation figure catalog.
+Historical blocked/running snapshots below are superseded.
+
+
 ## Current verified audit — 11 November
 
 **Pilot DONE; corrected full training NOT STARTED at today's initial audit.**

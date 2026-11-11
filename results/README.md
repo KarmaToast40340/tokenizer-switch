@@ -59,3 +59,10 @@ Chinese 50M A/B/E after verified pilot completion; the measured GPU gate and ful
 training job IDs do not exist yet. Corrected outputs use a separate run/results
 root and explicit dropout-0.1 labels; pilot outputs retain dropout-disabled /
 provisional labels. See the [corrected handoff](../docs/corrected-chinese-handoff.md).
+
+
+Latest audit: standalone E memory gate **766279 passed** after a lifetime-only
+cleanup (paired A/B/C/E saved weights/losses unchanged on CPU). See
+`corrected-memory-recovery-2026-11-11.json`: diagnostic evidence, **not full
+corrected results**. The full sequence has no job/checkpoints yet. Current tests:
+70 passed. The compression figures now put **20 MB pilot fits** in their titles.

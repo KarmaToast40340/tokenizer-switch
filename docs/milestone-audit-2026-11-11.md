@@ -1,6 +1,55 @@
 # Milestone audit — 11 November 2026
 
-## Actual state, not the previous submission plan
+## Latest verified outcome — 15:41 Taipei
+
+- **DONE:** data/splits/selected tokenizers/20 MB mini-grids, measured compression
+  figures, preserved dropout-disabled pilot, all checkpoint hashes, final pilot
+  bpb/speed and labelled comparisons. All three weight hashes were rechecked
+  today and still match independent verifier 764463.
+- **DONE:** corrected mode/memory compatibility after a routine lifetime fix.
+  New E-only gate **766279 COMPLETED / 0:0, 2m41s**. E has two optimizer steps,
+  **131,072 diagnostic tokens**, 128 active-dropout gradient forwards / backward
+  calls and correctly restored training after every evaluation. Peak E allocation
+  **6,018,094,592 bytes**. Prior A/B passes from 764704 were reused, not rerun.
+- **BLOCKED:** fresh full corrected A/B/E submission, pending approval after
+  automatic action review rejected the test-plus-full-continuation watcher.
+  There is **no formal corrected job, 0 formal tokens**, and no automatic
+  continuation process. This is now an operational approval block, not the
+  previous E OOM. The standalone diagnostic did not start full training.
+- **NOT STARTED:** corrected final checkpoints/bpb/speed/figures; full 1 GB fit
+  study, 200M extensions and extra innovations.
+
+The lifetime-only fix frees BF16 vocabulary logits after cross entropy is built,
+then clears completed microbatch tensors. Exact paired tiny CLI runs against
+`4cc7bff` produce **bit-identical losses and saved weights for A/B/C/E**. No
+training settings, RNG, dropout, batch, context, data or schedule changed. Source
+is frozen at **d11b8b5** in
+`~/tokenizer-switch-releases/zh50-memory-d11b8b5e7188/`. Evidence reuse checks the
+unchanged protocol files and restricts trainer differences to those deletions.
+
+**70 current tests passed (76.11 s)**. E gate 766279 plus prior A/B measurements
+reserve a **37-hour** Slurm allocation. Post-diagnostic quota has
+**2,665,304,064 bytes free**, versus **2,440,785,846 bytes** reserved for all new
+checkpoints/save workspace/headroom. The current reserved peak is below 10 GiB;
+reserves are checked again before each condition. No pilot deletion or new
+runtime is needed. These are runtime projections, not completed full training.
+
+Prepared full-run command (not executed):
+
+```bash
+cd ~/tokenizer-switch-releases/zh50-memory-d11b8b5e7188
+sbatch --job-name=zh50_corrected_ABE --time=37:00:00 \
+  --output="$PWD/logs/%x_%j.out" cluster/corrected_chinese.sbatch \
+  --phase train --gate-file "$PWD/results/corrected_gate_766279.json"
+```
+
+Automatic approval review rejected the earlier combined action because its
+watcher could submit full A/B/E beyond the interpreted current E-only scope.
+The safer standalone test was approved and completed. No full submission or
+watcher was executed indirectly after that rejection.
+
+
+## Initial audit: actual state, not the previous submission plan
 
 | Deliverable | Status | Evidence |
 |---|---|---|
