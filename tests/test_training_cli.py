@@ -55,3 +55,21 @@ def test_all_conditions_with_validation_and_pruning(tmp_path, corpus, old_tok, n
         if condition=="E_progressive":
             pruned=next(r["final_eval_pruned"] for r in rows if "final_eval_pruned" in r)
             assert pruned["new"] <= final["new"] + 1e-5
+        # Paired exact-CLI proof: lifetime-only cleanup must not change the
+        # dropout RNG, loss, gradients, updates or pruned saved weights.
+        reference=tmp_path/"train_before_cleanup.py"
+        reference.write_text(subprocess.check_output(
+            ["git","show","4cc7bff:scripts/train.py"],cwd=root,text=True))
+        ref_out=tmp_path/"reference_runs"
+        overrides=[f"out={ref_out}" if arg.startswith("out=") else arg
+                   for arg in command[command.index("--")+1:]]
+        subprocess.run([sys.executable,str(reference),*overrides],cwd=root,env=env,
+            check=True,capture_output=True,text=True,timeout=180)
+        from safetensors.torch import load_file
+        import torch
+        before=load_file(str(ref_out/f"{condition}_0M/model/model.safetensors"))
+        after=load_file(str(run/"model/model.safetensors"))
+        assert before.keys()==after.keys()
+        assert all(torch.equal(before[key],after[key]) for key in before)
+        reference_rows=[json.loads(line) for line in (ref_out/f"{condition}_0M/log.jsonl").read_text().splitlines()]
+        assert [r["train_loss"] for r in rows if "train_loss" in r]==[r["train_loss"] for r in reference_rows if "train_loss" in r]

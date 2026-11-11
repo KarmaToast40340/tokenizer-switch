@@ -8,8 +8,9 @@ from types import SimpleNamespace
 import pytest
 
 
+@pytest.mark.parametrize('existing',[False,True])
 @pytest.mark.parametrize('failure',[None,'gate','quota'])
-def test_submits_only_after_verified_pilot_and_measured_safe_gate(tmp_path,monkeypatch,failure):
+def test_submits_only_after_verified_pilot_and_measured_safe_gate(tmp_path,monkeypatch,failure,existing):
     source=Path(__file__).resolve().parents[1]/'cluster'
     monkeypatch.syspath_prepend(str(source))
     spec=importlib.util.spec_from_file_location('corrected_watch_test',source/'watch_corrected_chinese.py')
@@ -36,20 +37,21 @@ def test_submits_only_after_verified_pilot_and_measured_safe_gate(tmp_path,monke
         if cmd[0]=='sacct':return f'{cmd[cmd.index("-j")+1]}|COMPLETED|0:0|\n'
         assert cmd[0]=='sbatch'
         submitted.append(cmd)
-        return f'{800000+len(submitted)}\n'
+        return '800002\n' if 'train' in cmd else '800001\n'
     monkeypatch.setattr(watch.subprocess,'check_output',output)
     monkeypatch.setattr(watch.subprocess,'run',lambda *a,**k:SimpleNamespace(returncode=0))
     monkeypatch.setenv('USER','test-user')
     monkeypatch.setattr(sys,'argv',['watch','--pilot-watcher',str(old),'--out',str(out),'--assets',str(tmp_path/'assets')])
+    if existing:monkeypatch.setattr(sys,'argv',sys.argv+['--existing-gate-job','800001'])
     if failure:
         with pytest.raises(RuntimeError):watch.main()
     else:watch.main()
     state=json.loads(out.read_text())
     if failure=='quota':assert not submitted
-    elif failure=='gate':assert len(submitted)==1
+    elif failure=='gate':assert len(submitted)==(0 if existing else 1)
     else:
-        assert len(submitted)==2 and state['status']=='completed'
+        assert len(submitted)==(1 if existing else 2) and state['status']=='completed'
         assert state['corrected_gate_job_id']=='800001' and state['corrected_training_job_id']=='800002'
-        assert '--phase' in submitted[0] and 'gate' in submitted[0]
-        assert 'train' in submitted[1] and any(s.startswith('--time=') for s in submitted[1])
+        if not existing:assert '--phase' in submitted[0] and 'gate' in submitted[0]
+        assert 'train' in submitted[-1] and any(s.startswith('--time=') for s in submitted[-1])
     if failure:assert state['status']=='blocked' and state['corrected_training_job_id'] is None

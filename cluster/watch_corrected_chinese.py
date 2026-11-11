@@ -21,7 +21,9 @@ def main():
     ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--interval',type=int,default=60)
     ap.add_argument('--hours',type=int,default=120)
+    ap.add_argument('--existing-gate-job',help='Continue from an actually submitted gate in this immutable worktree')
     args=ap.parse_args()
+    if args.existing_gate_job and not args.existing_gate_job.isdecimal():ap.error('numeric gate job ID required')
     root=Path(__file__).resolve().parents[1]
     args.out.parent.mkdir(parents=True,exist_ok=True)
     with args.out.with_suffix('.lock').open('x') as f:f.write(str(os.getpid())+'\n')
@@ -29,6 +31,8 @@ def main():
     state=dict(status='waiting_pilot_verification',pid=os.getpid(),commit=commit,pilot_job_id='757238',
         corrected_gate_job_id=None,corrected_training_job_id=None,
         survives_laptop_disconnect=True,github_publication='Local/manual; no credentials on cluster')
+    if args.existing_gate_job:
+        state.update(status='waiting_corrected_gate',corrected_gate_job_id=args.existing_gate_job)
     def write():
         state['updated_at']=datetime.now(timezone.utc).isoformat();write_json(args.out,state)
     def submit(name,phase,hours=None,gate=None):
@@ -90,6 +94,8 @@ def main():
                 # Use the larger of pilot sizes and the gate's measured saves.
                 sizes=[max(a,b['checkpoint_bytes']) for a,b in zip(checkpoint_sizes(args.assets),check['trials'])]
                 used,limit,method=usage();state['storage']=storage_plan(used,limit,sizes)|dict(method=method)
+                if (args.assets/'runs/chinese_corrected_dropout01_20261110').exists():
+                    raise FileExistsError('preserving existing corrected output root; no duplicate training')
                 state['corrected_training_job_id']=submit('zh50_corrected_ABE','train',plan['requested_hours'],gate)
                 state['status']='waiting_corrected_training';write()
             elif state['status']=='waiting_corrected_training':

@@ -75,3 +75,38 @@ def test_runtime_requires_all_corrected_cases_and_includes_margin():
     bad=trials();bad[0]['all_evaluations_restored_train_mode']=False
     with pytest.raises(ValueError):policy.runtime_plan(bad)
     with pytest.raises(RuntimeError,match='QoS'):policy.runtime_plan(trials(),max_hours=1)
+
+
+@pytest.mark.parametrize('bad_mode',[False,True])
+def test_reuse_only_passed_matching_AB_gate_evidence(tmp_path,monkeypatch,bad_mode):
+    import json
+    from types import SimpleNamespace
+    monkeypatch.syspath_prepend(str(root/'cluster'));monkeypatch.chdir(root)
+    spec=importlib.util.spec_from_file_location('reuse_gate',root/'cluster/run_corrected_chinese.py')
+    gate=importlib.util.module_from_spec(spec);spec.loader.exec_module(gate)
+    evidence=json.loads((root/'results/milestone-audit-2026-11-11.json').read_text())['corrected_gpu_gate']
+    if bad_mode:evidence['trials'][0]['all_training_forwards_train_mode']=False
+    previous=tmp_path/'old.json';previous.write_text(json.dumps(evidence))
+    assets=tmp_path/'assets';raw=assets/'data/raw/wiki_zh';raw.mkdir(parents=True)
+    (raw/'validation.jsonl').write_text('{"text":"validation only"}\n')
+    monkeypatch.setattr(gate,'checkpoint_sizes',lambda _: [500_000_000]*3)
+    monkeypatch.setattr(gate,'usage',lambda:(8*(1<<30),10*(1<<30),'test'))
+    monkeypatch.setenv('SLURM_JOB_ID','test')
+    original=gate.subprocess.run
+    def run(cmd,**kw):
+        if 'scripts/verify_assets.py' in cmd:return SimpleNamespace(returncode=0)
+        return original(cmd,**kw)
+    monkeypatch.setattr(gate.subprocess,'run',run)
+    calls=[]
+    def stop(*args):
+        calls.append(args);raise RuntimeError('stop before GPU')
+    monkeypatch.setattr(gate,'command',stop)
+    out=tmp_path/'new.json'
+    with pytest.raises(AssertionError if bad_mode else RuntimeError):
+        gate.gate(assets,out,'test-revision',previous)
+    if bad_mode:assert not calls
+    else:
+        report=json.loads(out.read_text())
+        assert [r['condition'] for r in report['trials']]==['A_keep','B_swap_fvt']
+        assert len(calls)==1 and 'configs/train/E_progressive.yaml' in calls[0]
+        assert all(r['validation_job_id']=='764704' for r in report['trials'])

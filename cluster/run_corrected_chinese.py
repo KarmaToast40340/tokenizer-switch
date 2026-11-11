@@ -27,7 +27,7 @@ def command(script,*args):
     subprocess.run([sys.executable,'-u','cluster/text_only.py',script,*map(str,args)],check=True)
 
 
-def gate(assets,out,commit):
+def gate(assets,out,commit,reuse=None):
     sizes=checkpoint_sizes(assets)
     used,limit,method=usage()
     # Temporary gate saves are one at a time, and removed before the next case.
@@ -36,12 +36,33 @@ def gate(assets,out,commit):
     report=dict(status='running',scope='Corrected train-mode GPU/memory/runtime gate; not model quality',
         job_id=os.environ['SLURM_JOB_ID'],commit=commit,quota=dict(used_bytes=used,hard_limit_bytes=limit,
         required_free_bytes=needed,method=method),checkpoint_directory_bytes=sizes,trials=[])
+    if reuse is not None:
+        previous=json.loads(reuse.read_text())
+        assert previous['commit']=='4cc7bff729537e17b471bef36e3a40cd2e11e5d3'
+        assert previous['job_id']=='764704' and previous['status']=='failed'
+        assert {r['condition'] for r in previous['trials']}=={'A_keep','B_swap_fvt'}
+        # Reuse compatibility measurements only when protocol/model code matches.
+        for rel in ['configs/train/base.yaml','configs/train/A_keep.yaml','configs/train/B_swap_fvt.yaml',
+                    'configs/train/E_progressive.yaml','src/toksw/metrics.py','src/toksw/model.py',
+                    'src/toksw/data.py','src/toksw/schedule.py','src/toksw/modes.py','cluster/corrected_chinese.py']:
+            original=subprocess.check_output(['git','show',previous['commit']+':'+rel])
+            assert original==Path(rel).read_bytes(), f'changed protocol: {rel}'
+        trainer=Path('scripts/train.py').read_text()
+        trainer=trainer.replace('            # Cross entropy owns the tensors autograd needs. Do not retain the\n            # large BF16 vocabulary logits during backward or the next forward.\n            del logits\n','').replace('            del loss, x, y\n','')
+        assert trainer==subprocess.check_output(['git','show',previous['commit']+':scripts/train.py'],text=True), 'trainer changed beyond lifetime cleanup'
+        for trial in previous['trials']:
+            assert trial['status']=='passed' and trial['all_training_forwards_train_mode'] and trial['all_evaluations_restored_train_mode']
+            assert trial['optimizer_steps']==2 and trial['configured_dropout']==.1
+            report['trials'].append(trial|dict(validated_source_commit=previous['commit'],validation_job_id=previous['job_id']))
+        report['reused_gate_sha256']=sha(reuse)
+        report['reuse_note']='A/B passed in 764704. New code only releases completed logits/tensors; paired exact-CLI A/B/C/E losses and saved weights are bit-identical on CPU. Only E requires a new GPU memory gate.'
     write_json(out,report)
     try:
         subprocess.run([sys.executable,'scripts/verify_assets.py','--root',str(assets),'--layout','destination','--profiles','chinese'],check=True)
         scratch=out.parent/'diagnostics';scratch.mkdir(exist_ok=True)
         first=next((assets/'data/raw/wiki_zh/validation.jsonl').open())
         for case,name in CASES:
+            if case in {r['condition'] for r in report['trials']}:continue
             with tempfile.TemporaryDirectory(prefix='corrected-gate-',dir=scratch) as d:
                 tmp=Path(d).resolve();raw=tmp/'raw/wiki_zh';raw.mkdir(parents=True)
                 for split in ['validation','test']:(raw/f'{split}.jsonl').write_text(first)
@@ -70,7 +91,7 @@ def gate(assets,out,commit):
                     configured_dropout=.1,trainer_wall_s=final['wall_s'],cli_wall_s=evidence['cli_wall_seconds'],
                     peak_allocated_bytes=evidence['gpu_peak_allocated_bytes'],peak_reserved_bytes=evidence['gpu_peak_reserved_bytes'],
                     checkpoint_bytes=sum(p.stat().st_size for p in (run/'model').rglob('*') if p.is_file()),
-                    gpu=evidence['gpu'],torch=evidence['torch'])
+                    gpu=evidence['gpu'],torch=evidence['torch'],validated_source_commit=commit,validation_job_id=os.environ['SLURM_JOB_ID'])
                 report['trials'].append(trial);write_json(out,report)
         report.update(status='passed',runtime=runtime_plan(report['trials']))
         write_json(out,report)
@@ -123,12 +144,13 @@ def main():
     ap.add_argument('--phase',choices=['gate','train'],required=True)
     ap.add_argument('--assets',type=Path,default=Path.home()/'tokenizer-switch')
     ap.add_argument('--gate-file',type=Path)
+    ap.add_argument('--reuse-gate',type=Path)
     args=ap.parse_args()
     commit=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
     subprocess.run(['git','diff','--quiet'],check=True);subprocess.run(['git','diff','--cached','--quiet'],check=True)
     out=Path(f'results/corrected_{args.phase}_{os.environ["SLURM_JOB_ID"]}.json')
     if out.exists():raise FileExistsError(out)
-    if args.phase=='gate':gate(args.assets,out,commit)
+    if args.phase=='gate':gate(args.assets,out,commit,args.reuse_gate)
     else:
         if args.gate_file is None:ap.error('--gate-file required for training')
         train(args.assets,out,commit,args.gate_file)

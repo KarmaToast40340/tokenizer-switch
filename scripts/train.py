@@ -104,10 +104,14 @@ def main():
             with torch.autocast(device_type="cuda", dtype=torch.bfloat16, enabled=device == "cuda"):
                 logits = fwd(input_ids=x).logits
             loss = F.cross_entropy(logits.float().flatten(0, 1), y.flatten())
+            # Cross entropy owns the tensors autograd needs. Do not retain the
+            # large BF16 vocabulary logits during backward or the next forward.
+            del logits
             (loss / cfg["grad_accum"]).backward()
             nll_sum += loss.item() * y.numel()
             n_bytes += info["n_bytes"]
             frac_new += info["frac_new"] / cfg["grad_accum"]
+            del loss, x, y
         bytes_seen += n_bytes
         gnorm = torch.nn.utils.clip_grad_norm_(model.parameters(), cfg["grad_clip"])
         opt.step()
