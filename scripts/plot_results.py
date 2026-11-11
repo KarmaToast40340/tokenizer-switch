@@ -35,6 +35,7 @@ def training(logs, out, title=None):
     if title:
         fig.suptitle(title)
     measured = False
+    eval_splits = set()
     for log in logs:
         path = Path(log)
         rows = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
@@ -46,6 +47,7 @@ def training(logs, out, title=None):
             axes[0].plot([r["tokens"] / 1e6 for r in train], [r["train_bpb"] for r in train], label=path.parent.name)
         ev = [r for r in rows if "eval" in r]
         if ev and cfg:
+            eval_splits.add(cfg.get("eval_split", "test"))
             tps = cfg["block_size"] * cfg["micro_batch"] * cfg["grad_accum"]
             for encoding in ("old", "new"):
                 pts = [r for r in ev if encoding in r["eval"]]
@@ -56,7 +58,9 @@ def training(logs, out, title=None):
     if not measured:
         plt.close(fig)
         raise ValueError("No measured training/eval points found")
-    for ax, label in zip(axes, ("Training bpb", "Periodic evaluation bpb (see each run's eval_split)")):
+    eval_label = "Validation bpb" if eval_splits == {"validation"} else "Evaluation bpb"
+    axes[1].set_title("Periodic evaluation")
+    for ax, label in zip(axes, ("Training bpb", eval_label)):
         ax.set_xlabel("Training tokens (millions)")
         ax.set_ylabel(label)
         if ax.lines:

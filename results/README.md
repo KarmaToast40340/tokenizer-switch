@@ -1,5 +1,12 @@
 # Verified results and their scope
 
+**11 November:** [verified dropout-disabled Chinese pilot](chinese757238_dropout_disabled/README.md)
+now includes actual bpb/speed, numeric logs and labelled PNG/PDF comparisons.
+See [the milestone audit](../docs/milestone-audit-2026-11-11.md) for exact
+presentation-ready claims and figures. Corrected full training had not started:
+gate 764704 failed E CUDA OOM. Do not confuse diagnostic passes with full runs.
+
+
 **10 November:** all checkpoint scores from job 757238 are provisional for the
 intended study. Its A/B/E make updates with dropout disabled. See
 [the exact-source diagnosis](../docs/train-mode-diagnosis.md). The small

@@ -1,4 +1,24 @@
-# Chloé progress — 10 November 2026
+# Chloé progress — 11 November 2026
+
+## Current verified audit — 11 November
+
+**Pilot DONE; corrected full training NOT STARTED at today's initial audit.**
+Pilot **757238** and independent verifier **764463** completed successfully.
+Corrected GPU gate **764704** passed A/B but failed E backward with CUDA OOM;
+the watcher stopped before submitting formal corrected A/B/E. Full corrected
+training tokens are zero. Yesterday's armed plan was not a completed run.
+
+Verified pilot bpb A/B/E: **1.864271 / 1.646345 / 1.714944**; generation characters/s:
+**55.76 / 181.04 / 168.15**. Keep all model findings explicitly labelled
+**dropout-disabled pilot / provisional for the intended dropout-0.1 study**.
+All checkpoints and 49,938,432-token logs are preserved. Real bpb, speed and
+labelled comparison/curve figures are now collected locally and hash verified.
+
+See [today's audit](milestone-audit-2026-11-11.md) for DONE/BLOCKED/NOT STARTED,
+actual IDs/errors and the exact presentation-ready figure/claim catalog. The
+entries below describe earlier snapshots and are superseded by that audit.
+No 200M extension or extra innovation was submitted.
+
 
 Objective: compare GPT-2 small tokenizer switching on code and Chinese (A keep, B FVT swap, C random swap, E progressive/pruned). Compression gains are measured; quality gains from E remain hypotheses.
 

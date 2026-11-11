@@ -1,0 +1,71 @@
+{
+  "status": "verified",
+  "scope": "PROVISIONAL: eval-mode-trained / dropout disabled; Chinese 50M pilot",
+  "provisional": true,
+  "training_job_id": "757238",
+  "training_commit": "31dbce7f645018eb221d55f5b7756872396de9b5",
+  "training_mode": "eval",
+  "effective_dropout": "disabled",
+  "configured_dropout": 0.1,
+  "evaluation_mode": "eval",
+  "evaluation_commit": "0c375eedccad9b45ac671f446eeb5ec08e48bbec",
+  "quota": {
+    "used_bytes": 8075841536,
+    "hard_limit_bytes": 10737418240,
+    "required_free_bytes": 1181116006,
+    "method": "du against confirmed 10 GiB hard limit"
+  },
+  "cases": [
+    {
+      "condition": "A",
+      "run": "A_keep_zh_50M",
+      "weights_sha256": "0f8e086a531c98f1cd3ceb59ffcb414ef5f6a7c7be3fec7c8aebc7dfca0d3927",
+      "weights_bytes": 497774208,
+      "tokenizer_sha256": "1fe93b6152957cf9cfd6d89002467f789ce8b3f3e000b3a2edf27c808ddd0b9e",
+      "reference_tokenizer_semantics_verified": true,
+      "actual_tokens": 49938432,
+      "test_bpb": 1.8642711613796186,
+      "logged_final_bpb": 1.8642711613796186,
+      "trainer_wall_hours": 9.046185380220413,
+      "eos_token_id": 50256,
+      "n_test_documents": 1000,
+      "characters_per_second": 55.757503359326954,
+      "generation_tokens_per_second": 115.57830655860485
+    },
+    {
+      "condition": "B",
+      "run": "B_swap_fvt_zh_50M",
+      "weights_sha256": "d530b1e6213449c52ff7d2efb2eda195bd6941d1c0daf021aa40fd2996793e03",
+      "weights_bytes": 496984704,
+      "tokenizer_sha256": "6f23989f35f35cac9c883f15b7996ccd9a98b866f0d3be3144d5c510e2a92763",
+      "reference_tokenizer_semantics_verified": true,
+      "actual_tokens": 49938432,
+      "test_bpb": 1.646345474112828,
+      "logged_final_bpb": 1.646345474112828,
+      "trainer_wall_hours": 7.948266495400005,
+      "eos_token_id": 0,
+      "n_test_documents": 1000,
+      "characters_per_second": 181.03547749901534,
+      "generation_tokens_per_second": 122.18582188175041
+    },
+    {
+      "condition": "E",
+      "run": "E_progressive_zh_50M",
+      "weights_sha256": "38067cf4f90196cceb47510caf0d2a66bfbfed50468e1c441006b740eb9fdb46",
+      "weights_bytes": 496984704,
+      "tokenizer_sha256": "6f23989f35f35cac9c883f15b7996ccd9a98b866f0d3be3144d5c510e2a92763",
+      "reference_tokenizer_semantics_verified": true,
+      "actual_tokens": 49938432,
+      "test_bpb": 1.7149436801772797,
+      "logged_final_bpb": 1.7149436801772797,
+      "trainer_wall_hours": 10.800313725272815,
+      "eos_token_id": 0,
+      "n_test_documents": 1000,
+      "characters_per_second": 168.1506056146735,
+      "generation_tokens_per_second": 121.94491511998984
+    }
+  ],
+  "test_raw_sha256": "3ab1840f01a07bfd5e36ea40e705d11151934794f503fa0fcd6bff6764e01c0f",
+  "n_test_documents": 1000,
+  "caution": "Valid metrics for dropout-disabled weights; provisional for intended training comparison."
+}

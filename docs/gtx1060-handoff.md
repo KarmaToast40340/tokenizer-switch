@@ -1,5 +1,11 @@
 # Chinese 50M on GTX 1060 — verified 9 November 2026
 
+> **11 November audit:** pilot 757238 and verifier 764463 COMPLETED. Corrected
+> gate 764704 FAILED on E CUDA OOM after A/B passed; formal corrected A/B/E was
+> **not submitted**. Read [the current audit](milestone-audit-2026-11-11.md),
+> rather than treating the historical armed plan below as completed work.
+
+
 > **Latest authorized sequence (10 November, 16:35):** preserve pilot job 757238,
 > then run fresh corrected Chinese 50M A/B/E through the independent cluster
 > watcher. Per-step mode checks, matched settings, separate outputs and measured

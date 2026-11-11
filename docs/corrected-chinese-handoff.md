@@ -1,5 +1,11 @@
 # Corrected Chinese 50M A/B/E — 10 November 2026
 
+> **11 November audit:** pilot 757238 and verifier 764463 COMPLETED. Corrected
+> gate 764704 FAILED on E CUDA OOM after A/B passed; formal corrected A/B/E was
+> **not submitted**. Read [the current audit](milestone-audit-2026-11-11.md),
+> rather than treating the historical armed plan below as completed work.
+
+
 The user authorized fresh corrected A/B/E after preserving job **757238** as a
 dropout-disabled pilot. This supersedes the earlier instruction not to launch
 corrected runs automatically. No 200M extension or innovation is queued.

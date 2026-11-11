@@ -48,7 +48,7 @@ def main():
         ax.set_axisbelow(True)
     fig.suptitle('Frozen pilot tokenizers: compression and training readiness', fontsize=13)
     fig.supxlabel('Tokenizer fits: 20 MB per variant (pilot). Model corpora: code 250 MB; Chinese 400 MB.\n'
-                  'Capacity is not unique coverage. Model quality and GPU speed remain unmeasured.', fontsize=9)
+                  'Capacity is not unique coverage. Dropout-disabled model results are separate; corrected comparisons pending.', fontsize=9)
     out = Path('results/milestone_summary')
     for ext in ['png', 'pdf']:
         fig.savefig(out.with_suffix('.'+ext), dpi=180)
