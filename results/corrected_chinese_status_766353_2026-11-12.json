@@ -1,0 +1,103 @@
+{
+  "observed_at": "2026-11-12T14:19:29.709883+08:00",
+  "job_id": "766353",
+  "slurm": "766353|RUNNING|22:29:04|cmpt053",
+  "stage": "training_E_progressive",
+  "source_commit": "d11b8b5e7188321b881101081c1119a89ec3276b",
+  "cases": {
+    "A": {
+      "status": "saved",
+      "last_logged_tokens": 49938432,
+      "target_tokens": 49938432,
+      "all_logged_training_modes_true": true,
+      "all_logged_evaluations_restore_training": true,
+      "periodic_eval_steps": [
+        0,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700
+      ],
+      "full_training_mode_checks": 762,
+      "all_logged_losses_and_gradients_finite": true,
+      "trainer_logged_test_bpb": {
+        "old": 1.956646544093831
+      },
+      "saved_checkpoint_independently_reevaluated": false
+    },
+    "B": {
+      "status": "saved",
+      "last_logged_tokens": 49938432,
+      "target_tokens": 49938432,
+      "all_logged_training_modes_true": true,
+      "all_logged_evaluations_restore_training": true,
+      "periodic_eval_steps": [
+        0,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700
+      ],
+      "full_training_mode_checks": 762,
+      "all_logged_losses_and_gradients_finite": true,
+      "trainer_logged_test_bpb": {
+        "new": 1.6927550811912
+      },
+      "saved_checkpoint_independently_reevaluated": false
+    },
+    "E": {
+      "status": "training",
+      "last_logged_tokens": 21692416,
+      "target_tokens": 49938432,
+      "all_logged_training_modes_true": true,
+      "all_logged_evaluations_restore_training": true,
+      "periodic_eval_steps": [
+        0,
+        100,
+        200,
+        300
+      ],
+      "full_training_mode_checks": null,
+      "all_logged_losses_and_gradients_finite": true,
+      "trainer_logged_test_bpb": null,
+      "saved_checkpoint_independently_reevaluated": false
+    }
+  },
+  "checkpoint_records": [
+    {
+      "condition": "A_keep",
+      "run": "$HOME/tokenizer-switch/runs/chinese_corrected_dropout01_20261110/A_keep_zh_dropout01_50M",
+      "status": "saved",
+      "actual_tokens": 49938432,
+      "weights_sha256": "76e61af825fafdc8e7afcff8ecd000c4f01535f0e728a0bb9b7a634f7108e33b",
+      "weights_bytes": 497774208
+    },
+    {
+      "condition": "B_swap_fvt",
+      "run": "$HOME/tokenizer-switch/runs/chinese_corrected_dropout01_20261110/B_swap_fvt_zh_dropout01_50M",
+      "status": "saved",
+      "actual_tokens": 49938432,
+      "weights_sha256": "6332cb6ba6a224961f3eb98eac26a90691a9fa36719accc0cf05dea658bef7f3",
+      "weights_bytes": 496984704
+    }
+  ],
+  "latest_quota_guard": {
+    "used_bytes": 9086181376,
+    "hard_limit_bytes": 10737418240,
+    "free_bytes": 1651236864,
+    "remaining_final_checkpoint_bytes": 509344691,
+    "save_workspace_bytes": 509721640,
+    "logs_and_headroom_bytes": 402653184,
+    "required_free_bytes": 1421719515,
+    "projected_reserved_peak_bytes": 10507900891,
+    "fits": true,
+    "method": "du against confirmed 10 GiB course-home quota"
+  },
+  "note": "A/B trainer test scores are preliminary until post-E saved-checkpoint verification. E, speed and full comparison remain pending."
+}

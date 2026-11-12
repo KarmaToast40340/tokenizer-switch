@@ -1,4 +1,32 @@
-# Chloé progress — 11 November 2026
+# Chloé progress — 12 November 2026
+
+## Current corrected progress — 12 November, 14:19 Taipei
+
+**Job 766353 RUNNING on cmpt053, stage E.** A and B each completed
+**49,938,432 tokens** and saved controller-hashed checkpoints. E last logged
+**21,692,416 / 49,938,432 tokens (43.4%)**. No errors were reported; all logged
+losses/gradients are finite. No duplicate or extension job was submitted.
+
+The mode fix is confirmed across the completed A/B runs: **762 per-step checks
+each**, every logged training forward has mode true, and initial/periodic/final
+evaluation restores training. E has the same positive mode records, including
+after evaluations at steps 0/100/200/300. Source d11b8b5 remains immutable.
+
+Preliminary trainer-logged test bpb: **A 1.9566465**, **B 1.6927551**. These are
+corrected dropout-0.1 runs, **separate from pilot scores**. Saved-checkpoint
+reevaluation, final E/pruning results, synchronized speed and full comparison
+figures remain pending and will run automatically inside this allocation after
+E finishes. Do not present these two scores as a verified complete comparison.
+
+Latest checkpoint-space guard: **1.65 GB free** versus **1.42 GB reserved** for
+remaining E checkpoint/save/log headroom; fits the 10 GiB quota. Current quota
+also remains below the limit. The original dropout-disabled pilot and verified
+figures remain preserved. Closing the laptop does not interrupt this job.
+
+Evidence: `results/corrected_chinese_status_766353_2026-11-12.json` (token values
+are last-logged lower bounds, not a live dashboard). Historical snapshots below
+are superseded by this dated update.
+
 
 ## Approved corrected sequence — 11 November, 15:53 Taipei
 

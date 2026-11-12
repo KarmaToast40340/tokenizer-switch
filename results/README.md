@@ -1,5 +1,12 @@
 # Verified results and their scope
 
+**12 November, 14:19 Taipei:** corrected job **766353** is RUNNING E (43.4%);
+A/B checkpoints are saved. `corrected_chinese_status_766353_2026-11-12.json` records
+live mode-check evidence and preliminary trainer scores, **not completed saved-
+checkpoint evaluation/speed/comparison results**. Keep it separate from the
+verified dropout-disabled pilot; final corrected outputs remain pending.
+
+
 **11 November approved launch:** corrected full sequence **766353 is RUNNING**,
 source d11b8b5, gate 766279 passed. `corrected_chinese_launch_766353_2026-11-11.json`
 is launch/status evidence, not completed corrected model results. Current
