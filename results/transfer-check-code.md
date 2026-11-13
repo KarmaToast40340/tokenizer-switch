@@ -49,7 +49,5 @@ ne change pas. Sur les vrais assets, au pas 0, E-old masqué = A (Δ 0,0) et E-n
 exactement comme A et B. Avec le drapeau à false, les pertes et les poids sauvegardés sont identiques bit à bit à main
 (test `tests/test_logit_mask.py`).
 
-Tests du dépôt (`.venv` : torch 2.15 CPU, transformers 5.22) : main 85 passed ; cette branche 90 passed, 1 failed.
-L'échec `test_corrected_workflow.py::test_reuse_only_passed_matching_AB_gate_evidence[False]` est attendu : la porte historique
-de réutilisation du job chinois (`cluster/run_corrected_chinese.py`) refuse tout `scripts/train.py` différent de 4cc7bff au-delà
-du nettoyage mémoire. Elle n'a pas été affaiblie ; à décider (adapter le test ou la porte) avant de fusionner.
+Tests du dépôt (`.venv` : torch 2.15 CPU, transformers 5.22) : main 85 passed ; cette branche 92 passed (le test de la porte de
+réutilisation chinoise compare désormais au trainer figé de main, et vérifie qu'un trainer modifié reste refusé).

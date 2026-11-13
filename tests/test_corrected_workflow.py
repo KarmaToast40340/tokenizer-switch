@@ -77,11 +77,22 @@ def test_runtime_requires_all_corrected_cases_and_includes_margin():
     with pytest.raises(RuntimeError,match='QoS'):policy.runtime_plan(trials(),max_hours=1)
 
 
-@pytest.mark.parametrize('bad_mode',[False,True])
-def test_reuse_only_passed_matching_AB_gate_evidence(tmp_path,monkeypatch,bad_mode):
+@pytest.mark.parametrize('bad_mode,trainer',[(False,'main'),(True,'main'),(False,'changed')])
+def test_reuse_only_passed_matching_AB_gate_evidence(tmp_path,monkeypatch,bad_mode,trainer):
     import json
+    import shutil
     from types import SimpleNamespace
-    monkeypatch.syspath_prepend(str(root/'cluster'));monkeypatch.chdir(root)
+    # The gate reads the working tree: give it a snapshot whose trainer is the
+    # archived main trainer, so later opt-in trainer features do not change
+    # what this historical reuse gate is tested against.
+    checkout=tmp_path/'checkout'
+    for rel in ['configs','src','cluster']:shutil.copytree(root/rel,checkout/rel)
+    (checkout/'scripts').mkdir()
+    main_trainer=(root/'tests/fixtures/train_main_lifetime_cleanup.py').read_text()
+    changed=main_trainer.replace('            loss = F.cross_entropy(','            logits = logits * 1.0\n            loss = F.cross_entropy(',1)
+    assert changed!=main_trainer
+    (checkout/'scripts/train.py').write_text(main_trainer if trainer=='main' else changed)
+    monkeypatch.syspath_prepend(str(root/'cluster'));monkeypatch.chdir(checkout)
     spec=importlib.util.spec_from_file_location('reuse_gate',root/'cluster/run_corrected_chinese.py')
     gate=importlib.util.module_from_spec(spec);spec.loader.exec_module(gate)
     evidence=json.loads((root/'results/milestone-audit-2026-11-11.json').read_text())['corrected_gpu_gate']
@@ -98,7 +109,7 @@ def test_reuse_only_passed_matching_AB_gate_evidence(tmp_path,monkeypatch,bad_mo
     def archived(cmd,**kw):
         if cmd[:2]==['git','show']:
             rel=cmd[2].split(':',1)[1]
-            data=(root/'tests/fixtures/train_before_tensor_cleanup.py').read_bytes() if rel=='scripts/train.py' else (root/rel).read_bytes()
+            data=(root/'tests/fixtures/train_before_tensor_cleanup.py').read_bytes() if rel=='scripts/train.py' else (checkout/rel).read_bytes()
             return data.decode() if kw.get('text') else data
         return original_output(cmd,**kw)
     monkeypatch.setattr(gate.subprocess,'check_output',archived)
@@ -112,9 +123,10 @@ def test_reuse_only_passed_matching_AB_gate_evidence(tmp_path,monkeypatch,bad_mo
         calls.append(args);raise RuntimeError('stop before GPU')
     monkeypatch.setattr(gate,'command',stop)
     out=tmp_path/'new.json'
-    with pytest.raises(AssertionError if bad_mode else RuntimeError):
+    rejected=bad_mode or trainer=='changed'
+    with pytest.raises(AssertionError if rejected else RuntimeError,match='trainer changed' if trainer=='changed' else None):
         gate.gate(assets,out,'test-revision',previous)
-    if bad_mode:assert not calls
+    if rejected:assert not calls
     else:
         report=json.loads(out.read_text())
         assert [r['condition'] for r in report['trials']]==['A_keep','B_swap_fvt']
