@@ -1,0 +1,20 @@
+{
+  "checkpoint": "runs/chinese_corrected_dropout01_20261110/A_keep_zh_dropout01_50M/model",
+  "domain": "wiki_zh",
+  "split": "test",
+  "raw_sha256": "3ab1840f01a07bfd5e36ea40e705d11151934794f503fa0fcd6bff6764e01c0f",
+  "block_size": 1024,
+  "batch_size": 1,
+  "device": "cuda",
+  "tokenizer_sha256": "1fe93b6152957cf9cfd6d89002467f789ce8b3f3e000b3a2edf27c808ddd0b9e",
+  "model_training_after_eval": false,
+  "torch": "2.6.0+cu124",
+  "gpu": "NVIDIA GeForce GTX 1060 6GB",
+  "bpb": 1.956646544093831,
+  "nll_per_token": 1.9145904367234188,
+  "n_tokens": 7271616,
+  "n_bytes": 10265237,
+  "scope": "Corrected Chinese 50M; dropout 0.1; 20 MB tokenizer pilots",
+  "provisional": false,
+  "weights_sha256": "76e61af825fafdc8e7afcff8ecd000c4f01535f0e728a0bb9b7a634f7108e33b"
+}

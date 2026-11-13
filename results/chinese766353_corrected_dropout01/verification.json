@@ -1,0 +1,71 @@
+{
+  "status": "verified",
+  "scope": "Corrected Chinese 50M; dropout 0.1; 20 MB tokenizer pilots",
+  "provisional": false,
+  "training_job_id": "766353",
+  "training_commit": "d11b8b5e7188321b881101081c1119a89ec3276b",
+  "training_mode": "train",
+  "effective_dropout": "enabled",
+  "configured_dropout": 0.1,
+  "evaluation_mode": "eval",
+  "evaluation_commit": "d11b8b5e7188321b881101081c1119a89ec3276b",
+  "quota": {
+    "used_bytes": 9589166080,
+    "hard_limit_bytes": 10737418240,
+    "required_free_bytes": 402653184,
+    "method": "du against confirmed 10 GiB course-home quota"
+  },
+  "cases": [
+    {
+      "condition": "A",
+      "run": "A_keep_zh_dropout01_50M",
+      "weights_sha256": "76e61af825fafdc8e7afcff8ecd000c4f01535f0e728a0bb9b7a634f7108e33b",
+      "weights_bytes": 497774208,
+      "tokenizer_sha256": "1fe93b6152957cf9cfd6d89002467f789ce8b3f3e000b3a2edf27c808ddd0b9e",
+      "reference_tokenizer_semantics_verified": true,
+      "actual_tokens": 49938432,
+      "test_bpb": 1.956646544093831,
+      "logged_final_bpb": 1.956646544093831,
+      "trainer_wall_hours": 9.217037331329452,
+      "eos_token_id": 50256,
+      "n_test_documents": 1000,
+      "characters_per_second": 55.65890834871688,
+      "generation_tokens_per_second": 112.37129761255143
+    },
+    {
+      "condition": "B",
+      "run": "B_swap_fvt_zh_dropout01_50M",
+      "weights_sha256": "6332cb6ba6a224961f3eb98eac26a90691a9fa36719accc0cf05dea658bef7f3",
+      "weights_bytes": 496984704,
+      "tokenizer_sha256": "6f23989f35f35cac9c883f15b7996ccd9a98b866f0d3be3144d5c510e2a92763",
+      "reference_tokenizer_semantics_verified": true,
+      "actual_tokens": 49938432,
+      "test_bpb": 1.6927550811912,
+      "logged_final_bpb": 1.6927550811912,
+      "trainer_wall_hours": 8.233777603374588,
+      "eos_token_id": 0,
+      "n_test_documents": 1000,
+      "characters_per_second": 172.63514010966716,
+      "generation_tokens_per_second": 116.97881383820749
+    },
+    {
+      "condition": "E",
+      "run": "E_progressive_zh_dropout01_50M",
+      "weights_sha256": "1a5b39547b8804d03241de6c6d4dd992fe3e5d5269fa712c5a143e25d58ab79d",
+      "weights_bytes": 496984704,
+      "tokenizer_sha256": "6f23989f35f35cac9c883f15b7996ccd9a98b866f0d3be3144d5c510e2a92763",
+      "reference_tokenizer_semantics_verified": true,
+      "actual_tokens": 49938432,
+      "test_bpb": 1.7634908576156905,
+      "logged_final_bpb": 1.7634908576156905,
+      "trainer_wall_hours": 11.083224243720373,
+      "eos_token_id": 0,
+      "n_test_documents": 1000,
+      "characters_per_second": 165.08480270822233,
+      "generation_tokens_per_second": 116.51973943563527
+    }
+  ],
+  "test_raw_sha256": "3ab1840f01a07bfd5e36ea40e705d11151934794f503fa0fcd6bff6764e01c0f",
+  "n_test_documents": 1000,
+  "caution": "Fresh matched dropout-0.1 training with mode checks on every training phase. Single seed, 20 MB tokenizer fits; not the proposed 1 GB study."
+}

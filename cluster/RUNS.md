@@ -1,5 +1,12 @@
 # Who runs what
 
+> Current code50 transfer/launch instructions: [Djam's corrected handoff](../docs/djam-code50-handoff.md).
+> Use the verified merged main in a separate worktree and the already working
+> RTX environment; do not run setup/install scripts for this handoff. Legacy
+> `runs-v1`, default environment and future 200M/innovation commands below are
+> historical plans, not instructions to execute before the core code50 runs.
+
+
 Runs are split by domain, not by condition: split by letter, C would take ~1 GPU-hour and E ~18,
 and the account running E would hold up everyone. With this split each account runs ~13 hours and
 only stores the data of its own domain. One job at a time per account; everyone submits on their
@@ -28,6 +35,38 @@ be the condition:
 sha256sum data/tokens/*/*.bin      # on the laptop and on the cluster: the lines must match
 ```
 
+## Which encoded data for which budget
+
+The sampler draws each training sequence from a random document start,
+`rng.integers(0, n_docs)`, so **the draws depend on how many documents were encoded**. All the
+conditions of one comparison (A, B, C, E at the same budget and domain) must therefore use `.bin`
+files encoded with the **same `--max-mb`**. The 50M and 200M runs may use different encodings.
+
+Chloé's current encodings (see `docs/data-handoff.md` on `chloe/data-eval`) are sized for 50M:
+
+| Domain | New tokenizer | Text | GPT-2 tokens | New tokens | Use |
+|---|---|---|---|---|---|
+| code | `code70_gpt4_32k` | 250 MB | 113.9M | 63.2M | 50M runs |
+| Chinese | `wiki_zh70_gpt4_50k` | 400 MB | 283.2M | 91.7M | 50M runs |
+
+At 200M, these would not crash, but B and E would see each document ~3.2 times on code (~2.2 times
+on Chinese) while A, whose GPT-2 encoding is longer, sees it ~1.8 times (~0.7 times on Chinese):
+different amounts of repetition across the conditions we compare.
+For the 200M runs, encode more text so that the new tokenizer has at least 200M tokens. Estimates
+from the counts above:
+
+| Domain | `--max-mb` | GPT-2 `.bin` | New `.bin` | On disk |
+|---|---|---|---|---|
+| code | ~800 | ~364M tokens, ~0.73 GB | ~202M tokens, ~0.40 GB | ~1.1 GB |
+| Chinese | ~900 (close to the ~1 GB prepared) | ~637M tokens, ~1.27 GB | ~206M tokens, ~0.41 GB | ~1.7 GB |
+
+Mathieu's Chinese A at 200M must use the same 900 MB `gpt2.bin` as Chloé's B and E (not a smaller
+one), for the reason above. Check the free quota before copying (`bash cluster/setup_account.sh`
+prints it).
+
+E on Chinese uses a larger union vocabulary than the 80k measured on code (GPT-2 plus a 50k
+tokenizer), so its speed and memory on the RTX 5050 are not measured yet: check the first log lines.
+
 ## Once per account
 
 ```bash
@@ -47,7 +86,7 @@ scp -r artifacts/tokenizers/code70_gpt4_32k USER@hpclogin02.cs.nycu.edu.tw:token
 # Chinese (Chloé: everything; Mathieu: only data/tokens/wiki_zh/gpt2.* and the test set)
 scp -r data/tokens/wiki_zh USER@hpclogin02.cs.nycu.edu.tw:tokenizer-switch/data/tokens/
 scp data/raw/wiki_zh/test.jsonl data/raw/wiki_zh/stats.json USER@hpclogin02.cs.nycu.edu.tw:tokenizer-switch/data/raw/wiki_zh/
-scp -r artifacts/tokenizers/wiki_zh70_gpt4_32k USER@hpclogin02.cs.nycu.edu.tw:tokenizer-switch/artifacts/tokenizers/
+scp -r artifacts/tokenizers/wiki_zh70_gpt4_50k USER@hpclogin02.cs.nycu.edu.tw:tokenizer-switch/artifacts/tokenizers/
 ```
 
 Do not copy `data/raw/*/train.jsonl`: training reads the `.bin` files, and it would eat ~1 GB of quota.
@@ -58,7 +97,7 @@ Run every command from `~/tokenizer-switch` on the login node. First, in each ne
 
 ```bash
 TAG="account=$USER commit='$(git rev-parse --short HEAD)'"
-ZH="domain=wiki_zh new_tokenizer=artifacts/tokenizers/wiki_zh70_gpt4_32k new_name=wiki_zh70_gpt4_32k"
+ZH="domain=wiki_zh new_tokenizer=artifacts/tokenizers/wiki_zh70_gpt4_50k new_name=wiki_zh70_gpt4_50k"
 ```
 
 `account` and `commit` are extra config keys: `train.py` ignores them but writes them to the run's
@@ -67,6 +106,11 @@ from reading a hash such as `0123456` as a number.
 
 One run per job (`job.sbatch` allows 8 h; the longest run takes ~4.7 h). Submit the next run when
 the previous one is done (`squeue -u $USER`).
+
+If a run fails, rename its folder before resubmitting it, e.g.
+`mv runs/B_swap_fvt_code_50M runs/B_swap_fvt_code_50M.failed1`. Today `train.py` appends to an
+existing `log.jsonl`, which would mix the two attempts. Once the trainer hardening from
+`chloe/data-eval` is merged, it refuses an existing run folder instead.
 
 ### Djam
 

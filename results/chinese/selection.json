@@ -1,0 +1,16 @@
+{
+  "validation_csv": "results/chinese/validation.csv",
+  "english_nsl_cap": 1.25,
+  "domain": "wiki_zh",
+  "rule": "lossless on both validation domains; English NSL <= cap; minimum wiki_zh NSL, then smaller vocab",
+  "selected": {
+    "tokenizer": "wiki_zh70_gpt4_50k",
+    "vocab_size": "50000",
+    "nsl_wiki_zh": "0.3036",
+    "bytes_per_token_wiki_zh": "4.658",
+    "roundtrip_wiki_zh": "1.0",
+    "nsl_wiki_en": "1.0967",
+    "bytes_per_token_wiki_en": "3.993",
+    "roundtrip_wiki_en": "1.0"
+  }
+}

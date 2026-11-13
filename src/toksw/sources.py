@@ -19,6 +19,24 @@ SOURCES = {
 }
 
 
+def _wiki_rows(repo, revision, files):
+    """Read remote Parquet sequentially without Arrow dataset scan workers.
+
+    Disabling threaded reads avoids the observed macOS scan-pool shutdown hang
+    after a bounded streaming iterator is stopped early. Range requests keep
+    disk usage bounded; no full Wikipedia download is materialized.
+    """
+    from huggingface_hub import HfFileSystem
+    import pyarrow.parquet as pq
+
+    fs = HfFileSystem()
+    for file in files:
+        with fs.open(f"datasets/{repo}@{revision}/{file}", "rb", block_size=4 * 1024**2) as handle:
+            with pq.ParquetFile(handle) as parquet:
+                for batch in parquet.iter_batches(batch_size=128, use_threads=False):
+                    yield from batch.to_pylist()
+
+
 def _t2s():
     """Return a traditional -> simplified Chinese converter (OpenCC)."""
     try:
@@ -37,6 +55,8 @@ def stream_source(
     seed: int = 0,
     shuffle_buffer: int = 10_000,
     min_chars: int = 0,
+    revision: str | None = None,
+    reader: str = "auto",
 ) -> Iterator[dict]:
     """Stream documents of one source in a reproducible, shuffled order.
 
@@ -44,10 +64,18 @@ def stream_source(
     alphabetical article ranges (Wikipedia); without it the first documents of
     the stream are strongly correlated.
     """
-    from datasets import load_dataset
+    from datasets import IterableDataset, load_dataset
 
     repo, config, text_field, id_field, group_field = SOURCES[name]
-    ds = load_dataset(repo, config, split="train", streaming=True)
+    if name.startswith("wiki_") and reader != "hf":
+        from huggingface_hub import HfApi
+        files = sorted(p for p in HfApi().list_repo_files(repo, repo_type="dataset", revision=revision)
+                       if p.startswith(f"{config}/train-") and p.endswith(".parquet"))
+        if not files:
+            raise ValueError(f"no Parquet files for {repo}/{config}@{revision}")
+        ds = IterableDataset.from_generator(_wiki_rows, gen_kwargs=dict(repo=repo, revision=revision, files=files))
+    else:
+        ds = load_dataset(repo, config, split="train", streaming=True, revision=revision)
     if shuffle_buffer > 0:
         ds = ds.shuffle(seed=seed, buffer_size=shuffle_buffer)
 

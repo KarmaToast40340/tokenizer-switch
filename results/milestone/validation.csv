@@ -1,0 +1,7 @@
+tokenizer,vocab_size,nsl_code,bytes_per_token_code,roundtrip_code,nsl_wiki_en,bytes_per_token_wiki_en,roundtrip_wiki_en
+gpt2,50257,1.0,2.246,1.0,1.0,4.379,1.0
+code100_gpt4_32k,32000,0.5463,4.112,1.0,1.3872,3.157,1.0
+code70_gpt2_32k,32000,0.612,3.67,1.0,1.0763,4.068,1.0
+code70_gpt4_16k,16000,0.5918,3.796,1.0,1.201,3.646,1.0
+code70_gpt4_32k,32000,0.5589,4.02,1.0,1.0978,3.989,1.0
+code70_punct_32k,32000,0.6205,3.62,1.0,1.0935,4.004,1.0

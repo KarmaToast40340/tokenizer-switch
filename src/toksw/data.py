@@ -21,10 +21,11 @@ import torch
 from tokenizers import Tokenizer
 
 from .tok import eot_id
+from .jsonio import open_text
 
 
 def iter_jsonl(path: str | Path, limit: int | None = None) -> Iterator[dict]:
-    with open(path, encoding="utf-8") as f:
+    with open_text(path) as f:
         for i, line in enumerate(f):
             if limit is not None and i >= limit:
                 break

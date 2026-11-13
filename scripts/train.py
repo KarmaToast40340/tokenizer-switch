@@ -16,6 +16,7 @@ import torch.nn.functional as F
 from toksw import model as M
 from toksw.data import MixedBatchSampler, TokenFile, iter_jsonl
 from toksw.metrics import bits_per_byte
+from toksw.modes import require_mode
 from toksw.schedule import lr_at, p_new
 from toksw.tok import load_tokenizer
 from toksw.utils import JsonlLogger, load_config
@@ -24,12 +25,16 @@ from toksw.vocab import prune_to_new
 
 def evaluate(setup, old_tok, new_tok, texts, cfg, device):
     out = {}
-    if setup.old_map is not None:
-        out["old"] = bits_per_byte(setup.model, old_tok, texts, setup.old_map,
-                                   cfg["block_size"], cfg["eval_batch"], device)["bpb"]
-    if setup.new_map is not None:
-        out["new"] = bits_per_byte(setup.model, new_tok, texts, setup.new_map,
-                                   cfg["block_size"], cfg["eval_batch"], device)["bpb"]
+    was_training = setup.model.training
+    try:
+        if setup.old_map is not None:
+            out["old"] = bits_per_byte(setup.model, old_tok, texts, setup.old_map,
+                                       cfg["block_size"], cfg["eval_batch"], device)["bpb"]
+        if setup.new_map is not None:
+            out["new"] = bits_per_byte(setup.model, new_tok, texts, setup.new_map,
+                                       cfg["block_size"], cfg["eval_batch"], device)["bpb"]
+    finally:
+        require_mode(setup.model, was_training)
     return out
 
 
@@ -43,7 +48,8 @@ def main():
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     run = Path(cfg["out"]) / f"{cfg['run_name']}_{cfg['token_budget'] // 1_000_000}M"
-    run.mkdir(parents=True, exist_ok=True)
+    # There is no optimizer/RNG resume support: existing runs must be preserved.
+    run.mkdir(parents=True, exist_ok=False)
     (run / "config.json").write_text(json.dumps(cfg, indent=2))
     log = JsonlLogger(run / "log.jsonl")
 
@@ -51,6 +57,9 @@ def main():
     new_tok = load_tokenizer(cfg["new_tokenizer"]) if cfg["condition"] != "keep" else None
     setup = M.build(cfg["condition"], old_tok, new_tok, cfg["base_model"], cfg.get("init", "fvt"), cfg["seed"])
     model = setup.model.to(device)
+    # Hugging Face loads in eval mode; the trainer owns the training policy.
+    model.train()
+    require_mode(model, True, cfg.get("expected_dropout"))
 
     tokens = Path(cfg["tokens_dir"]) / cfg["domain"]
     old_file = TokenFile(tokens / cfg["old_name"]) if setup.old_map is not None else None
@@ -65,7 +74,8 @@ def main():
 
     test_path = Path(cfg["raw_dir"]) / cfg["domain"] / "test.jsonl"
     test_texts = [d["text"] for d in iter_jsonl(test_path)]
-    eval_texts = test_texts[: cfg["eval_docs"]]
+    eval_path = Path(cfg["raw_dir"]) / cfg["domain"] / f"{cfg.get('eval_split', 'test')}.jsonl"
+    eval_texts = [d["text"] for d in iter_jsonl(eval_path, cfg["eval_docs"])]
 
     decay = [p for n, p in model.named_parameters() if p.dim() >= 2]
     no_decay = [p for n, p in model.named_parameters() if p.dim() < 2]
@@ -77,10 +87,13 @@ def main():
     warmup = max(1, int(cfg["warmup_frac"] * total_steps))
     print(f"[train] {run.name}: {total_steps} steps x {tokens_per_step} tokens, device={device}")
 
-    log.log(step=0, eval=evaluate(setup, old_tok, new_tok, eval_texts, cfg, device))
+    log.log(step=0, eval=evaluate(setup, old_tok, new_tok, eval_texts, cfg, device),
+            model_training_after_eval=model.training)
     t0 = time.time()
     bytes_seen = 0
     for step in range(total_steps):
+        # Check every training phase, including the first one after evaluation.
+        require_mode(model, True, cfg.get("expected_dropout"))
         lr = lr_at(step, total_steps, cfg["lr"], warmup, cfg["min_lr_ratio"])
         for g in opt.param_groups:
             g["lr"] = lr
@@ -91,10 +104,14 @@ def main():
             with torch.autocast(device_type="cuda", dtype=torch.bfloat16, enabled=device == "cuda"):
                 logits = fwd(input_ids=x).logits
             loss = F.cross_entropy(logits.float().flatten(0, 1), y.flatten())
+            # Cross entropy owns the tensors autograd needs. Do not retain the
+            # large BF16 vocabulary logits during backward or the next forward.
+            del logits
             (loss / cfg["grad_accum"]).backward()
             nll_sum += loss.item() * y.numel()
             n_bytes += info["n_bytes"]
             frac_new += info["frac_new"] / cfg["grad_accum"]
+            del loss, x, y
         bytes_seen += n_bytes
         gnorm = torch.nn.utils.clip_grad_norm_(model.parameters(), cfg["grad_clip"])
         opt.step()
@@ -105,12 +122,15 @@ def main():
             log.log(step=step, lr=lr, train_bpb=nll_sum / math.log(2) / n_bytes,
                     train_loss=nll_sum / (tokens_per_step), p_new=info["p_new"], frac_new=frac_new,
                     grad_norm=float(gnorm), tokens=(step + 1) * tokens_per_step, bytes_seen=bytes_seen,
-                    tok_per_s=(step + 1) * tokens_per_step / max(elapsed, 1e-9))
+                    tok_per_s=(step + 1) * tokens_per_step / max(elapsed, 1e-9),
+                    model_training=model.training)
         if (step + 1) % cfg["eval_every"] == 0 and step + 1 < total_steps:
-            log.log(step=step + 1, eval=evaluate(setup, old_tok, new_tok, eval_texts, cfg, device))
+            log.log(step=step + 1, eval=evaluate(setup, old_tok, new_tok, eval_texts, cfg, device),
+                    model_training_after_eval=model.training)
 
     final = evaluate(setup, old_tok, new_tok, test_texts, cfg, device)
-    log.log(step=total_steps, final_eval=final, wall_s=time.time() - t0)
+    log.log(step=total_steps, final_eval=final, wall_s=time.time() - t0,
+            model_training_after_eval=model.training, training_mode_checks=total_steps)
     print(f"[final] {final}")
 
     ckpt = run / "model"
@@ -122,7 +142,7 @@ def main():
         setup = M.Setup(model, None, np.arange(pruned.shape[0]), setup.token_bytes[setup.union.new2union])
         model.to(device)
         pruned_eval = evaluate(setup, old_tok, new_tok, test_texts, cfg, device)
-        log.log(step=total_steps, final_eval_pruned=pruned_eval)
+        log.log(step=total_steps, final_eval_pruned=pruned_eval, model_training_after_eval=model.training)
         print(f"[final pruned] {pruned_eval}")
     model.save_pretrained(ckpt)
     tok_src = cfg["new_tokenizer"] if cfg["condition"] != "keep" else None

@@ -1,0 +1,13 @@
+{
+  "torch": "2.7.0+cu128",
+  "unpacked_bytes": 2008052238,
+  "unpacked_GiB": 1.8701443802565336,
+  "url": "https://download.pytorch.org/whl/cu128/torch-2.7.0%2Bcu128-cp312-cp312-manylinux_2_28_x86_64.whl",
+  "dependency_requirements": [
+    "nvidia-cudnn-cu12==9.7.1.26; platform_system == \"Linux\" and platform_machine == \"x86_64\"",
+    "nvidia-cusparselt-cu12==0.6.3; platform_system == \"Linux\" and platform_machine == \"x86_64\"",
+    "nvidia-nccl-cu12==2.26.2; platform_system == \"Linux\" and platform_machine == \"x86_64\"",
+    "triton==3.3.0; platform_system == \"Linux\""
+  ],
+  "method": "Bounded wheel metadata and ZIP-directory reads only; no install"
+}

@@ -2,13 +2,28 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .venv/
+.venv
+.venv-icloud-preserved/
+results/smoke/
 .pytest_cache/
 # Generated data, tokenizers, checkpoints and logs (large, reproducible from scripts)
 data/
+data
+data-icloud-preserved/
 artifacts/
+artifacts
+deliverables/
 runs/
 wandb/
 *.bin
 *.idx
 *.npy
 collected/
+results/chinese-smoke/
+results/**/execution*.log
+results/**/workflow.log
+results/**/preparation.log
+results/cluster-readiness.json
+
+# Cluster scheduler output (including persistent release-worktree links)
+/logs

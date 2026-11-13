@@ -1,0 +1,15 @@
+{
+  "validation_csv": "results/milestone/validation.csv",
+  "english_nsl_cap": 1.25,
+  "rule": "lossless on both validation domains; English NSL <= cap; minimum code NSL, then smaller vocab",
+  "selected": {
+    "tokenizer": "code70_gpt4_32k",
+    "vocab_size": "32000",
+    "nsl_code": "0.5589",
+    "bytes_per_token_code": "4.02",
+    "roundtrip_code": "1.0",
+    "nsl_wiki_en": "1.0978",
+    "bytes_per_token_wiki_en": "3.989",
+    "roundtrip_wiki_en": "1.0"
+  }
+}

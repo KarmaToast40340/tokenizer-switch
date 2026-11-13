@@ -1,0 +1,91 @@
+{
+  "scope": "PROVISIONAL: eval-mode-trained / dropout disabled; Chinese 50M pilot",
+  "provisional": true,
+  "files": [
+    {
+      "path": "A/config.json",
+      "bytes": 95,
+      "sha256": "a0e6f9a19ec192e18dedd5ddd7298e1c0ba4bed00772c6717605f5ef04d48238"
+    },
+    {
+      "path": "A/log.jsonl",
+      "bytes": 19742,
+      "sha256": "9c83216c8db727dfd2f01eab1596f70c2426705e6f3596d3603bd64cba1b12c1"
+    },
+    {
+      "path": "A_bpb.json",
+      "bytes": 736,
+      "sha256": "f6dcc64ccf4c67d45a2151b7ead360dec243fae7001605b199b60c4dbe5b78d5"
+    },
+    {
+      "path": "B/config.json",
+      "bytes": 95,
+      "sha256": "a0e6f9a19ec192e18dedd5ddd7298e1c0ba4bed00772c6717605f5ef04d48238"
+    },
+    {
+      "path": "B/log.jsonl",
+      "bytes": 19725,
+      "sha256": "0fcd274ff5df917af081b806713aee48871eac76126f9060a67b480f67a71ee7"
+    },
+    {
+      "path": "B_bpb.json",
+      "bytes": 737,
+      "sha256": "e3e147f0a0c54caa1f27ab90e404326e0a7c45a54ce84cee33c29a7b2b9a09bc"
+    },
+    {
+      "path": "E/config.json",
+      "bytes": 95,
+      "sha256": "a0e6f9a19ec192e18dedd5ddd7298e1c0ba4bed00772c6717605f5ef04d48238"
+    },
+    {
+      "path": "E/log.jsonl",
+      "bytes": 20743,
+      "sha256": "a6c192a5fe7241bfdc4a397d253c04d3181bed1d65c0270404162b1708a06344"
+    },
+    {
+      "path": "E_bpb.json",
+      "bytes": 742,
+      "sha256": "4deb60f9c4e536d9509f691d1648458d2ae2b31ef2acf2990bc787f02f613cbd"
+    },
+    {
+      "path": "README.md",
+      "bytes": 602,
+      "sha256": "35629809f05b07d6933f99f1da09ca795acaacdf5dcb25bc215750e735e84edd"
+    },
+    {
+      "path": "comparison.csv",
+      "bytes": 482,
+      "sha256": "3e214b0f9d181fece8fdebc8006a94356f6735bc5b6741b75b9051149bba58da"
+    },
+    {
+      "path": "comparison.pdf",
+      "bytes": 22369,
+      "sha256": "7b7f2a409cd8b9e740164aeff89127de96758ecd5423e3fa05fdf81aff76d55e"
+    },
+    {
+      "path": "comparison.png",
+      "bytes": 118756,
+      "sha256": "06988597097183959ac19bcc904d55f43e1584388c6da38d65a5d5b148cfbd0a"
+    },
+    {
+      "path": "speed.csv",
+      "bytes": 1354,
+      "sha256": "906fd4fc6be638238c7e7223521e66c96247403aca24a2f8dfef15d7210ba4de"
+    },
+    {
+      "path": "training.pdf",
+      "bytes": 20757,
+      "sha256": "599f6bff04e859f993bfc40646f538f3549f3c962b468fa01199bdef5a776c0a"
+    },
+    {
+      "path": "training.png",
+      "bytes": 151889,
+      "sha256": "5733eb695e6153bdd4ba7e8bf3ffd891bba4b5c19751482925d4a9bc156e243a"
+    },
+    {
+      "path": "verification.json",
+      "bytes": 2858,
+      "sha256": "7dc97097f4ba4ea3bd310cc3a250eeb89ef0c0187061c5301d89604e6b262150"
+    }
+  ]
+}

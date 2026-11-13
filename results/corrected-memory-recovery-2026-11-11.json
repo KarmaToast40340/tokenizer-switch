@@ -1,0 +1,119 @@
+{
+  "gate": {
+    "status": "passed",
+    "scope": "Corrected train-mode GPU/memory/runtime gate; not model quality",
+    "job_id": "766279",
+    "commit": "d11b8b5e7188321b881101081c1119a89ec3276b",
+    "quota": {
+      "used_bytes": 8079781888,
+      "hard_limit_bytes": 10737418240,
+      "required_free_bytes": 903986175,
+      "method": "du against confirmed 10 GiB course-home quota"
+    },
+    "checkpoint_directory_bytes": [
+      501332991,
+      500956042,
+      500956042
+    ],
+    "trials": [
+      {
+        "condition": "A_keep",
+        "status": "passed",
+        "optimizer_steps": 2,
+        "all_training_forwards_train_mode": true,
+        "all_evaluations_restored_train_mode": true,
+        "training_forwards": 128,
+        "nonzero_backward_calls": 128,
+        "configured_dropout": 0.1,
+        "trainer_wall_s": 75.0539779663086,
+        "cli_wall_s": 81.2292244178243,
+        "peak_allocated_bytes": 5221201408,
+        "peak_reserved_bytes": 5553258496,
+        "checkpoint_bytes": 501333032,
+        "gpu": "NVIDIA GeForce GTX 1060 6GB",
+        "torch": "2.6.0+cu124",
+        "validated_source_commit": "4cc7bff729537e17b471bef36e3a40cd2e11e5d3",
+        "validation_job_id": "764704"
+      },
+      {
+        "condition": "B_swap_fvt",
+        "status": "passed",
+        "optimizer_steps": 2,
+        "all_training_forwards_train_mode": true,
+        "all_evaluations_restored_train_mode": true,
+        "training_forwards": 128,
+        "nonzero_backward_calls": 128,
+        "configured_dropout": 0.1,
+        "trainer_wall_s": 73.84106874465942,
+        "cli_wall_s": 81.2202981649898,
+        "peak_allocated_bytes": 5213964288,
+        "peak_reserved_bytes": 5448400896,
+        "checkpoint_bytes": 500956083,
+        "gpu": "NVIDIA GeForce GTX 1060 6GB",
+        "torch": "2.6.0+cu124",
+        "validated_source_commit": "4cc7bff729537e17b471bef36e3a40cd2e11e5d3",
+        "validation_job_id": "764704"
+      },
+      {
+        "condition": "E_progressive",
+        "status": "passed",
+        "optimizer_steps": 2,
+        "all_training_forwards_train_mode": true,
+        "all_evaluations_restored_train_mode": true,
+        "training_forwards": 128,
+        "nonzero_backward_calls": 128,
+        "configured_dropout": 0.1,
+        "trainer_wall_s": 86.59815454483032,
+        "cli_wall_s": 102.9277217509225,
+        "peak_allocated_bytes": 6018094592,
+        "peak_reserved_bytes": 6161432576,
+        "checkpoint_bytes": 500956083,
+        "gpu": "NVIDIA GeForce GTX 1060 6GB",
+        "torch": "2.6.0+cu124",
+        "validated_source_commit": "d11b8b5e7188321b881101081c1119a89ec3276b",
+        "validation_job_id": "766279"
+      }
+    ],
+    "reused_gate_sha256": "5512b1c52dd0d1d7444c65953fdc2940a2e86143f844cfbe1b80f9443c1f969a",
+    "reuse_note": "A/B passed in 764704. New code only releases completed logits/tensors; paired exact-CLI A/B/C/E losses and saved weights are bit-identical on CPU. Only E requires a new GPU memory gate.",
+    "runtime": {
+      "cases": [
+        {
+          "condition": "A_keep",
+          "measured_seconds_per_step": 37.5269889831543,
+          "projected_training_hours": 7.943212668100993,
+          "reserved_hours": 11.32617646853129
+        },
+        {
+          "condition": "B_swap_fvt",
+          "measured_seconds_per_step": 36.92053437232971,
+          "projected_training_hours": 7.814846442143122,
+          "reserved_hours": 11.159300374786058
+        },
+        {
+          "condition": "E_progressive",
+          "measured_seconds_per_step": 43.29907727241516,
+          "projected_training_hours": 9.164971355994542,
+          "reserved_hours": 12.914462762792907
+        }
+      ],
+      "requested_hours": 37,
+      "caveat": "Two exact optimizer steps per condition; projection, not completed runtime. Includes 30% margin, 1h/case evaluation allowance and 1h allocation margin."
+    }
+  },
+  "quota": {
+    "used_bytes": 8072114176,
+    "hard_limit_bytes": 10737418240,
+    "free_bytes": 2665304064,
+    "remaining_final_checkpoint_bytes": 1528411022,
+    "save_workspace_bytes": 509721640,
+    "logs_and_headroom_bytes": 402653184,
+    "required_free_bytes": 2440785846,
+    "projected_reserved_peak_bytes": 10512900022,
+    "fits": true
+  },
+  "quota_method": "quota /net/course",
+  "accounting": "766279|COMPLETED|0:0|00:02:41",
+  "queue": "",
+  "automatic_full_continuation": false
+}

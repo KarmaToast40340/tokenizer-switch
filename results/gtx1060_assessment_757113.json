@@ -1,0 +1,49 @@
+{
+  "status": "assessed",
+  "purpose": "GTX 1060 feasibility only; excluded from model comparisons",
+  "job_id": "757113",
+  "commit": "681a28a6c76082555eef703501776721e12d64ed",
+  "trials": [
+    {
+      "status": "failed",
+      "error": "RuntimeError: Failed to import transformers.models.gpt2.modeling_gpt2 because of the following error (look up to see its traceback):\nlibGL.so.1: cannot open shared object file: No such file or directory",
+      "condition": "A_keep",
+      "micro_batch": 2
+    },
+    {
+      "status": "failed",
+      "error": "RuntimeError: Failed to import transformers.models.gpt2.modeling_gpt2 because of the following error (look up to see its traceback):\nlibGL.so.1: cannot open shared object file: No such file or directory",
+      "condition": "B_swap_fvt",
+      "micro_batch": 2
+    },
+    {
+      "status": "failed",
+      "error": "RuntimeError: Failed to import transformers.models.gpt2.modeling_gpt2 because of the following error (look up to see its traceback):\nlibGL.so.1: cannot open shared object file: No such file or directory",
+      "condition": "E_progressive",
+      "micro_batch": 2
+    }
+  ],
+  "probe": {
+    "cuda_available": true,
+    "torch": "2.6.0+cu124",
+    "cuda": "12.4",
+    "gpu": "NVIDIA GeForce GTX 1060 6GB",
+    "capability": [
+      6,
+      1
+    ],
+    "memory_bytes": 6360465408,
+    "compiled_architectures": [
+      "sm_50",
+      "sm_60",
+      "sm_70",
+      "sm_75",
+      "sm_80",
+      "sm_86",
+      "sm_90"
+    ],
+    "native_bf16": false,
+    "fp32_forward_backward": "passed",
+    "bf16_forward_backward": "passed"
+  }
+}

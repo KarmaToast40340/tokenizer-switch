@@ -1,0 +1,64 @@
+{
+  "status": "running",
+  "stage": "training_A_keep",
+  "job_id": "757238",
+  "commit": "31dbce7f645018eb221d55f5b7756872396de9b5",
+  "started_at": "2026-11-09T09:30:30.525843+00:00",
+  "quota": {
+    "used_bytes": 6562185216,
+    "hard_limit_bytes": 10737418240,
+    "required_free_bytes": 3113851289,
+    "method": "du against confirmed 10 GiB hard limit"
+  },
+  "smoke": [
+    {
+      "condition": "A_keep",
+      "status": "passed",
+      "optimizer_steps": 2,
+      "scope": "validation-only diagnostic; checkpoint removed"
+    },
+    {
+      "condition": "B_swap_fvt",
+      "status": "passed",
+      "optimizer_steps": 2,
+      "scope": "validation-only diagnostic; checkpoint removed"
+    },
+    {
+      "condition": "E_progressive",
+      "status": "passed",
+      "optimizer_steps": 2,
+      "scope": "validation-only diagnostic; checkpoint removed"
+    }
+  ],
+  "runs": [],
+  "updated_at": "2026-11-09T09:36:24.596421+00:00",
+  "gpu": {
+    "cuda_available": true,
+    "torch": "2.6.0+cu124",
+    "cuda": "12.4",
+    "gpu": "NVIDIA GeForce GTX 1060 6GB",
+    "capability": [
+      6,
+      1
+    ],
+    "memory_bytes": 6360465408,
+    "compiled_architectures": [
+      "sm_50",
+      "sm_60",
+      "sm_70",
+      "sm_75",
+      "sm_80",
+      "sm_86",
+      "sm_90"
+    ],
+    "native_bf16": false,
+    "fp32_forward_backward": "passed",
+    "bf16_forward_backward": "passed"
+  },
+  "quota_before_run": {
+    "used_bytes": 6562193408,
+    "hard_limit_bytes": 10737418240,
+    "required_free_bytes": 3113851289,
+    "method": "du against confirmed 10 GiB hard limit"
+  }
+}

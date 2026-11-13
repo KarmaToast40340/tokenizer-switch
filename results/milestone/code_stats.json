@@ -1,0 +1,46 @@
+{
+  "source": "code",
+  "seed": 2026,
+  "split_method": "sha256(seed:repository_or_text_hash) modulo 100: 80/10/10",
+  "requested_train_bytes": 50000000,
+  "requested_eval_docs": 100,
+  "chunk_chars": 3000,
+  "n_train": 19067,
+  "train_bytes": 50002307,
+  "dropped": {
+    "duplicate_document": 0,
+    "duplicate_chunk": 2,
+    "missing_group": 0
+  },
+  "complete": true,
+  "provenance": {
+    "hf_repo": "codeparrot/codeparrot-clean",
+    "config": null,
+    "revision": "35a59fb025bc0a102f7d96eac09d145b896d487b",
+    "shuffle_buffer": 1000,
+    "min_chars": 1
+  },
+  "audit": {
+    "train": {
+      "n_docs": 19067,
+      "utf8_bytes": 50002307,
+      "median_doc_bytes": 2966,
+      "max_doc_bytes": 4298,
+      "sha256": "6d85f66b2973caf260cec6207fb9995bd755f654f855b2cbcc1f69cf8e45eb05"
+    },
+    "validation": {
+      "n_docs": 100,
+      "utf8_bytes": 734411,
+      "median_doc_bytes": 3446,
+      "max_doc_bytes": 60463,
+      "sha256": "bac6b0a4cd42608548d08faeb9386ff35cc30c41187c4a6cac9e39fc3c95c63e"
+    },
+    "test": {
+      "n_docs": 100,
+      "utf8_bytes": 1223167,
+      "median_doc_bytes": 4968,
+      "max_doc_bytes": 451630,
+      "sha256": "9324b34065e20f42fa51ca91ba9e4bb819ab999ce2a644d4555fbb9d077d8974"
+    }
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "observed_date": "2026-11-11",
+  "timezone": "Asia/Taipei",
+  "pilot": {
+    "status": "completed",
+    "stage": "completed",
+    "job_id": "757238",
+    "commit": "31dbce7f645018eb221d55f5b7756872396de9b5",
+    "started_at": "2026-11-09T09:30:30.525843+00:00",
+    "quota": {
+      "used_bytes": 6562185216,
+      "hard_limit_bytes": 10737418240,
+      "required_free_bytes": 3113851289,
+      "method": "du against confirmed 10 GiB hard limit"
+    },
+    "smoke": [
+      {
+        "condition": "A_keep",
+        "status": "passed",
+        "optimizer_steps": 2,
+        "scope": "validation-only diagnostic; checkpoint removed"
+      },
+      {
+        "condition": "B_swap_fvt",
+        "status": "passed",
+        "optimizer_steps": 2,
+        "scope": "validation-only diagnostic; checkpoint removed"
+      },
+      {
+        "condition": "E_progressive",
+        "status": "passed",
+        "optimizer_steps": 2,
+        "scope": "validation-only diagnostic; checkpoint removed"
+      }
+    ],
+    "runs": [
+      {
+        "condition": "A_keep",
+        "run": "runs/A_keep_zh_50M",
+        "status": "saved",
+        "actual_tokens": 49938432,
+        "weights_bytes": 497774208,
+        "weights_sha256": "0f8e086a531c98f1cd3ceb59ffcb414ef5f6a7c7be3fec7c8aebc7dfca0d3927"
+      },
+      {
+        "condition": "B_swap_fvt",
+        "run": "runs/B_swap_fvt_zh_50M",
+        "status": "saved",
+        "actual_tokens": 49938432,
+        "weights_bytes": 496984704,
+        "weights_sha256": "d530b1e6213449c52ff7d2efb2eda195bd6941d1c0daf021aa40fd2996793e03"
+      },
+      {
+        "condition": "E_progressive",
+        "run": "runs/E_progressive_zh_50M",
+        "status": "saved",
+        "actual_tokens": 49938432,
+        "weights_bytes": 496984704,
+        "weights_sha256": "38067cf4f90196cceb47510caf0d2a66bfbfed50468e1c441006b740eb9fdb46"
+      }
+    ],
+    "updated_at": "2026-11-10T14:40:32.020787+00:00",
+    "gpu": {
+      "cuda_available": true,
+      "torch": "2.6.0+cu124",
+      "cuda": "12.4",
+      "gpu": "NVIDIA GeForce GTX 1060 6GB",
+      "capability": [
+        6,
+        1
+      ],
+      "memory_bytes": 6360465408,
+      "compiled_architectures": [
+        "sm_50",
+        "sm_60",
+        "sm_70",
+        "sm_75",
+        "sm_80",
+        "sm_86",
+        "sm_90"
+      ],
+      "native_bf16": false,
+      "fp32_forward_backward": "passed",
+      "bf16_forward_backward": "passed"
+    },
+    "quota_before_run": {
+      "used_bytes": 7568621568,
+      "hard_limit_bytes": 10737418240,
+      "required_free_bytes": 1825361100,
+      "method": "du against confirmed 10 GiB hard limit"
+    },
+    "result_dir": "results/chinese_models_gtx50_757238"
+  },
+  "corrected_gpu_gate": {
+    "status": "failed",
+    "scope": "Corrected train-mode GPU/memory/runtime gate; not model quality",
+    "job_id": "764704",
+    "commit": "4cc7bff729537e17b471bef36e3a40cd2e11e5d3",
+    "quota": {
+      "used_bytes": 8076357632,
+      "hard_limit_bytes": 10737418240,
+      "required_free_bytes": 903986175,
+      "method": "du against confirmed 10 GiB course-home quota"
+    },
+    "checkpoint_directory_bytes": [
+      501332991,
+      500956042,
+      500956042
+    ],
+    "trials": [
+      {
+        "condition": "A_keep",
+        "status": "passed",
+        "optimizer_steps": 2,
+        "all_training_forwards_train_mode": true,
+        "all_evaluations_restored_train_mode": true,
+        "training_forwards": 128,
+        "nonzero_backward_calls": 128,
+        "configured_dropout": 0.1,
+        "trainer_wall_s": 75.0539779663086,
+        "cli_wall_s": 81.2292244178243,
+        "peak_allocated_bytes": 5221201408,
+        "peak_reserved_bytes": 5553258496,
+        "checkpoint_bytes": 501333032,
+        "gpu": "NVIDIA GeForce GTX 1060 6GB",
+        "torch": "2.6.0+cu124"
+      },
+      {
+        "condition": "B_swap_fvt",
+        "status": "passed",
+        "optimizer_steps": 2,
+        "all_training_forwards_train_mode": true,
+        "all_evaluations_restored_train_mode": true,
+        "training_forwards": 128,
+        "nonzero_backward_calls": 128,
+        "configured_dropout": 0.1,
+        "trainer_wall_s": 73.84106874465942,
+        "cli_wall_s": 81.2202981649898,
+        "peak_allocated_bytes": 5213964288,
+        "peak_reserved_bytes": 5448400896,
+        "checkpoint_bytes": 500956083,
+        "gpu": "NVIDIA GeForce GTX 1060 6GB",
+        "torch": "2.6.0+cu124"
+      }
+    ],
+    "error": "E_progressive CUDA OOM during backward: requested 332 MiB; 279.62 MiB free on GTX 1060 6GB. Full training was not submitted."
+  },
+  "corrected_full_training": {
+    "status": "COMPLETED",
+    "job_id": "766353",
+    "source_commit": "d11b8b5e7188321b881101081c1119a89ec3276b",
+    "actual_tokens_per_condition": 49938432,
+    "exit_code": "0:0",
+    "completed_at": "2026-11-12T20:44:34+07:00",
+    "mode_audit_passed": true,
+    "saved_checkpoint_evaluation": "verified",
+    "generation_speed": "complete",
+    "comparison_figures": "complete",
+    "results_root": "results/chinese766353_corrected_dropout01",
+    "results_scope": "Single-seed corrected dropout-0.1 Chinese 50M; 20 MB tokenizer pilots"
+  },
+  "slurm_accounting": [
+    "757238|COMPLETED|0:0|1-05:10:32",
+    "764463|COMPLETED|0:0|00:45:11",
+    "764704|FAILED|1:0|00:05:03"
+  ],
+  "queue_at_initial_audit": "",
+  "scope": "Actual milestone audit; pilot and corrected results are separate",
+  "corrected_memory_recovery": {
+    "job_id": "766279",
+    "status": "COMPLETED",
+    "exit_code": "0:0",
+    "gate_status": "passed",
+    "source_commit": "d11b8b5e7188321b881101081c1119a89ec3276b",
+    "E_actual_diagnostic_tokens": 131072,
+    "E_training_forwards": 128,
+    "mode_and_restoration_verified": true
+  },
+  "current_checkpoint_storage": {
+    "used_bytes": 8072114176,
+    "hard_limit_bytes": 10737418240,
+    "free_bytes": 2665304064,
+    "remaining_final_checkpoint_bytes": 1528411022,
+    "save_workspace_bytes": 509721640,
+    "logs_and_headroom_bytes": 402653184,
+    "required_free_bytes": 2440785846,
+    "projected_reserved_peak_bytes": 10512900022,
+    "fits": true
+  },
+  "corrected_runtime_reserved_hours": 37,
+  "pilot_weight_hashes_rechecked_today": true,
+  "offline_validation": {
+    "full_suite_passed": 70,
+    "full_suite_seconds": 76.11,
+    "paired_exact_CLI_loss_and_weight_equality": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ]
+  },
+  "latest_observed_at": "2026-11-12T21:28:36.255148+07:00"
+}

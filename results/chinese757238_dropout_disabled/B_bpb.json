@@ -1,0 +1,20 @@
+{
+  "checkpoint": "runs/B_swap_fvt_zh_50M/model",
+  "domain": "wiki_zh",
+  "split": "test",
+  "raw_sha256": "3ab1840f01a07bfd5e36ea40e705d11151934794f503fa0fcd6bff6764e01c0f",
+  "block_size": 1024,
+  "batch_size": 1,
+  "device": "cuda",
+  "tokenizer_sha256": "6f23989f35f35cac9c883f15b7996ccd9a98b866f0d3be3144d5c510e2a92763",
+  "model_training_after_eval": false,
+  "torch": "2.6.0+cu124",
+  "gpu": "NVIDIA GeForce GTX 1060 6GB",
+  "bpb": 1.646345474112828,
+  "nll_per_token": 5.30612795725673,
+  "n_tokens": 2207688,
+  "n_bytes": 10265237,
+  "scope": "PROVISIONAL: eval-mode-trained / dropout disabled; Chinese 50M pilot",
+  "provisional": true,
+  "weights_sha256": "d530b1e6213449c52ff7d2efb2eda195bd6941d1c0daf021aa40fd2996793e03"
+}

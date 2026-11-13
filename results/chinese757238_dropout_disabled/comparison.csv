@@ -1,0 +1,4 @@
+condition,test_bpb,characters_per_second,trainer_wall_hours,training_scope,provisional
+A,1.8642711613796186,55.757503359326954,9.046185380220413,PROVISIONAL: eval-mode-trained / dropout disabled; Chinese 50M pilot,True
+B,1.646345474112828,181.03547749901534,7.948266495400005,PROVISIONAL: eval-mode-trained / dropout disabled; Chinese 50M pilot,True
+E,1.7149436801772797,168.1506056146735,10.800313725272815,PROVISIONAL: eval-mode-trained / dropout disabled; Chinese 50M pilot,True

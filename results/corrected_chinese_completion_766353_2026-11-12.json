@@ -1,0 +1,146 @@
+{
+  "observed_at": "2026-11-12T21:28:36.255148+07:00",
+  "controller": {
+    "status": "completed",
+    "stage": "completed",
+    "job_id": "766353",
+    "commit": "d11b8b5e7188321b881101081c1119a89ec3276b",
+    "training_mode": "train",
+    "configured_dropout": 0.1,
+    "effective_dropout": "enabled",
+    "protocol": "corrected",
+    "runs_root": "$HOME/tokenizer-switch/runs/chinese_corrected_dropout01_20261110",
+    "gate_job_id": "766279",
+    "runtime_plan": {
+      "cases": [
+        {
+          "condition": "A_keep",
+          "measured_seconds_per_step": 37.5269889831543,
+          "projected_training_hours": 7.943212668100993,
+          "reserved_hours": 11.32617646853129
+        },
+        {
+          "condition": "B_swap_fvt",
+          "measured_seconds_per_step": 36.92053437232971,
+          "projected_training_hours": 7.814846442143122,
+          "reserved_hours": 11.159300374786058
+        },
+        {
+          "condition": "E_progressive",
+          "measured_seconds_per_step": 43.29907727241516,
+          "projected_training_hours": 9.164971355994542,
+          "reserved_hours": 12.914462762792907
+        }
+      ],
+      "requested_hours": 37,
+      "caveat": "Two exact optimizer steps per condition; projection, not completed runtime. Includes 30% margin, 1h/case evaluation allowance and 1h allocation margin."
+    },
+    "quota": {
+      "used_bytes": 9086181376,
+      "hard_limit_bytes": 10737418240,
+      "free_bytes": 1651236864,
+      "remaining_final_checkpoint_bytes": 509344691,
+      "save_workspace_bytes": 509721640,
+      "logs_and_headroom_bytes": 402653184,
+      "required_free_bytes": 1421719515,
+      "projected_reserved_peak_bytes": 10507900891,
+      "fits": true,
+      "method": "du against confirmed 10 GiB course-home quota"
+    },
+    "runs": [
+      {
+        "condition": "A_keep",
+        "run": "$HOME/tokenizer-switch/runs/chinese_corrected_dropout01_20261110/A_keep_zh_dropout01_50M",
+        "status": "saved",
+        "actual_tokens": 49938432,
+        "weights_sha256": "76e61af825fafdc8e7afcff8ecd000c4f01535f0e728a0bb9b7a634f7108e33b",
+        "weights_bytes": 497774208
+      },
+      {
+        "condition": "B_swap_fvt",
+        "run": "$HOME/tokenizer-switch/runs/chinese_corrected_dropout01_20261110/B_swap_fvt_zh_dropout01_50M",
+        "status": "saved",
+        "actual_tokens": 49938432,
+        "weights_sha256": "6332cb6ba6a224961f3eb98eac26a90691a9fa36719accc0cf05dea658bef7f3",
+        "weights_bytes": 496984704
+      },
+      {
+        "condition": "E_progressive",
+        "run": "$HOME/tokenizer-switch/runs/chinese_corrected_dropout01_20261110/E_progressive_zh_dropout01_50M",
+        "status": "saved",
+        "actual_tokens": 49938432,
+        "weights_sha256": "1a5b39547b8804d03241de6c6d4dd992fe3e5d5269fa712c5a143e25d58ab79d",
+        "weights_bytes": 496984704
+      }
+    ]
+  },
+  "mode_audit": [
+    {
+      "condition": "A",
+      "training_phase_checks": 762,
+      "logged_training_events": 77,
+      "all_logged_training_modes_true": true,
+      "all_initial_periodic_final_evaluations_restore_training": true,
+      "evaluation_steps": [
+        0,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        762
+      ],
+      "all_logged_losses_and_gradients_finite": true,
+      "E_pruned_evaluation_present": null
+    },
+    {
+      "condition": "B",
+      "training_phase_checks": 762,
+      "logged_training_events": 77,
+      "all_logged_training_modes_true": true,
+      "all_initial_periodic_final_evaluations_restore_training": true,
+      "evaluation_steps": [
+        0,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        762
+      ],
+      "all_logged_losses_and_gradients_finite": true,
+      "E_pruned_evaluation_present": null
+    },
+    {
+      "condition": "E",
+      "training_phase_checks": 762,
+      "logged_training_events": 77,
+      "all_logged_training_modes_true": true,
+      "all_initial_periodic_final_evaluations_restore_training": true,
+      "evaluation_steps": [
+        0,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        762,
+        762
+      ],
+      "all_logged_losses_and_gradients_finite": true,
+      "E_pruned_evaluation_present": true
+    }
+  ],
+  "accounting_original_timezone": "Asia/Taipei",
+  "accounting": "766353|COMPLETED|0:0|2026-11-11T15:50:27|2026-11-12T21:44:34|1-05:54:07",
+  "started_at_bangkok": "2026-11-11T14:50:27+07:00",
+  "completed_at_bangkok": "2026-11-12T20:44:34+07:00",
+  "corrected_source_clean": true,
+  "pilot_source_clean": true
+}

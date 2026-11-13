@@ -1,0 +1,188 @@
+{
+  "status": "verified",
+  "files": [
+    {
+      "profile": "code50",
+      "source": "data/code50/tokens/code/code70_gpt4_32k.bin",
+      "destination": "data/tokens/code/code70_gpt4_32k.bin",
+      "bytes": 126308568,
+      "sha256": "4dc94a6712fe50c606585a2fec5d60d11869a9c8085c91c554b32299fa4e6ae1"
+    },
+    {
+      "profile": "code50",
+      "source": "data/code50/tokens/code/code70_gpt4_32k.idx",
+      "destination": "data/tokens/code/code70_gpt4_32k.idx",
+      "bytes": 766096,
+      "sha256": "74108926f1f22fabcd363884fcb22954879b0a701b15eb3cfff1c2adf1a8ed01"
+    },
+    {
+      "profile": "code50",
+      "source": "data/code50/tokens/code/code70_gpt4_32k.json",
+      "destination": "data/tokens/code/code70_gpt4_32k.json",
+      "bytes": 86,
+      "sha256": "5bba2dbc2ec5a0707d76dc18fdb8154986ded3c99d3c19f7c92c63db016b25b1"
+    },
+    {
+      "profile": "code50",
+      "source": "data/code50/tokens/code/gpt2.bin",
+      "destination": "data/tokens/code/gpt2.bin",
+      "bytes": 227772858,
+      "sha256": "f47c5a20ca6a92831ad457b81a13fb63c0730551eefef11c4900583027b39396"
+    },
+    {
+      "profile": "code50",
+      "source": "data/code50/tokens/code/gpt2.idx",
+      "destination": "data/tokens/code/gpt2.idx",
+      "bytes": 766096,
+      "sha256": "4b71e7658cc14af3ee9be882a4856d93bf9bd36857b7bf205772612496cbebf7"
+    },
+    {
+      "profile": "code50",
+      "source": "data/code50/tokens/code/gpt2.json",
+      "destination": "data/tokens/code/gpt2.json",
+      "bytes": 87,
+      "sha256": "f7caf355c2c1f37538caaa09251c1df365cd5ce0cb90191fe5eaf06b1a448686"
+    },
+    {
+      "profile": "code50",
+      "source": "data/code50/raw/code/validation.jsonl",
+      "destination": "data/raw/code/validation.jsonl",
+      "bytes": 11105835,
+      "sha256": "5c07d6fc1f93e7ea39f1507b9a4736cc3aed930c9cbe4435e7d2a04ffd2adb2c"
+    },
+    {
+      "profile": "code50",
+      "source": "data/code50/raw/code/test.jsonl",
+      "destination": "data/raw/code/test.jsonl",
+      "bytes": 11594371,
+      "sha256": "a69277a361bbe682f3ab448b1799ff670fa491eed60f00beb6ab3e2ddd7dd713"
+    },
+    {
+      "profile": "code50",
+      "source": "data/code50/raw/code/stats.json",
+      "destination": "data/raw/code/stats.json",
+      "bytes": 1346,
+      "sha256": "a6d56a524eee9fddda26b5d7c780de1d7883b9b4c8b6d966f49b43dc32440d5f"
+    },
+    {
+      "profile": "code50",
+      "source": "artifacts/milestone/tokenizers/gpt2/meta.json",
+      "destination": "artifacts/tokenizers/gpt2/meta.json",
+      "bytes": 82,
+      "sha256": "e346f3afeb88efa9ef276e12e78d4c6c7c70721c435936310fac121680b33121"
+    },
+    {
+      "profile": "code50",
+      "source": "artifacts/milestone/tokenizers/gpt2/tokenizer.json",
+      "destination": "artifacts/tokenizers/gpt2/tokenizer.json",
+      "bytes": 1355256,
+      "sha256": "8414cab924d8b9b33013f0d221c5862f365ee9be39c5c2bfae8a5a9e970478a6"
+    },
+    {
+      "profile": "code50",
+      "source": "artifacts/milestone/tokenizers/code70_gpt4_32k/meta.json",
+      "destination": "artifacts/tokenizers/code70_gpt4_32k/meta.json",
+      "bytes": 546,
+      "sha256": "151b1c58e11549b346d3d7f2f99dd728d323b7e6d144fb920386b3f623d44d31"
+    },
+    {
+      "profile": "code50",
+      "source": "artifacts/milestone/tokenizers/code70_gpt4_32k/tokenizer.json",
+      "destination": "artifacts/tokenizers/code70_gpt4_32k/tokenizer.json",
+      "bytes": 2220197,
+      "sha256": "3dd5a347248b58c812497dbb7f87dfbeb19a41bd09ffcbfc2601fd29c66e9e9c"
+    },
+    {
+      "profile": "chinese",
+      "source": "data/chinese/tokens/wiki_zh/gpt2.bin",
+      "destination": "data/tokens/wiki_zh/gpt2.bin",
+      "bytes": 566324670,
+      "sha256": "1207f3e001395e682fe41c6d6ddd19e03724d7fc635048590f8d115f60e9a9a5"
+    },
+    {
+      "profile": "chinese",
+      "source": "data/chinese/tokens/wiki_zh/gpt2.idx",
+      "destination": "data/tokens/wiki_zh/gpt2.idx",
+      "bytes": 1590352,
+      "sha256": "4b5a11e9ec62293b79f4db6843a75724929efc8ba7ad5beba69e81d6b7911fcd"
+    },
+    {
+      "profile": "chinese",
+      "source": "data/chinese/tokens/wiki_zh/gpt2.json",
+      "destination": "data/tokens/wiki_zh/gpt2.json",
+      "bytes": 87,
+      "sha256": "bad17c6a25cc4b592ad400bfef6863729fe669f07538b784fbd380244bceb5f4"
+    },
+    {
+      "profile": "chinese",
+      "source": "data/chinese/tokens/wiki_zh/wiki_zh70_gpt4_50k.bin",
+      "destination": "data/tokens/wiki_zh/wiki_zh70_gpt4_50k.bin",
+      "bytes": 183359958,
+      "sha256": "967efd2ce361ced5ce44c3e395e382f4a93d36c8d2eb1b876164bce702715a76"
+    },
+    {
+      "profile": "chinese",
+      "source": "data/chinese/tokens/wiki_zh/wiki_zh70_gpt4_50k.idx",
+      "destination": "data/tokens/wiki_zh/wiki_zh70_gpt4_50k.idx",
+      "bytes": 1590352,
+      "sha256": "6c75a6061862fb96e2f71bb250706879fda503bd552f6a0d7c8e4a74809bdfd6"
+    },
+    {
+      "profile": "chinese",
+      "source": "data/chinese/tokens/wiki_zh/wiki_zh70_gpt4_50k.json",
+      "destination": "data/tokens/wiki_zh/wiki_zh70_gpt4_50k.json",
+      "bytes": 86,
+      "sha256": "dfef4e69896b5c193b3618217106e98fddeeba7bba396503eae6e19844553e24"
+    },
+    {
+      "profile": "chinese",
+      "source": "data/chinese/raw/wiki_zh/validation.jsonl",
+      "destination": "data/raw/wiki_zh/validation.jsonl",
+      "bytes": 10444543,
+      "sha256": "569ccd96139b16509bd6906926057f61925988f6dc0ffea7dc05974bdf2936bf"
+    },
+    {
+      "profile": "chinese",
+      "source": "data/chinese/raw/wiki_zh/test.jsonl",
+      "destination": "data/raw/wiki_zh/test.jsonl",
+      "bytes": 10512041,
+      "sha256": "3ab1840f01a07bfd5e36ea40e705d11151934794f503fa0fcd6bff6764e01c0f"
+    },
+    {
+      "profile": "chinese",
+      "source": "data/chinese/raw/wiki_zh/stats.json",
+      "destination": "data/raw/wiki_zh/stats.json",
+      "bytes": 1389,
+      "sha256": "607efd68d61962301155ecad01d6b956bb12fa21f3c25bc80a12b46f82b5c775"
+    },
+    {
+      "profile": "chinese",
+      "source": "artifacts/chinese/tokenizers/gpt2/meta.json",
+      "destination": "artifacts/tokenizers/gpt2/meta.json",
+      "bytes": 82,
+      "sha256": "e346f3afeb88efa9ef276e12e78d4c6c7c70721c435936310fac121680b33121"
+    },
+    {
+      "profile": "chinese",
+      "source": "artifacts/chinese/tokenizers/gpt2/tokenizer.json",
+      "destination": "artifacts/tokenizers/gpt2/tokenizer.json",
+      "bytes": 1355256,
+      "sha256": "8414cab924d8b9b33013f0d221c5862f365ee9be39c5c2bfae8a5a9e970478a6"
+    },
+    {
+      "profile": "chinese",
+      "source": "artifacts/chinese/tokenizers/wiki_zh70_gpt4_50k/meta.json",
+      "destination": "artifacts/tokenizers/wiki_zh70_gpt4_50k/meta.json",
+      "bytes": 555,
+      "sha256": "83e4255d01b7bdac145e40fae5ede94363b868ebcffdce3c3f66887bf3f6dc0d"
+    },
+    {
+      "profile": "chinese",
+      "source": "artifacts/chinese/tokenizers/wiki_zh70_gpt4_50k/tokenizer.json",
+      "destination": "artifacts/tokenizers/wiki_zh70_gpt4_50k/tokenizer.json",
+      "bytes": 3970235,
+      "sha256": "6f23989f35f35cac9c883f15b7996ccd9a98b866f0d3be3144d5c510e2a92763"
+    }
+  ],
+  "notes": "Binary/text file checksums are physical file hashes. Compressed raw train is not shipped."
+}

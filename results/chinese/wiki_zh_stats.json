@@ -1,0 +1,49 @@
+{
+  "source": "wiki_zh",
+  "seed": 2026,
+  "split_method": "sha256(seed:repository_or_text_hash) modulo 100: 80/10/10",
+  "requested_train_bytes": 400000000,
+  "requested_eval_docs": 1000,
+  "chunk_chars": 1000,
+  "n_train": 198793,
+  "train_bytes": 400027591,
+  "dropped": {
+    "duplicate_document": 1,
+    "duplicate_chunk": 21,
+    "missing_group": 0
+  },
+  "complete": true,
+  "provenance": {
+    "hf_repo": "wikimedia/wikipedia",
+    "config": "20231101.zh",
+    "revision": "b04c8d1ceb2f5cd4588862100d08de323dccfbaa",
+    "shuffle_buffer": 1000,
+    "min_chars": 200,
+    "reader": "sequential-parquet-hf-shuffle-v1",
+    "conversion": "OpenCC t2s (1.1.9)"
+  },
+  "audit": {
+    "train": {
+      "n_docs": 198793,
+      "utf8_bytes": 400027591,
+      "median_doc_bytes": 2291,
+      "max_doc_bytes": 3005,
+      "sha256": "90c3358e2aea8047a445607ec051db39e3f6ffe2f7be947ce69569ae2ff96f8f"
+    },
+    "validation": {
+      "n_docs": 1000,
+      "utf8_bytes": 10197970,
+      "median_doc_bytes": 5094,
+      "max_doc_bytes": 149494,
+      "sha256": "569ccd96139b16509bd6906926057f61925988f6dc0ffea7dc05974bdf2936bf"
+    },
+    "test": {
+      "n_docs": 1000,
+      "utf8_bytes": 10265237,
+      "median_doc_bytes": 4529,
+      "max_doc_bytes": 147044,
+      "sha256": "3ab1840f01a07bfd5e36ea40e705d11151934794f503fa0fcd6bff6764e01c0f"
+    }
+  },
+  "train_storage": "train.jsonl.gz"
+}

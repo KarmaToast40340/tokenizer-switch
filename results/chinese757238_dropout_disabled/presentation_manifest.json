@@ -1,0 +1,15 @@
+{
+  "scope": "Readability-only derivatives of verified pilot logs; dropout-disabled/provisional",
+  "files": [
+    {
+      "path": "presentation_training.pdf",
+      "bytes": 22171,
+      "sha256": "c8114624a523ded009b1a31c3bcc71c40adde7a00c79875414ed0ccfe7496640"
+    },
+    {
+      "path": "presentation_training.png",
+      "bytes": 140851,
+      "sha256": "0f88bd9593f6b82ca05782be0090dfddc848f060d7e9feae7ac3a10c17aa0d63"
+    }
+  ]
+}

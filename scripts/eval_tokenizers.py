@@ -20,10 +20,11 @@ def main():
     ap.add_argument("--raw", default="data/raw")
     ap.add_argument("--reference", default="gpt2")
     ap.add_argument("--out", default="results/tokenizers.csv")
+    ap.add_argument("--split", choices=["validation", "test"], default="test")
     args = ap.parse_args()
 
     ref = load_tokenizer(args.reference)
-    tests = {s: [d["text"] for d in iter_jsonl(Path(args.raw) / s / "test.jsonl")] for s in args.subsets}
+    tests = {s: [d["text"] for d in iter_jsonl(Path(args.raw) / s / f"{args.split}.jsonl")] for s in args.subsets}
     rows = []
     for path in [args.reference, *args.tokenizers]:
         tok = load_tokenizer(path)
@@ -36,7 +37,7 @@ def main():
         print(row)
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     with open(args.out, "w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=list(rows[0]))
+        w = csv.DictWriter(f, fieldnames=list(rows[0]), lineterminator="\n")
         w.writeheader()
         w.writerows(rows)
 

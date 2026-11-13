@@ -1,0 +1,40 @@
+{
+  "date": "2026-11-09",
+  "status": "does_not_fit_planned_storage",
+  "assumption": "Optimistically reuse ALL other CUDA/pure-Python libraries without copying; count only these five version-matched runtime packages",
+  "packages": [
+    {
+      "name": "torch",
+      "version": "2.7.1+cu128",
+      "unpacked_bytes": 1908559147
+    },
+    {
+      "name": "nvidia-cudnn-cu12",
+      "version": "9.7.1.26",
+      "unpacked_bytes": 1105967868
+    },
+    {
+      "name": "nvidia-cusparselt-cu12",
+      "version": "0.6.3",
+      "unpacked_bytes": 237426410
+    },
+    {
+      "name": "nvidia-nccl-cu12",
+      "version": "2.26.2",
+      "unpacked_bytes": 273411922
+    },
+    {
+      "name": "triton",
+      "version": "3.3.1",
+      "unpacked_bytes": 563196735
+    }
+  ],
+  "five_package_unpacked_bytes": 4088562082,
+  "free_quota_bytes": 4184936448,
+  "torch_alone_bytes": 1908559147,
+  "allowed_runtime_bytes_with_three_checkpoints": 861369958,
+  "shortfall_with_full_reserve_bytes": 3227192124,
+  "one_checkpoint_reserve_bytes": 644245094,
+  "one_checkpoint_and_runtime_lower_bound_bytes": 4732807176,
+  "note": "A lower bound, not a validated installation. Even one 0.6 GiB checkpoint plus these packages exceeds available quota before venv/log/save headroom. No packages installed."
+}

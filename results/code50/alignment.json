@@ -1,0 +1,21 @@
+{
+  "raw_sha256": "d2a478b473919975eefa34fa5b3b3880002c32bd33a07625f9b8b42ccfb39573",
+  "encodings": [
+    {
+      "prefix": "data/code50/tokens/code/gpt2",
+      "n_docs": 95761,
+      "n_tokens": 113886429,
+      "dtype": "uint16",
+      "bin_sha256": "f47c5a20ca6a92831ad457b81a13fb63c0730551eefef11c4900583027b39396",
+      "idx_sha256": "4b71e7658cc14af3ee9be882a4856d93bf9bd36857b7bf205772612496cbebf7"
+    },
+    {
+      "prefix": "data/code50/tokens/code/code70_gpt4_32k",
+      "n_docs": 95761,
+      "n_tokens": 63154284,
+      "dtype": "uint16",
+      "bin_sha256": "4dc94a6712fe50c606585a2fec5d60d11869a9c8085c91c554b32299fa4e6ae1",
+      "idx_sha256": "74108926f1f22fabcd363884fcb22954879b0a701b15eb3cfff1c2adf1a8ed01"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "scope": "Live status snapshot and post-run automation, not verified model-quality results",
+  "observed_at": "2026-11-10T14:24:26+08:00",
+  "training_job_id": "757238",
+  "slurm_state": "RUNNING",
+  "training_stage": "E_progressive",
+  "training_commit": "31dbce7f645018eb221d55f5b7756872396de9b5",
+  "effective_training_mode": "eval (dropout disabled)",
+  "provisional": true,
+  "saved_conditions": [
+    "A_keep",
+    "B_swap_fvt"
+  ],
+  "E_last_logged_step": 250,
+  "E_last_logged_tokens": 16449536,
+  "active_release_clean": true,
+  "active_source_hashes_unchanged_after_staging": true,
+  "postcheck_source_commit": "0c375eedccad9b45ac671f446eeb5ec08e48bbec",
+  "postcheck_root": "$HOME/tokenizer-switch-postcheck/0c375eedccad",
+  "watcher_pid": 4149846,
+  "watcher_status": "waiting",
+  "verification_job_id": null,
+  "quota_before_staging_KiB": {
+    "used": 7384332,
+    "hard_limit": 10485760
+  },
+  "offline_checks": {
+    "full_suite_passed": 49,
+    "publication_guards_passed": 6,
+    "paired_actual_CLI_traces": 6
+  },
+  "next": "After allocation/account queue empty: verify all saved checkpoints, reevaluate, measure speed, generate labelled pilot figures. No automatic retrain."
+}

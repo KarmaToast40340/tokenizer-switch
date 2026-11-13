@@ -29,7 +29,7 @@ def bytes_per_token(tok: Tokenizer, texts: Sequence[str]) -> float:
 def roundtrip_ok(tok: Tokenizer, texts: Sequence[str]) -> float:
     """Fraction of documents with decode(encode(x)) == x."""
     encs = tok.encode_batch(list(texts), add_special_tokens=False)
-    return float(np.mean([tok.decode(e.ids) == t for e, t in zip(encs, texts)]))
+    return float(np.mean([tok.decode(e.ids, skip_special_tokens=False) == t for e, t in zip(encs, texts)]))
 
 
 @torch.no_grad()
@@ -49,41 +49,49 @@ def bits_per_byte(
     targets are included in the loss (one per document, for every tokenizer).
     ``id_map`` maps raw tokenizer ids to model ids (``None`` = identity).
     """
-    model.eval()
-    eot = eot_id(tok)
-    stream = [eot]
-    for e in tok.encode_batch(list(texts), add_special_tokens=False):
-        stream.extend(e.ids)
-        stream.append(eot)
-    ids = np.asarray(stream, dtype=np.int64)
-    if id_map is not None:
-        ids = id_map[ids]
-    ids_t = torch.from_numpy(ids)
-    n_bytes = sum(len(t.encode("utf-8")) for t in texts)
+    if not texts or not sum(len(t.encode("utf-8")) for t in texts):
+        raise ValueError("bits per byte requires nonempty text")
+    if block_size <= 0 or batch_size <= 0:
+        raise ValueError("block_size and batch_size must be positive")
+    was_training = model.training
+    try:
+        model.eval()
+        eot = eot_id(tok)
+        stream = [eot]
+        for e in tok.encode_batch(list(texts), add_special_tokens=False):
+            stream.extend(e.ids)
+            stream.append(eot)
+        ids = np.asarray(stream, dtype=np.int64)
+        if id_map is not None:
+            ids = id_map[ids]
+        ids_t = torch.from_numpy(ids)
+        n_bytes = sum(len(t.encode("utf-8")) for t in texts)
 
-    def nll_sum(xs: list[torch.Tensor], ys: list[torch.Tensor]) -> float:
-        x, y = torch.stack(xs).to(device), torch.stack(ys).to(device)
-        with torch.autocast(device_type="cuda", dtype=torch.bfloat16, enabled=device == "cuda"):
-            logits = model(input_ids=x).logits
-        return F.cross_entropy(logits.float().flatten(0, 1), y.flatten(), reduction="sum").item()
+        def nll_sum(xs: list[torch.Tensor], ys: list[torch.Tensor]) -> float:
+            x, y = torch.stack(xs).to(device), torch.stack(ys).to(device)
+            with torch.autocast(device_type="cuda", dtype=torch.bfloat16, enabled=device == "cuda"):
+                logits = model(input_ids=x).logits
+            return F.cross_entropy(logits.float().flatten(0, 1), y.flatten(), reduction="sum").item()
 
-    n_pred = len(ids_t) - 1
-    n_full = n_pred // block_size
-    total_nll = 0.0
-    for b in range(0, n_full, batch_size):
-        starts = range(b * block_size, min(n_full, b + batch_size) * block_size, block_size)
-        total_nll += nll_sum(
-            [ids_t[s : s + block_size] for s in starts],
-            [ids_t[s + 1 : s + 1 + block_size] for s in starts],
-        )
-    s = n_full * block_size
-    if s < n_pred:  # last, shorter window
-        total_nll += nll_sum([ids_t[s:n_pred]], [ids_t[s + 1 :]])
-    n_tok = n_pred
-    model.train()
-    return {
-        "bpb": total_nll / math.log(2) / n_bytes,
-        "nll_per_token": total_nll / n_tok,
-        "n_tokens": n_tok,
-        "n_bytes": n_bytes,
-    }
+        n_pred = len(ids_t) - 1
+        n_full = n_pred // block_size
+        total_nll = 0.0
+        for b in range(0, n_full, batch_size):
+            starts = range(b * block_size, min(n_full, b + batch_size) * block_size, block_size)
+            total_nll += nll_sum(
+                [ids_t[s : s + block_size] for s in starts],
+                [ids_t[s + 1 : s + 1 + block_size] for s in starts],
+            )
+        s = n_full * block_size
+        if s < n_pred:  # last, shorter window
+            total_nll += nll_sum([ids_t[s:n_pred]], [ids_t[s + 1 :]])
+        n_tok = n_pred
+        return {
+            "bpb": total_nll / math.log(2) / n_bytes,
+            "nll_per_token": total_nll / n_tok,
+            "n_tokens": n_tok,
+            "n_bytes": n_bytes,
+        }
+
+    finally:
+        model.train(was_training)
