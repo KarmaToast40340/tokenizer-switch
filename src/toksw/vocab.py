@@ -115,6 +115,20 @@ def init_embeddings(
     return out
 
 
+def allowed_rows(union: UnionVocab) -> tuple[torch.Tensor, torch.Tensor]:
+    """Union rows each tokenizer can emit: ``(old_allowed, new_allowed)``.
+
+    Old-tokenized sequences never contain new-only tokens and new-tokenized
+    sequences never contain old-only tokens; masking the other rows restricts
+    the union softmax to the sequence's own vocabulary.
+    """
+    old_allowed = torch.zeros(union.size, dtype=torch.bool)
+    old_allowed[: union.n_old] = True
+    new_allowed = torch.zeros(union.size, dtype=torch.bool)
+    new_allowed[torch.as_tensor(union.new2union)] = True
+    return old_allowed, new_allowed
+
+
 @torch.no_grad()
 def prune_to_new(union_emb: torch.Tensor, union: UnionVocab) -> torch.Tensor:
     """Keep only the rows of the new vocabulary, in new-id order."""

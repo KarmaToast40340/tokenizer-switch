@@ -1,0 +1,505 @@
+{
+  "info": {
+    "n_eval_docs": 50,
+    "eval_bytes": 370487
+  },
+  "base": "/home/karma/.cache/huggingface/hub/models--openai-community--gpt2/snapshots/607a30d783dfa663caf39e06633721c8d4cfcd7e",
+  "old": "artifacts/tokenizers/gpt2",
+  "new": "artifacts/tokenizers/code70_gpt4_32k",
+  "eval": "data/code200/raw_pinned/code/validation.jsonl",
+  "bpb": {
+    "A": {
+      "bpb": 1.2249849662052275,
+      "nll_per_token": 1.9014319926450782,
+      "n_tokens": 165443,
+      "n_bytes": 370487,
+      "seconds": 153.9
+    },
+    "B": {
+      "bpb": 1.6612409220052824,
+      "nll_per_token": 4.568928839701468,
+      "n_tokens": 93372,
+      "n_bytes": 370487,
+      "seconds": 81.6
+    },
+    "C": {
+      "bpb": 2.0329086010633395,
+      "nll_per_token": 5.591130469302227,
+      "n_tokens": 93372,
+      "n_bytes": 370487,
+      "seconds": 81.9
+    },
+    "E_old": {
+      "bpb": 2.4320079690805034,
+      "nll_per_token": 3.7749832743683815,
+      "n_tokens": 165443,
+      "n_bytes": 370487,
+      "seconds": 169.7
+    },
+    "E_new": {
+      "bpb": 1.6686534498656453,
+      "nll_per_token": 4.589315595088773,
+      "n_tokens": 93372,
+      "n_bytes": 370487,
+      "seconds": 98.2
+    },
+    "E_old_masked": {
+      "bpb": 1.2249849662052275,
+      "nll_per_token": 1.9014319926450782,
+      "n_tokens": 165443,
+      "n_bytes": 370487,
+      "seconds": 178.8
+    },
+    "E_new_masked": {
+      "bpb": 1.6612416768578206,
+      "nll_per_token": 4.568930915780552,
+      "n_tokens": 93372,
+      "n_bytes": 370487,
+      "seconds": 103.4
+    },
+    "pruned": {
+      "bpb": 1.6612409220052824,
+      "nll_per_token": 4.568928839701468,
+      "n_tokens": 93372,
+      "n_bytes": 370487,
+      "seconds": 83.5
+    },
+    "reloaded": {
+      "bpb": 1.6612409220052824,
+      "nll_per_token": 4.568928839701468,
+      "n_tokens": 93372,
+      "n_bytes": 370487,
+      "seconds": 87.4
+    }
+  },
+  "checks": [
+    {
+      "check": "1 union",
+      "status": "PASS",
+      "n_old": 50257,
+      "n_new": 32000,
+      "n_new_only": 14009,
+      "size": 64266,
+      "n_shared": 17991,
+      "new_eot_id": 0,
+      "new_eot_union_id": 50256
+    },
+    {
+      "check": "2 fvt pieces",
+      "status": "PASS",
+      "n_failures": 0,
+      "failures": [],
+      "new_only_pieces_mean": 2.483,
+      "new_only_pieces_max": 64,
+      "new_only_single_piece": 0,
+      "examples": {
+        "ĠĠĠ": {
+          "in_gpt2": false,
+          "pieces": [
+            "Ġ",
+            "Ġ",
+            "Ġ"
+          ]
+        },
+        "ĠĠĠĠ": {
+          "in_gpt2": false,
+          "pieces": [
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ"
+          ]
+        },
+        "ĠĠĠĠĠĠĠ": {
+          "in_gpt2": false,
+          "pieces": [
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ"
+          ]
+        },
+        "ĠĠĠĠĠĠĠĠ": {
+          "in_gpt2": false,
+          "pieces": [
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ"
+          ]
+        },
+        "Ġreturn": {
+          "in_gpt2": true,
+          "pieces": [
+            "Ġreturn"
+          ]
+        },
+        ".append": {
+          "in_gpt2": false,
+          "pieces": [
+            ".",
+            "append"
+          ]
+        },
+        "Ġself": {
+          "in_gpt2": true,
+          "pieces": [
+            "Ġself"
+          ]
+        },
+        "):Ċ": {
+          "in_gpt2": false,
+          "pieces": [
+            "):",
+            "Ċ"
+          ]
+        },
+        "ĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠ": {
+          "in_gpt2": false,
+          "pieces": [
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ"
+          ]
+        },
+        "ĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠ": {
+          "in_gpt2": false,
+          "pieces": [
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ"
+          ]
+        },
+        "ĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠ": {
+          "in_gpt2": false,
+          "pieces": [
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ",
+            "Ġ"
+          ]
+        }
+      }
+    },
+    {
+      "check": "7 tied A",
+      "status": "PASS"
+    },
+    {
+      "check": "7 tied B",
+      "status": "PASS"
+    },
+    {
+      "check": "3 init B",
+      "status": "PASS",
+      "shared_rows_exact": true,
+      "fvt_rows_sampled": 100,
+      "fvt_max_abs_err": 0.0
+    },
+    {
+      "check": "7 tied C",
+      "status": "PASS"
+    },
+    {
+      "check": "3 init C",
+      "status": "PASS",
+      "shared_rows_exact": true,
+      "random_vs_fvt_rel_diff_min": 1.1276435852050781,
+      "random_vs_fvt_rel_diff_mean": 1.5116733312606812
+    },
+    {
+      "check": "7 tied E",
+      "status": "PASS"
+    },
+    {
+      "check": "3 init E",
+      "status": "PASS",
+      "old_rows_exact": true,
+      "new_only_rows_equal_B": true,
+      "rows": 64266
+    },
+    {
+      "check": "4a step0 B < C",
+      "status": "PASS",
+      "B": 1.6612409220052824,
+      "C": 2.0329086010633395,
+      "C_minus_B": 0.3716676790580571
+    },
+    {
+      "check": "4b step0 E_new ~ B (unmasked)",
+      "status": "PASS",
+      "E_new_minus_B": 0.00741252786036295
+    },
+    {
+      "check": "4c step0 E_old ~ A (unmasked)",
+      "status": "FAIL",
+      "E_old_minus_A": 1.207023002875276
+    },
+    {
+      "check": "4d step0 E_old masked == A",
+      "status": "PASS",
+      "E_old_masked": 1.2249849662052275,
+      "A": 1.2249849662052275,
+      "abs_diff": 0.0
+    },
+    {
+      "check": "4e step0 E_new masked == B",
+      "status": "PASS",
+      "E_new_masked": 1.6612416768578206,
+      "B": 1.6612409220052824,
+      "abs_diff": 7.54852538253914e-07
+    },
+    {
+      "check": "7 tied pruned",
+      "status": "PASS",
+      "rows": 32000
+    },
+    {
+      "check": "5 pruning",
+      "status": "PASS",
+      "E_new": 1.668653,
+      "pruned": 1.661241,
+      "E_new_minus_pruned": 0.00741252786036295,
+      "max_abs_logit_diff": 0.0001068115234375,
+      "max_abs_logsoftmax_diff_after_renorm": 0.0001068115234375,
+      "argmax_agreement": 1.0,
+      "tokens_compared": 1024
+    },
+    {
+      "check": "7 tied reloaded",
+      "status": "PASS"
+    },
+    {
+      "check": "5 save/reload",
+      "status": "PASS",
+      "pruned": 1.6612409220052824,
+      "reloaded": 1.6612409220052824,
+      "abs_diff": 0.0
+    },
+    {
+      "check": "6 progressive sampler",
+      "status": "PASS",
+      "schedule": [
+        {
+          "step": 0,
+          "p_new": 0.0,
+          "frac_new": 0.0
+        },
+        {
+          "step": 190,
+          "p_new": 0.4987,
+          "frac_new": 0.4875
+        },
+        {
+          "step": 381,
+          "p_new": 1.0,
+          "frac_new": 1.0
+        },
+        {
+          "step": 600,
+          "p_new": 1.0,
+          "frac_new": 1.0
+        }
+      ],
+      "prefix_pairs_compared": 96,
+      "prefix_mismatches": 0,
+      "n_docs": 95761,
+      "step600_frac_new": 1.0,
+      "max_model_id": 64250
+    }
+  ],
+  "all_pass": false,
+  "seconds": 1045.2,
+  "diagnostics_E_old": {
+    "source": "scratch diagnostic run after check_transfer (8 validation docs, 4096 GPT-2 tokens, E union model step 0, eval mode)",
+    "mean_prob_mass_on_new_only_rows": 0.5746,
+    "median_prob_mass_on_new_only_rows": 0.6474,
+    "mean_extra_nats_per_old_token": 1.5631,
+    "space_only_new_tokens": 60,
+    "space_only_in_gpt2": 1,
+    "new_only_rows_bit_identical_to_an_old_row": 17,
+    "top_new_only_tokens_by_mass": "space runs (15 to 60 spaces)",
+    "explanation": "tied embeddings: FVT rows of space-run tokens are means of identical Ġ rows, so their output logit equals logit(Ġ); with old tokenization the union softmax spreads the Ġ mass over ~60 space tokens. Not an implementation bug; the expectation E_old≈A does not hold for this tokenizer pair."
+  },
+  "note": "4c (unmasked E_old ~ A) is an expected structural FAIL, explained in diagnostics_E_old; 4d/4e show the opt-in mask_foreign_logits restores A and B exactly at step 0."
+}

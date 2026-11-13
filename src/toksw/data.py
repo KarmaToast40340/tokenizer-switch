@@ -155,7 +155,7 @@ class MixedBatchSampler:
         docs = rng.integers(0, self.n_docs, size=self.batch_size)
         u = rng.random(self.batch_size)
         p = self.p_new(step)
-        rows, n_new = [], 0
+        rows, n_new, flags = [], 0, []
         for d, ui in zip(docs, u):
             use_new = ui < p
             src, mp = (self.new, self.new_map) if use_new else (self.old, self.old_map)
@@ -163,10 +163,12 @@ class MixedBatchSampler:
                 raise RuntimeError(f"step {step}: p_new={p} needs a tokenizer that is not loaded")
             rows.append(mp[src.window(int(d), self.block_size + 1)])
             n_new += int(use_new)
+            flags.append(bool(use_new))
         arr = torch.from_numpy(np.stack(rows))
         x, y = arr[:, :-1].contiguous(), arr[:, 1:].contiguous()
         n_bytes = int(self.token_bytes[y.numpy()].sum())
-        return x, y, {"n_bytes": n_bytes, "frac_new": n_new / self.batch_size, "p_new": p}
+        return x, y, {"n_bytes": n_bytes, "frac_new": n_new / self.batch_size, "p_new": p,
+                      "use_new": torch.tensor(flags, dtype=torch.bool)}
 
 
 def token_byte_lengths(tokens: list[str], special: set[str]) -> np.ndarray:

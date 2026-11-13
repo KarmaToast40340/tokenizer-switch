@@ -32,6 +32,15 @@ def roundtrip_ok(tok: Tokenizer, texts: Sequence[str]) -> float:
     return float(np.mean([tok.decode(e.ids, skip_special_tokens=False) == t for e, t in zip(encs, texts)]))
 
 
+def mask_logits(logits: torch.Tensor, allowed: torch.Tensor) -> torch.Tensor:
+    """Give zero probability to the vocabulary rows where ``allowed`` is False.
+
+    ``allowed`` broadcasts against ``logits`` over the last (vocabulary) axis.
+    Use float32 logits: the fill value does not fit in BF16.
+    """
+    return logits.masked_fill(~allowed, torch.finfo(logits.dtype).min)
+
+
 @torch.no_grad()
 def bits_per_byte(
     model: torch.nn.Module,
@@ -41,6 +50,7 @@ def bits_per_byte(
     block_size: int = 1024,
     batch_size: int = 8,
     device: str = "cuda",
+    allowed: torch.Tensor | None = None,
 ) -> dict:
     """bpb = -sum log2 p(x_t | x_<t) / #bytes over ``texts``.
 
@@ -48,6 +58,8 @@ def bits_per_byte(
     non-overlapping windows; every document token is predicted once. The EOT
     targets are included in the loss (one per document, for every tokenizer).
     ``id_map`` maps raw tokenizer ids to model ids (``None`` = identity).
+    ``allowed`` (bool, one per model id) restricts the softmax to those rows;
+    ``None`` uses every row.
     """
     if not texts or not sum(len(t.encode("utf-8")) for t in texts):
         raise ValueError("bits per byte requires nonempty text")
@@ -71,7 +83,10 @@ def bits_per_byte(
             x, y = torch.stack(xs).to(device), torch.stack(ys).to(device)
             with torch.autocast(device_type="cuda", dtype=torch.bfloat16, enabled=device == "cuda"):
                 logits = model(input_ids=x).logits
-            return F.cross_entropy(logits.float().flatten(0, 1), y.flatten(), reduction="sum").item()
+            logits = logits.float()
+            if allowed is not None:
+                logits = mask_logits(logits, allowed.to(logits.device))
+            return F.cross_entropy(logits.flatten(0, 1), y.flatten(), reduction="sum").item()
 
         n_pred = len(ids_t) - 1
         n_full = n_pred // block_size

@@ -27,3 +27,4 @@ log_every: 10
 eval_every: 100
 eval_docs: 200                     # periodic eval on a subset; final eval on all 1000 test docs
 eval_batch: 8
+mask_foreign_logits: false         # E only, opt-in: softmax restricted to the sequence's tokenizer rows (train + union eval)

@@ -15,24 +15,26 @@ import torch.nn.functional as F
 
 from toksw import model as M
 from toksw.data import MixedBatchSampler, TokenFile, iter_jsonl
-from toksw.metrics import bits_per_byte
+from toksw.metrics import bits_per_byte, mask_logits
 from toksw.modes import require_mode
 from toksw.schedule import lr_at, p_new
 from toksw.tok import load_tokenizer
 from toksw.utils import JsonlLogger, load_config
-from toksw.vocab import prune_to_new
+from toksw.vocab import allowed_rows, prune_to_new
 
 
-def evaluate(setup, old_tok, new_tok, texts, cfg, device):
+def evaluate(setup, old_tok, new_tok, texts, cfg, device, allowed=None):
+    """``allowed`` = (old_allowed, new_allowed) row masks, or None for the full softmax."""
     out = {}
+    old_allowed, new_allowed = allowed if allowed is not None else (None, None)
     was_training = setup.model.training
     try:
         if setup.old_map is not None:
             out["old"] = bits_per_byte(setup.model, old_tok, texts, setup.old_map,
-                                       cfg["block_size"], cfg["eval_batch"], device)["bpb"]
+                                       cfg["block_size"], cfg["eval_batch"], device, old_allowed)["bpb"]
         if setup.new_map is not None:
             out["new"] = bits_per_byte(setup.model, new_tok, texts, setup.new_map,
-                                       cfg["block_size"], cfg["eval_batch"], device)["bpb"]
+                                       cfg["block_size"], cfg["eval_batch"], device, new_allowed)["bpb"]
     finally:
         require_mode(setup.model, was_training)
     return out
@@ -69,6 +71,11 @@ def main():
     total_steps = cfg["token_budget"] // tokens_per_step
     rho = {"keep": None, "swap": 0.0, "progressive": cfg.get("rho", 0.5)}[cfg["condition"]]
     sched = (lambda s: 0.0) if rho is None else (lambda s: p_new(s, total_steps, rho))
+    # Opt-in (progressive only): restrict each sequence's softmax to its own
+    # tokenizer's rows, in training and in the periodic/final union evaluation.
+    allowed = None
+    if cfg.get("mask_foreign_logits", False) and cfg["condition"] == "progressive":
+        allowed = tuple(a.to(device) for a in allowed_rows(setup.union))
     sampler = MixedBatchSampler(old_file, new_file, setup.old_map, setup.new_map, setup.token_bytes,
                                 sched, cfg["block_size"], cfg["micro_batch"], cfg["data_seed"])
 
@@ -87,7 +94,7 @@ def main():
     warmup = max(1, int(cfg["warmup_frac"] * total_steps))
     print(f"[train] {run.name}: {total_steps} steps x {tokens_per_step} tokens, device={device}")
 
-    log.log(step=0, eval=evaluate(setup, old_tok, new_tok, eval_texts, cfg, device),
+    log.log(step=0, eval=evaluate(setup, old_tok, new_tok, eval_texts, cfg, device, allowed),
             model_training_after_eval=model.training)
     t0 = time.time()
     bytes_seen = 0
@@ -103,6 +110,9 @@ def main():
             x, y = x.to(device, non_blocking=True), y.to(device, non_blocking=True)
             with torch.autocast(device_type="cuda", dtype=torch.bfloat16, enabled=device == "cuda"):
                 logits = fwd(input_ids=x).logits
+            if allowed is not None:
+                rows = torch.where(info["use_new"].to(device)[:, None], allowed[1], allowed[0])
+                logits = mask_logits(logits.float(), rows[:, None, :])
             loss = F.cross_entropy(logits.float().flatten(0, 1), y.flatten())
             # Cross entropy owns the tensors autograd needs. Do not retain the
             # large BF16 vocabulary logits during backward or the next forward.
@@ -125,10 +135,10 @@ def main():
                     tok_per_s=(step + 1) * tokens_per_step / max(elapsed, 1e-9),
                     model_training=model.training)
         if (step + 1) % cfg["eval_every"] == 0 and step + 1 < total_steps:
-            log.log(step=step + 1, eval=evaluate(setup, old_tok, new_tok, eval_texts, cfg, device),
+            log.log(step=step + 1, eval=evaluate(setup, old_tok, new_tok, eval_texts, cfg, device, allowed),
                     model_training_after_eval=model.training)
 
-    final = evaluate(setup, old_tok, new_tok, test_texts, cfg, device)
+    final = evaluate(setup, old_tok, new_tok, test_texts, cfg, device, allowed)
     log.log(step=total_steps, final_eval=final, wall_s=time.time() - t0,
             model_training_after_eval=model.training, training_mode_checks=total_steps)
     print(f"[final] {final}")
