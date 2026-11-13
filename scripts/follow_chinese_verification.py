@@ -21,9 +21,9 @@ SSH=['ssh','-o','BatchMode=yes','-o','ControlPath=/tmp/tok-%C','-o','ConnectTime
 BRANCH='chloe/data-eval'
 
 
-def checked_manifest(manifest):
-    if manifest.get('provisional') is not True:
-        raise ValueError('missing provisional scope')
+def checked_manifest(manifest, expected_provisional=True):
+    if manifest.get('provisional') is not expected_provisional:
+        raise ValueError('unexpected provisional flag for requested protocol')
     records=manifest['files']
     if not 1<=len(records)<=50 or sum(r['bytes'] for r in records)>30*(1<<20):
         raise ValueError('unexpected collection size')

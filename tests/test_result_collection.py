@@ -1,4 +1,4 @@
-"""Only small, explicitly provisional, hash-addressed result files may publish."""
+"""Only small, explicitly scoped, hash-addressed result files may publish."""
 import importlib.util
 from pathlib import Path
 import pytest
@@ -21,3 +21,14 @@ def test_accepts_small_provisional_verification():
 def test_rejects_unsafe_or_unlabelled_artifacts(bad):
     with pytest.raises(ValueError):
         collector.checked_manifest(bad)
+
+
+def test_corrected_results_require_explicit_protocol():
+    corrected=manifest();corrected['provisional']=False
+    assert collector.checked_manifest(corrected,expected_provisional=False)
+    with pytest.raises(ValueError):collector.checked_manifest(corrected)
+
+
+def test_corrected_collection_rejects_pilot_scope():
+    with pytest.raises(ValueError):
+        collector.checked_manifest(manifest(),expected_provisional=False)
