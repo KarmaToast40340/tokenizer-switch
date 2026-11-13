@@ -1,0 +1,17 @@
+{
+  "checkpoint": "runs/djam_code50_corrected/B_swap_fvt_code_dropout01_50M/model",
+  "domain": "code",
+  "split": "test",
+  "raw_sha256": "a69277a361bbe682f3ab448b1799ff670fa491eed60f00beb6ab3e2ddd7dd713",
+  "block_size": 1024,
+  "batch_size": 1,
+  "device": "cuda",
+  "tokenizer_sha256": "3dd5a347248b58c812497dbb7f87dfbeb19a41bd09ffcbfc2601fd29c66e9e9c",
+  "model_training_after_eval": false,
+  "torch": "2.14.1+cu130",
+  "gpu": "NVIDIA GeForce RTX 5050",
+  "bpb": 0.6998092877682,
+  "nll_per_token": 1.8351476209232114,
+  "n_tokens": 2878907,
+  "n_bytes": 10891645
+}

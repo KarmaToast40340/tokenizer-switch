@@ -1,0 +1,17 @@
+{
+  "checkpoint": "runs/djam_code50_corrected/A_keep_code_dropout01_50M/model",
+  "domain": "code",
+  "split": "test",
+  "raw_sha256": "a69277a361bbe682f3ab448b1799ff670fa491eed60f00beb6ab3e2ddd7dd713",
+  "block_size": 1024,
+  "batch_size": 1,
+  "device": "cuda",
+  "tokenizer_sha256": "1fe93b6152957cf9cfd6d89002467f789ce8b3f3e000b3a2edf27c808ddd0b9e",
+  "model_training_after_eval": false,
+  "torch": "2.14.1+cu130",
+  "gpu": "NVIDIA GeForce RTX 5050",
+  "bpb": 0.7264269706492981,
+  "nll_per_token": 1.0690024951337962,
+  "n_tokens": 5130175,
+  "n_bytes": 10891645
+}

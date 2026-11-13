@@ -1,0 +1,8 @@
+domain,condition,test_bpb,characters_per_second,trainer_wall_hours,gpu,source
+code,A,0.7264269706492981,374.9432648509543,1.1843839339415232,RTX 5050,results/code50_djam_corrected_dropout01/comparison.csv
+code,B,0.6998092877682,532.9016707921843,0.9179700205061171,RTX 5050,results/code50_djam_corrected_dropout01/comparison.csv
+code,C,0.7847866068605311,549.4531785643162,0.9101821429199642,RTX 5050,results/code50_djam_corrected_dropout01/comparison.csv
+code,E,0.7164269330799824,500.82921900841774,1.190075763463974,RTX 5050,results/code50_djam_corrected_dropout01/comparison.csv
+wiki_zh,A,1.956646544093831,55.65890834871688,9.217037331329452,GTX 1060,results/chinese766353_corrected_dropout01/comparison.csv
+wiki_zh,B,1.6927550811912,172.63514010966716,8.233777603374588,GTX 1060,results/chinese766353_corrected_dropout01/comparison.csv
+wiki_zh,E,1.7634908576156905,165.08480270822233,11.083224243720373,GTX 1060,results/chinese766353_corrected_dropout01/comparison.csv

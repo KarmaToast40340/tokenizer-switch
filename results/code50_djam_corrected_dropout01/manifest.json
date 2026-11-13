@@ -1,0 +1,116 @@
+{
+  "scope": "Corrected code 50M; dropout 0.1; 20 MB tokenizer pilot; one seed",
+  "provisional": false,
+  "files": [
+    {
+      "path": "A/config.json",
+      "bytes": 948,
+      "sha256": "86966dfbf9a57d431d2782291a96160a624cad933d785049e57b17ede662bd82"
+    },
+    {
+      "path": "A/log.jsonl",
+      "bytes": 21986,
+      "sha256": "a0ced524f8f2f4ed3c31c665293949dd76f34e01c9ecf20d0c0d2be67269177d"
+    },
+    {
+      "path": "A_bpb.json",
+      "bytes": 570,
+      "sha256": "b7afa74d707779ee5d07ea13bdade6af289de8b20fccca86a1bea07a170a36da"
+    },
+    {
+      "path": "B/config.json",
+      "bytes": 969,
+      "sha256": "6be94ae02bd464727b1b5a0139c9a8b6f1e9f487024b894f810a5e4089c19663"
+    },
+    {
+      "path": "B/log.jsonl",
+      "bytes": 22008,
+      "sha256": "84eaa848990b08358015b869c9996df2a6490bae9e10ab4e32e4063d944ee91c"
+    },
+    {
+      "path": "B_bpb.json",
+      "bytes": 571,
+      "sha256": "cd474b287ee1b3dbf2112d112a9b259a89c60b59592798939419eaee68cb9fde"
+    },
+    {
+      "path": "C/config.json",
+      "bytes": 975,
+      "sha256": "777ef97603542497dfcd272a101815b5dc2e9db0e6c885bbf2fd09a8941f7d40"
+    },
+    {
+      "path": "C/log.jsonl",
+      "bytes": 21976,
+      "sha256": "c00b03b351a4c90f8b09ad908ae330473a94cb5776b2f934d6be3d5802932390"
+    },
+    {
+      "path": "C_bpb.json",
+      "bytes": 576,
+      "sha256": "417375d10ce5cfeb5c63d255acd449488b007ee96b9b088bf87c7035398316ae"
+    },
+    {
+      "path": "code_and_chinese_50M.csv",
+      "bytes": 975,
+      "sha256": "8ade610e778dae50e5a7857939cd7f408aa07d1ead13f88bee4eb65f3000a2fa"
+    },
+    {
+      "path": "comparison.csv",
+      "bytes": 1222,
+      "sha256": "b3e6522106329be3096eded6c4530663c09b5c373494457fe1910e904556809f"
+    },
+    {
+      "path": "comparison.pdf",
+      "bytes": 21143,
+      "sha256": "af169e253ae7c5ff157cbddc72de7996c36b79654be5440dee16c9948a4b11fc"
+    },
+    {
+      "path": "comparison.png",
+      "bytes": 115265,
+      "sha256": "02cbcf02d4141b24303a8685082cec555fc9948928143352852a3e914d2b5094"
+    },
+    {
+      "path": "E/config.json",
+      "bytes": 993,
+      "sha256": "5c5863c17d62125af5c190b6e6ccd84130c9f4d792c2a0d3b3f9e4bc5bb8e00c"
+    },
+    {
+      "path": "E/log.jsonl",
+      "bytes": 23066,
+      "sha256": "cc7000399a0a65df12f6b731c9c8df34c55139992138d6e0839b8579040ea751"
+    },
+    {
+      "path": "E_bpb.json",
+      "bytes": 577,
+      "sha256": "a5e45e5ebf4ffbd669398fcfdde89045c9c0e1532439af0cd2caccaafb2466c6"
+    },
+    {
+      "path": "eval_code50.sbatch",
+      "bytes": 1624,
+      "sha256": "3d700bd966ef3392bb19948fc6e5d833b2823265582147f3897942d0e6089683"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4243,
+      "sha256": "d0908d11fdbeb6bc016a73874956439a3c4b4a626a7f2117374b9c35b75f7ad2"
+    },
+    {
+      "path": "runs.csv",
+      "bytes": 1059,
+      "sha256": "bdaf0b6e8bf6934d338a825bda9e205bec18c48629673cdf975c0ace830e61c6"
+    },
+    {
+      "path": "speed.csv",
+      "bytes": 1532,
+      "sha256": "4b51067cbbbffd8603938ce674c5c34b24dc1847575f7ce43d35fa58036dffa4"
+    },
+    {
+      "path": "training.pdf",
+      "bytes": 19471,
+      "sha256": "1a2047c0eb71864c9c22bb4fed5fa6250d19d76058ed1008af627a0ced130a1d"
+    },
+    {
+      "path": "training.png",
+      "bytes": 161730,
+      "sha256": "46d8e065ab3e77cab985d144ad216d30a7fa0060d29a69e6b0209094c5d1be5e"
+    }
+  ]
+}
