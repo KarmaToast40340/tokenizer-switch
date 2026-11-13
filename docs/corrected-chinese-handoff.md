@@ -1,5 +1,12 @@
 # Corrected Chinese 50M A/B/E — 10 November 2026
 
+> **Verified completion, 12 November:** corrected job **766353 COMPLETED / 0:0**.
+> All A/B/E checkpoints, final bpb, speed and figures pass verification. The mode
+> fix held through all 762 steps/condition and every evaluation. See
+> [final corrected results](chinese50m-corrected-results.md); older pending/blocked
+> snapshots below are historical. The dropout-disabled pilot is preserved separately.
+
+
 ## Current corrected progress — 12 November, 14:19 Taipei
 
 **Job 766353 RUNNING on cmpt053, stage E.** A and B each completed

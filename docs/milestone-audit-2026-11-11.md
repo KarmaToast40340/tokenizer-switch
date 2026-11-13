@@ -1,5 +1,43 @@
 # Milestone audit — 11 November 2026
 
+## Corrected milestone complete — 12 November, 20:44 Bangkok / 21:44 Taipei
+
+**Job 766353 COMPLETED / exit 0**, elapsed **29h54m07s**. A/B/E each completed
+**49,938,432 training tokens** and saved verified checkpoints. Final saved-model
+bpb, shared-prompt generation speed, training curves and comparison PNG/PDF
+figures are complete, collected locally and manifest-hash verified.
+
+| Corrected condition | Test bpb | Generation characters/s | Reported trainer hours |
+|---|---:|---:|---:|
+| A keep | 1.956647 | 55.66 | 9.22 |
+| B FVT | 1.692755 | 172.64 | 8.23 |
+| E progressive, pruned | 1.763491 | 165.08 | 11.08 |
+
+**B is best in this single run; an E advantage is not demonstrated.** These are
+valid corrected dropout-0.1 results, with **20 MB tokenizer fits**, not the full
+proposed 1 GB study. Do not pool them with the preserved dropout-disabled pilot
+or claim statistical significance from one seed/benchmark.
+
+The completed mode audit passes **762 training-phase checks per condition**,
+all 77 logged training events per condition, and restoration after every
+initial/periodic/final evaluation, including E post-pruning. All logged losses
+and gradients are finite. Saved-checkpoint scores exactly match the appropriate
+final/pruned log scores on all 1,000 test docs; weights are unchanged after
+inference/speed verification. Both frozen source worktrees remain clean.
+
+Presentation-ready corrected figures:
+`results/chinese766353_corrected_dropout01/comparison.{png,pdf}` and
+`results/chinese766353_corrected_dropout01/training.{png,pdf}`. CSVs, verified
+bpb JSON, numeric logs and manifest are alongside them. No weight/data/env files
+are committed. [Final results and handoff](chinese50m-corrected-results.md).
+
+This completes the assigned Chinese 50M data/tokenizer/evaluation/figure core
+milestone. Code-model checkpoint comparisons still depend on teammates' runs;
+full 1 GB fits, additional seeds, 200M extensions and innovations remain deferred.
+No further training job was submitted. Earlier running/pending snapshots below
+are historical and superseded by this verified completion.
+
+
 ## Current corrected progress — 12 November, 14:19 Taipei
 
 **Job 766353 RUNNING on cmpt053, stage E.** A and B each completed

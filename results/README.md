@@ -1,5 +1,15 @@
 # Verified results and their scope
 
+**Corrected Chinese 50M complete:** job **766353 COMPLETED / 0:0** on 12 November.
+[Verified corrected results](chinese766353_corrected_dropout01/README.md) include
+all bpb/speed/logs and comparison/training PNG/PDF figures. Mode checks/restoration
+pass for every condition; the completed checkpoint evaluation matches logged
+scores. These are single-seed dropout-0.1 runs with **20 MB tokenizer pilots**.
+They are separate from [the preserved dropout-disabled pilot](chinese757238_dropout_disabled/README.md).
+See [the final handoff](../docs/chinese50m-corrected-results.md). Historical pending
+snapshots below are superseded; no new training was launched.
+
+
 **12 November, 14:19 Taipei:** corrected job **766353** is RUNNING E (43.4%);
 A/B checkpoints are saved. `corrected_chinese_status_766353_2026-11-12.json` records
 live mode-check evidence and preliminary trainer scores, **not completed saved-

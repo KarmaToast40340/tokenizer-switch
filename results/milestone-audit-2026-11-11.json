@@ -146,19 +146,18 @@
     "error": "E_progressive CUDA OOM during backward: requested 332 MiB; 279.62 MiB free on GTX 1060 6GB. Full training was not submitted."
   },
   "corrected_full_training": {
-    "status": "RUNNING",
+    "status": "COMPLETED",
     "job_id": "766353",
-    "observed_at": "2026-11-11T15:51:54+08:00",
-    "stage": "training_A_keep",
-    "last_logged_tokens": {
-      "A": 0,
-      "B": 0,
-      "E": 0
-    },
     "source_commit": "d11b8b5e7188321b881101081c1119a89ec3276b",
-    "user_approved": true,
-    "blocked": false,
-    "caution": "Startup/initial evaluation; zero logged gradient events at this snapshot. Later token logs are lower-bound progress."
+    "actual_tokens_per_condition": 49938432,
+    "exit_code": "0:0",
+    "completed_at": "2026-11-12T20:44:34+07:00",
+    "mode_audit_passed": true,
+    "saved_checkpoint_evaluation": "verified",
+    "generation_speed": "complete",
+    "comparison_figures": "complete",
+    "results_root": "results/chinese766353_corrected_dropout01",
+    "results_scope": "Single-seed corrected dropout-0.1 Chinese 50M; 20 MB tokenizer pilots"
   },
   "slurm_accounting": [
     "757238|COMPLETED|0:0|1-05:10:32",
@@ -199,5 +198,6 @@
       "C",
       "E"
     ]
-  }
+  },
+  "latest_observed_at": "2026-11-12T21:28:36.255148+07:00"
 }

@@ -1,0 +1,4 @@
+condition,test_bpb,characters_per_second,trainer_wall_hours,training_scope,provisional
+A,1.956646544093831,55.65890834871688,9.217037331329452,Corrected Chinese 50M; dropout 0.1; 20 MB tokenizer pilots,False
+B,1.6927550811912,172.63514010966716,8.233777603374588,Corrected Chinese 50M; dropout 0.1; 20 MB tokenizer pilots,False
+E,1.7634908576156905,165.08480270822233,11.083224243720373,Corrected Chinese 50M; dropout 0.1; 20 MB tokenizer pilots,False

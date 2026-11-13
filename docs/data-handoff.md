@@ -1,5 +1,12 @@
 # Data and evaluation handoff — verified 9 November 2026
 
+> **Verified completion, 12 November:** corrected job **766353 COMPLETED / 0:0**.
+> All A/B/E checkpoints, final bpb, speed and figures pass verification. The mode
+> fix held through all 762 steps/condition and every evaluation. See
+> [final corrected results](chinese50m-corrected-results.md); older pending/blocked
+> snapshots below are historical. The dropout-disabled pilot is preserved separately.
+
+
 > **Approved launch, 11 November 15:51:** corrected Chinese 50M A/B/E is now
 > **RUNNING as job 766353 on cmpt053**, frozen source d11b8b5, 37-hour limit.
 > Controller stage A startup/initial eval; zero gradient tokens logged at this

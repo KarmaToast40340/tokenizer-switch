@@ -1,0 +1,20 @@
+{
+  "checkpoint": "runs/chinese_corrected_dropout01_20261110/B_swap_fvt_zh_dropout01_50M/model",
+  "domain": "wiki_zh",
+  "split": "test",
+  "raw_sha256": "3ab1840f01a07bfd5e36ea40e705d11151934794f503fa0fcd6bff6764e01c0f",
+  "block_size": 1024,
+  "batch_size": 1,
+  "device": "cuda",
+  "tokenizer_sha256": "6f23989f35f35cac9c883f15b7996ccd9a98b866f0d3be3144d5c510e2a92763",
+  "model_training_after_eval": false,
+  "torch": "2.6.0+cu124",
+  "gpu": "NVIDIA GeForce GTX 1060 6GB",
+  "bpb": 1.6927550811912,
+  "nll_per_token": 5.455704894464608,
+  "n_tokens": 2207688,
+  "n_bytes": 10265237,
+  "scope": "Corrected Chinese 50M; dropout 0.1; 20 MB tokenizer pilots",
+  "provisional": false,
+  "weights_sha256": "6332cb6ba6a224961f3eb98eac26a90691a9fa36719accc0cf05dea658bef7f3"
+}

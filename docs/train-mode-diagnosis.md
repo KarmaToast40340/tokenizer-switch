@@ -1,5 +1,12 @@
 # Training-mode diagnosis — 10 November 2026
 
+> **Verified completion, 12 November:** corrected job **766353 COMPLETED / 0:0**.
+> All A/B/E checkpoints, final bpb, speed and figures pass verification. The mode
+> fix held through all 762 steps/condition and every evaluation. See
+> [final corrected results](chinese50m-corrected-results.md); older pending/blocked
+> snapshots below are historical. The dropout-disabled pilot is preserved separately.
+
+
 **Job 757238 remains unchanged. Its Chinese A/B/E are dropout-disabled pilots,
 not the intended dropout-0.1 training comparison.** Finishing E is useful for a
 consistent three-condition pilot. Do not pool these weights with corrected runs

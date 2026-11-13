@@ -1,5 +1,46 @@
 # Chloé progress — 12 November 2026
 
+## Corrected milestone complete — 12 November, 20:44 Bangkok / 21:44 Taipei
+
+**Job 766353 COMPLETED / exit 0**, elapsed **29h54m07s**. A/B/E each completed
+**49,938,432 training tokens** and saved verified checkpoints. Final saved-model
+bpb, shared-prompt generation speed, training curves and comparison PNG/PDF
+figures are complete, collected locally and manifest-hash verified.
+
+| Corrected condition | Test bpb | Generation characters/s | Reported trainer hours |
+|---|---:|---:|---:|
+| A keep | 1.956647 | 55.66 | 9.22 |
+| B FVT | 1.692755 | 172.64 | 8.23 |
+| E progressive, pruned | 1.763491 | 165.08 | 11.08 |
+
+**B is best in this single run; an E advantage is not demonstrated.** These are
+valid corrected dropout-0.1 results, with **20 MB tokenizer fits**, not the full
+proposed 1 GB study. Do not pool them with the preserved dropout-disabled pilot
+or claim statistical significance from one seed/benchmark.
+
+The completed mode audit passes **762 training-phase checks per condition**,
+all 77 logged training events per condition, and restoration after every
+initial/periodic/final evaluation, including E post-pruning. All logged losses
+and gradients are finite. Saved-checkpoint scores exactly match the appropriate
+final/pruned log scores on all 1,000 test docs; weights are unchanged after
+inference/speed verification. Both frozen source worktrees remain clean.
+
+Presentation-ready corrected figures:
+`results/chinese766353_corrected_dropout01/comparison.{png,pdf}` and
+`results/chinese766353_corrected_dropout01/training.{png,pdf}`. CSVs, verified
+bpb JSON, numeric logs and manifest are alongside them. No weight/data/env files
+are committed. [Final results and handoff](chinese50m-corrected-results.md).
+
+**72 current offline tests pass (130.01 s)**, and all 17 corrected publication
+files match their manifest hashes.
+
+This completes the assigned Chinese 50M data/tokenizer/evaluation/figure core
+milestone. Code-model checkpoint comparisons still depend on teammates' runs;
+full 1 GB fits, additional seeds, 200M extensions and innovations remain deferred.
+No further training job was submitted. Earlier running/pending snapshots below
+are historical and superseded by this verified completion.
+
+
 ## Current corrected progress — 12 November, 14:19 Taipei
 
 **Job 766353 RUNNING on cmpt053, stage E.** A and B each completed
@@ -164,9 +205,10 @@ GPU allocations do not change implementation ownership. Extra innovations are un
 - [x] 42 offline tests passed (9 November), including analytic bpb, split leakage, gzip logical checksums, checkpoint/speed CLIs, and tiny A/B/C/E training/pruning integration.
 - [x] Separate 250 MB code model-training assets: verified; see capacity table.
 - [x] Chinese 400 MB model-training assets + five-point tokenizer grid: verified; see capacity table.
-- [ ] Real model bpb, generation speed and training plots: require actual checkpoints/logs; none invented.
+- [x] Real corrected Chinese 50M saved-checkpoint bpb, generation speed and training/comparison figures: job **766353 COMPLETED / 0:0**, all hashes/modes/evaluation checks pass. See `results/chinese766353_corrected_dropout01/`.
 - [x] GTX 1060 fallback validated in Slurm job 757153 using unchanged DL_HW. All Chinese A/B/E pass at BF16 micro-batch 1 / accumulation 64; checkpoint reserve fits. Separate RTX installation remains blocked, but no administrator help is needed for this fallback.
-- [ ] Full Chinese 50M A/B/E: Slurm job **757238** submitted and running on cmpt053, all three exact trainer smoke gates passed; A/B have saved checkpoints and E is active (10 November). These are dropout-disabled pilots. See the latest execution update and `docs/gtx1060-handoff.md`; formal checkpoint results remain pending.
+- [x] Dropout-disabled Chinese 50M A/B/E pilot **757238** completed; independent verification **764463** passed. All pilot weights/logs/labelled figures preserved separately.
+- [x] Fresh corrected Chinese 50M A/B/E **766353** completed, **49,938,432 tokens each**, all 762 training-mode checks per condition and post-eval restoration pass. Final bpb/speed/figures verified and collected; see `docs/chinese50m-corrected-results.md`.
 
 ## Capacity and storage
 
