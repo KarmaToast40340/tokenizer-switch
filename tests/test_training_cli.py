@@ -58,8 +58,7 @@ def test_all_conditions_with_validation_and_pruning(tmp_path, corpus, old_tok, n
         # Paired exact-CLI proof: lifetime-only cleanup must not change the
         # dropout RNG, loss, gradients, updates or pruned saved weights.
         reference=tmp_path/"train_before_cleanup.py"
-        reference.write_text(subprocess.check_output(
-            ["git","show","4cc7bff:scripts/train.py"],cwd=root,text=True))
+        reference.write_bytes((root/"tests/fixtures/train_before_tensor_cleanup.py").read_bytes())
         ref_out=tmp_path/"reference_runs"
         overrides=[f"out={ref_out}" if arg.startswith("out=") else arg
                    for arg in command[command.index("--")+1:]]

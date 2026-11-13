@@ -92,6 +92,16 @@ def test_reuse_only_passed_matching_AB_gate_evidence(tmp_path,monkeypatch,bad_mo
     monkeypatch.setattr(gate,'checkpoint_sizes',lambda _: [500_000_000]*3)
     monkeypatch.setattr(gate,'usage',lambda:(8*(1<<30),10*(1<<30),'test'))
     monkeypatch.setenv('SLURM_JOB_ID','test')
+    # Simulate the archived protocol through fixture bytes, without requiring
+    # a historical commit in shallow/fresh merged clones.
+    original_output=gate.subprocess.check_output
+    def archived(cmd,**kw):
+        if cmd[:2]==['git','show']:
+            rel=cmd[2].split(':',1)[1]
+            data=(root/'tests/fixtures/train_before_tensor_cleanup.py').read_bytes() if rel=='scripts/train.py' else (root/rel).read_bytes()
+            return data.decode() if kw.get('text') else data
+        return original_output(cmd,**kw)
+    monkeypatch.setattr(gate.subprocess,'check_output',archived)
     original=gate.subprocess.run
     def run(cmd,**kw):
         if 'scripts/verify_assets.py' in cmd:return SimpleNamespace(returncode=0)

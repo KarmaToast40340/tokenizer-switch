@@ -1,5 +1,12 @@
 # Chloé progress — 12 November 2026
 
+> **13 November team handoff:** use [Djam's code50 package/launch instructions](djam-code50-handoff.md).
+> The exact 13 code50 manifest assets are verified. Djam's working RTX environment
+> is reused unchanged; the new wrapper selects his activated Python and the
+> corrected train/eval mode code. The archive is built outside Git and the final
+> merge/upload receipt is recorded in PR #4 and returned separately.
+
+
 ## Corrected milestone complete — 12 November, 20:44 Bangkok / 21:44 Taipei
 
 **Job 766353 COMPLETED / exit 0**, elapsed **29h54m07s**. A/B/E each completed

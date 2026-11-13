@@ -1,5 +1,12 @@
 # Who runs what
 
+> Current code50 transfer/launch instructions: [Djam's corrected handoff](../docs/djam-code50-handoff.md).
+> Use the verified merged main in a separate worktree and the already working
+> RTX environment; do not run setup/install scripts for this handoff. Legacy
+> `runs-v1`, default environment and future 200M/innovation commands below are
+> historical plans, not instructions to execute before the core code50 runs.
+
+
 Runs are split by domain, not by condition: split by letter, C would take ~1 GPU-hour and E ~18,
 and the account running E would hold up everyone. With this split each account runs ~13 hours and
 only stores the data of its own domain. One job at a time per account; everyone submits on their

@@ -1,5 +1,12 @@
 # Data and evaluation handoff — verified 9 November 2026
 
+> **13 November team handoff:** use [Djam's code50 package/launch instructions](djam-code50-handoff.md).
+> The exact 13 code50 manifest assets are verified. Djam's working RTX environment
+> is reused unchanged; the new wrapper selects his activated Python and the
+> corrected train/eval mode code. The archive is built outside Git and the final
+> merge/upload receipt is recorded in PR #4 and returned separately.
+
+
 > **Verified completion, 12 November:** corrected job **766353 COMPLETED / 0:0**.
 > All A/B/E checkpoints, final bpb, speed and figures pass verification. The mode
 > fix held through all 762 steps/condition and every evaluation. See
