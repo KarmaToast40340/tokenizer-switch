@@ -1,0 +1,71 @@
+{
+  "scope": "Corrected code 50M; dropout 0.1; 20 MB tokenizer pilot; one seed",
+  "provisional": false,
+  "files": [
+    {
+      "path": "djam_code50_rho.sbatch",
+      "bytes": 1645,
+      "sha256": "fba83801e3c530a859dee34f7683cbd5785d9ae8eca52f8c9b55798de575818b"
+    },
+    {
+      "path": "plot_rho.py",
+      "bytes": 5278,
+      "sha256": "4f4129b65b8ef99f95022c18bb026ae39461332b712d682df7d4c07d26eb35c7"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3873,
+      "sha256": "4a8bcf3172fa43e2dc54815c974197b53ff709c25b35298d91bdc248c4113241"
+    },
+    {
+      "path": "rho0/config.json",
+      "bytes": 983,
+      "sha256": "dc9e66559ab510f396571fa854298f811909283d52f6833b32d10c6f0bd333e9"
+    },
+    {
+      "path": "rho0/log.jsonl",
+      "bytes": 22324,
+      "sha256": "0bb578d4076bdfe9c46ad217e593e3b023397cdde8c3f7bfc9beddf08f688a17"
+    },
+    {
+      "path": "rho025/config.json",
+      "bytes": 988,
+      "sha256": "654bc0f5b4413b77bec110d1c18f95a2de24cecedde3d06a9f6c5a6c9d4715dc"
+    },
+    {
+      "path": "rho025/log.jsonl",
+      "bytes": 22696,
+      "sha256": "9daef6ee43c247b677603a9e41273852e5621c5470b96af8b1ae565edbe2a648"
+    },
+    {
+      "path": "rho075/config.json",
+      "bytes": 988,
+      "sha256": "22a787789114173827999d5264049fa9cbb1bc01c2524006a48cefee2ca8aa2f"
+    },
+    {
+      "path": "rho075/log.jsonl",
+      "bytes": 23421,
+      "sha256": "ad217b862f75b08b3d28ab476732fc9074778b9dd8c79a4abce398d5b9b55d1a"
+    },
+    {
+      "path": "rho_ablation.csv",
+      "bytes": 1190,
+      "sha256": "412e3d8762254b89b28f2a02b5c393860f85e86f30f8e6cfc499439a9750cbb0"
+    },
+    {
+      "path": "rho_ablation.pdf",
+      "bytes": 27166,
+      "sha256": "68ffce49b04aa37be8e0ea181d242c4084f30f2de6218006caae9a6b68dc1d5f"
+    },
+    {
+      "path": "rho_ablation.png",
+      "bytes": 274687,
+      "sha256": "a2243bc0bc5bb6baa6b24065892de62c35c826866108adfafb6d7dbab98ca70f"
+    },
+    {
+      "path": "runs.csv",
+      "bytes": 996,
+      "sha256": "583b88e456e0cbf45414cbe21cf2c840c67baf5c0b396b5370cbb0cec4fa2d39"
+    }
+  ]
+}
