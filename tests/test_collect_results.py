@@ -68,3 +68,14 @@ def test_short_and_full_hash_of_one_commit_do_not_warn(tmp_path, capsys):
              [TRAIN, {"final_eval": {"new": 1.1}}])
     collect_rows(tmp_path)
     assert "commits" not in capsys.readouterr().err
+
+
+def test_mask_column_is_set_for_progressive_runs_only(tmp_path):
+    root = tmp_path / "runs"
+    e_log = [TRAIN, {"final_eval": {"old": 1.5, "new": 1.2}}, {"final_eval_pruned": {"new": 1.2}}]
+    make_run(root, "E_old_config", {"condition": "progressive"}, e_log)
+    make_run(root, "E_off", {"condition": "progressive", "mask_foreign_logits": False}, e_log)
+    make_run(root, "E_masked", {"condition": "progressive", "mask_foreign_logits": True}, e_log)
+    make_run(root, "B_flag_ignored", {"condition": "swap", "mask_foreign_logits": True}, [TRAIN, {"final_eval": {"new": 1.3}}])
+    rows = collect_rows(tmp_path)
+    assert [rows[n]["mask_foreign_logits"] for n in ("E_old_config", "E_off", "E_masked", "B_flag_ignored")] ==         ["False", "False", "True", ""]

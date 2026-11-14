@@ -10,6 +10,10 @@ kept with ``status=incomplete`` so that they are not silently missing from the f
 Every ``bpb*`` column except ``bpb_step0_new`` is measured on the 1000 held-out *test* documents
 (train.py's final evaluation). ``eval_split`` only says which split the periodic evaluations and the
 step-0 evaluation used. Folders renamed after a failure (``<run>.failed1``) are skipped.
+
+``mask_foreign_logits`` is True or False for E and empty for A, B and C, where train.py ignores the
+option. With the mask, ``bpb_old`` and ``bpb_new`` come from a softmax restricted to one tokenizer's
+rows: compare them only between runs with the same value. ``bpb`` (after pruning) is not affected.
 """
 from __future__ import annotations
 
@@ -21,7 +25,7 @@ from pathlib import Path
 
 LETTER = {("keep", None): "A", ("swap", "fvt"): "B", ("swap", "random"): "C", ("progressive", "fvt"): "E"}
 COLUMNS = [
-    "run", "letter", "condition", "init", "rho", "domain", "budget_M", "status",
+    "run", "letter", "condition", "init", "rho", "mask_foreign_logits", "domain", "budget_M", "status",
     "bpb", "bpb_old", "bpb_new", "bpb_pruned", "bpb_step0_new", "peak_train_bpb",
     "tokens", "bytes_seen", "wall_h", "tok_per_s",
     "eval_split", "micro_batch", "grad_accum", "dropout", "seed", "account", "commit", "path",
@@ -92,6 +96,8 @@ def summarize(run_dir: Path, root: Path) -> dict:
         "condition": condition,
         "init": key_init or "",
         "rho": "" if rho is None else rho,
+        # train.py applies the mask to the progressive condition only; configs older than the option lack the key
+        "mask_foreign_logits": bool(cfg.get("mask_foreign_logits", False)) if condition == "progressive" else "",
         "domain": cfg.get("domain"),
         "budget_M": cfg.get("token_budget", 0) // 1_000_000,
         "status": run_status(condition, final, pruned),
@@ -138,7 +144,8 @@ def main(argv: list[str] | None = None) -> int:
         print("no run folder (config.json + log.jsonl) found", file=sys.stderr)
         return 1
     table = [summarize(d, root) for d, root in runs]
-    table.sort(key=lambda r: (r["domain"] or "", r["budget_M"], r["letter"], str(r["rho"]), r["run"]))
+    table.sort(key=lambda r: (r["domain"] or "", r["budget_M"], r["letter"], str(r["rho"]),
+                              str(r["mask_foreign_logits"]), r["run"]))
 
     names = [r["run"] for r in table]
     for name in sorted({n for n in names if names.count(n) > 1}):
